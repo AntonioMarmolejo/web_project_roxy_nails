@@ -39,11 +39,21 @@ export default function Navbar() {
         </Link>
 
         {user ? (
-          <button onClick={logout} className="btn-ghost" style={{ padding: '6px 16px', fontSize: 12 }}>
+          <button onClick={logout} style={{
+            background: 'transparent', border: '1px solid #F0D0DC',
+            color: '#C2185B', borderRadius: 20, padding: '6px 16px',
+            fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+          }}>
             Salir
           </button>
         ) : (
-          <Link to="/admin"><button className="btn-primary" style={{ padding: '8px 18px', fontSize: 12 }}>Ingresar</button></Link>
+          <Link to="/login">
+            <button style={{
+              background: '#C2185B', color: '#fff', border: 'none',
+              borderRadius: 20, padding: '8px 18px',
+              fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+            }}>Ingresar</button>
+          </Link>
         )}
       </div>
     </nav>
