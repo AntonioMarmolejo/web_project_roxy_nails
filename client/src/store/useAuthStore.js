@@ -1,0 +1,37 @@
+import { create } from 'zustand'
+import api from '../api/axios'
+
+export const useAuthStore = create((set) => ({
+  user:    null,
+  token:   localStorage.getItem('rn_token') || null,
+  loading: false,
+
+  login: async (email, password) => {
+    set({ loading: true })
+    const { data } = await api.post('/auth/login', { email, password })
+    localStorage.setItem('rn_token', data.token)
+    set({ user: data.user, token: data.token, loading: false })
+  },
+
+  register: async (name, email, phone, password) => {
+    set({ loading: true })
+    const { data } = await api.post('/auth/register', { name, email, phone, password })
+    localStorage.setItem('rn_token', data.token)
+    set({ user: data.user, token: data.token, loading: false })
+  },
+
+  logout: () => {
+    localStorage.removeItem('rn_token')
+    set({ user: null, token: null })
+  },
+
+  fetchMe: async () => {
+    try {
+      const { data } = await api.get('/auth/me')
+      set({ user: data.user })
+    } catch {
+      localStorage.removeItem('rn_token')
+      set({ user: null, token: null })
+    }
+  },
+}))

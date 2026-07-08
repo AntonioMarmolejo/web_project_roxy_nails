@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --rn-pink:    #C2185B;
+  --rn-pink-l:  #F8C8DC;
+  --rn-blush:   #FDF0F5;
+  --rn-dark:    #2D1520;
+  --rn-text:    #4A2030;
+  --rn-muted:   #9E7080;
+  --rn-radius:  12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--rn-dark);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+a { text-decoration: none; color: inherit; }
+
+.btn-primary {
+  background: var(--rn-pink);
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.88; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--rn-pink);
+  border: 1.5px solid var(--rn-pink);
+  border-radius: 24px;
+  padding: 10px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+}
+.btn-ghost:hover { background: var(--rn-blush); }

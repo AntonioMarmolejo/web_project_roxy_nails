@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Variables de entorno (nunca subir al repo)
+.env
+client/.env
+server/.env
+
+# Build del cliente
+client/dist/
+client/.vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
