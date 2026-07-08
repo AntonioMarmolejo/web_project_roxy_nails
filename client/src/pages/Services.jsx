@@ -45,12 +45,12 @@ export default function Services() {
       </Helmet>
 
       {/* Header */}
-      <div style={{ background: '#FDF0F5', padding: '2.5rem 2rem', textAlign: 'center', borderBottom: '1px solid #F0D0DC' }}>
-        <p style={{ fontSize: 11, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#C2185B', fontWeight: 500, marginBottom: 8 }}>
+      <div style={{ background: '#FDF0F5', padding: '3rem 2rem', textAlign: 'center', borderBottom: '1px solid #F0D0DC' }}>
+        <p style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#C2185B', fontWeight: 500, marginBottom: 10 }}>
           Lo que hacemos
         </p>
-        <h1 style={{ fontSize: 32, marginBottom: 8 }}>Nuestros servicios</h1>
-        <p style={{ fontSize: 14, color: '#9E7080', maxWidth: 440, margin: '0 auto' }}>
+        <h1 style={{ fontSize: 38, marginBottom: 10 }}>Nuestros servicios</h1>
+        <p style={{ fontSize: 15, color: '#9E7080', maxWidth: 460, margin: '0 auto' }}>
           Cada servicio incluye limpieza, hidratación y el acabado que elijas.
         </p>
       </div>
@@ -63,7 +63,7 @@ export default function Services() {
       }}>
         {CATS.map(c => (
           <button key={c.key} onClick={() => setCat(c.key)} style={{
-            padding: '7px 18px', borderRadius: 20, fontSize: 13,
+            padding: '8px 20px', borderRadius: 20, fontSize: 14,
             border: '1px solid',
             borderColor: cat === c.key ? '#C2185B' : '#F0D0DC',
             background: cat === c.key ? '#C2185B' : '#fff',
@@ -75,15 +75,15 @@ export default function Services() {
       </div>
 
       {/* Grid */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2rem' }}>
+      <div className="rn-section" style={{ maxWidth: 1100, margin: '0 auto', padding: '3rem 2rem' }}>
         {loading ? (
-          <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 14 }}>Cargando servicios...</p>
+          <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 15 }}>Cargando servicios...</p>
         ) : filtered.length === 0 ? (
-          <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 14 }}>
+          <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 15 }}>
             No hay servicios en esta categoría aún.
           </p>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 16 }}>
+          <div className="rn-catalog-grid">
             {filtered.map(svc => <ServiceCard key={svc._id} service={svc} />)}
           </div>
         )}

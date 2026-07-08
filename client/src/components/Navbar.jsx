@@ -1,31 +1,41 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/useCartStore'
 import { useAuthStore } from '../store/useAuthStore'
 
 export default function Navbar() {
-  const count   = useCartStore(s => s.count)
+  const count = useCartStore(s => s.count)
   const { user, logout } = useAuthStore()
+  const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const close = () => setOpen(false)
 
   return (
     <nav style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       padding: '1rem 2rem', borderBottom: '1px solid #F0D0DC',
-      background: '#fff', position: 'sticky', top: 0, zIndex: 100
+      background: '#fff', position: 'sticky', top: 0, zIndex: 100,
     }}>
-      <Link to="/" style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, color: '#C2185B', fontWeight: 600 }}>
+      <Link to="/" onClick={close} style={{ fontFamily: 'Playfair Display, serif', fontSize: 24, color: '#C2185B', fontWeight: 600 }}>
         Roxy <em style={{ fontStyle: 'italic', color: '#E91E8C' }}>Nails</em>
       </Link>
 
-      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-        <Link to="/servicios" style={{ fontSize: 13, color: '#6B4050' }}>Servicios</Link>
-        <Link to="/agendar"   style={{ fontSize: 13, color: '#6B4050' }}>Agendar</Link>
-        <Link to="/tienda"    style={{ fontSize: 13, color: '#6B4050' }}>Tienda</Link>
-        <Link to="/talleres"  style={{ fontSize: 13, color: '#6B4050' }}>Talleres</Link>
+      {/* Hamburger — solo visible en mobile */}
+      <button className="nav-hamburger" onClick={() => setOpen(o => !o)} aria-label="Abrir menú">
+        <span /><span /><span />
+      </button>
+
+      {/* Links — desktop inline, mobile dropdown */}
+      <div className={`nav-links${open ? ' is-open' : ''}`}>
+        <Link to="/servicios" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Servicios</Link>
+        <Link to="/agendar"   onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Agendar</Link>
+        <Link to="/tienda"    onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
+        <Link to="/talleres"  onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
         {user?.role === 'admin' && (
-          <Link to="/admin" style={{ fontSize: 13, color: '#C2185B', fontWeight: 500 }}>Admin</Link>
+          <Link to="/admin" onClick={close} style={{ fontSize: 14, color: '#C2185B', fontWeight: 500 }}>Admin</Link>
         )}
 
-        <Link to="/tienda" style={{ position: 'relative', color: '#6B4050' }}>
+        <Link to="/tienda" onClick={close} style={{ position: 'relative', color: '#6B4050' }}>
           🛒
           {count > 0 && (
             <span style={{
@@ -33,27 +43,27 @@ export default function Navbar() {
               background: '#C2185B', color: '#fff',
               borderRadius: '50%', width: 16, height: 16,
               fontSize: 9, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 500
+              fontWeight: 500,
             }}>{count}</span>
           )}
         </Link>
 
         {user ? (
-          <button onClick={logout} style={{
+          <button onClick={() => { logout(); close() }} style={{
             background: 'transparent', border: '1px solid #F0D0DC',
-            color: '#C2185B', borderRadius: 20, padding: '6px 16px',
-            fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+            color: '#C2185B', borderRadius: 20, padding: '7px 18px',
+            fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
           }}>
             Salir
           </button>
         ) : (
-          <Link to="/login">
-            <button style={{
-              background: '#C2185B', color: '#fff', border: 'none',
-              borderRadius: 20, padding: '8px 18px',
-              fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-            }}>Ingresar</button>
-          </Link>
+          <button onClick={() => { navigate('/login'); close() }} style={{
+            background: '#C2185B', color: '#fff', border: 'none',
+            borderRadius: 20, padding: '9px 20px',
+            fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
+          }}>
+            Ingresar
+          </button>
         )}
       </div>
     </nav>
