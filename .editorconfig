@@ -1,0 +1,26 @@
+# http://editorconfig.org
+# Una propiedad especial que debe ser especificada en la parte superior del archivo fuera de
+# cualquier sección. Configura a true para detener la búsqueda de archivos .editorconfig en el archivo actual root = true
+root = true
+[*]
+# Estilo de sangría
+# Valores posibles: tabulación, espacio
+indent_style = space
+# Tamaño de la sangría en caracteres a un solo espacio
+# Valores posibles: un número entero, tabulación
+indent_size = 4
+# Carácter de final de línea
+# Possible values - lf, crlf, cr
+end_of_line = cr
+# Codificación de caracteres del archivo
+# Possible values - latin1, utf-8, utf-16be, utf-16le
+charset = utf-8
+# Indica si se recortan los espacios en blanco al final de las líneas
+# Valores posibles: true, false
+trim_trailing_whitespace = true
+# Desactivar para Markdown porque los espacios en blanco al final son importantes
+[*.md]
+trim_trailing_whitespace = false
+# Indica si el archivo debe terminar con una nueva línea
+# Possible values - true, false
+insert_final_newline = false
