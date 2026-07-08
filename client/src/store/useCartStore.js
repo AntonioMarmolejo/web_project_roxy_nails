@@ -1,35 +1,43 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
-export const useCartStore = create((set, get) => ({
-    items: [],
+const compute = (items) => ({
+  items,
+  count: items.reduce((s, i) => s + i.qty, 0),
+  total: items.reduce((s, i) => s + i.price * i.qty, 0),
+})
 
-    addItem: (product) => {
-        const existing = get().items.find(i => i._id === product._id)
-        if (existing) {
-            set({
-                items: get().items.map(i =>
-                    i._id === product._id ? { ...i, qty: i.qty + 1 } : i
-                )
-            })
-        } else {
-            set({ items: [...get().items, { ...product, qty: 1 }] })
-        }
-    },
+export const useCartStore = create(
+  persist(
+    (set, get) => ({
+      ...compute([]),
+      drawerOpen: false,
 
-    removeItem: (id) => set({ items: get().items.filter(i => i._id !== id) }),
+      openDrawer:  () => set({ drawerOpen: true }),
+      closeDrawer: () => set({ drawerOpen: false }),
 
-    updateQty: (id, qty) => {
-        if (qty < 1) return get().removeItem(id)
-        set({ items: get().items.map(i => i._id === id ? { ...i, qty } : i) })
-    },
+      addItem: (product) => {
+        const items = get().items
+        const existing = items.find(i => i._id === product._id)
+        set(compute(
+          existing
+            ? items.map(i => i._id === product._id ? { ...i, qty: i.qty + 1 } : i)
+            : [...items, { ...product, qty: 1 }]
+        ))
+      },
 
-    clearCart: () => set({ items: [] }),
+      removeItem: (id) => set(compute(get().items.filter(i => i._id !== id))),
 
-    get total() {
-        return get().items.reduce((sum, i) => sum + i.price * i.qty, 0)
-    },
+      updateQty: (id, qty) => {
+        if (qty < 1) { set(compute(get().items.filter(i => i._id !== id))); return }
+        set(compute(get().items.map(i => i._id === id ? { ...i, qty } : i)))
+      },
 
-    get count() {
-        return get().items.reduce((sum, i) => sum + i.qty, 0)
-    },
-}))
+      clearCart: () => set(compute([])),
+    }),
+    {
+      name: 'rn-cart',
+      partialize: (s) => ({ items: s.items, count: s.count, total: s.total }),
+    }
+  )
+)

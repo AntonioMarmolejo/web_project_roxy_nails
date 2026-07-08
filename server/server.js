@@ -7,6 +7,7 @@ import authRoutes    from './routes/auth.routes.js'
 import serviceRoutes from './routes/service.routes.js'
 import bookingRoutes from './routes/booking.routes.js'
 import productRoutes from './routes/product.routes.js'
+import orderRoutes   from './routes/order.routes.js'
 
 dotenv.config()
 
@@ -23,6 +24,7 @@ app.use('/api/v1/auth',     authRoutes)
 app.use('/api/v1/services', serviceRoutes)
 app.use('/api/v1/bookings', bookingRoutes)
 app.use('/api/v1/products', productRoutes)
+app.use('/api/v1/orders',  orderRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: 'Roxy Nails API' }))

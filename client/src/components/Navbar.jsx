@@ -4,7 +4,7 @@ import { useCartStore } from '../store/useCartStore'
 import { useAuthStore } from '../store/useAuthStore'
 
 export default function Navbar() {
-    const count = useCartStore(s => s.count)
+    const { count, openDrawer } = useCartStore()
     const { user, logout } = useAuthStore()
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
@@ -30,7 +30,10 @@ export default function Navbar() {
                 <Link to="/servicios" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Servicios</Link>
                 <Link to="/agendar" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Agendar</Link>
                 {user && (
-                    <Link to="/mis-citas" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis citas</Link>
+                    <Link to="/mis-citas"   onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis citas</Link>
+                )}
+                {user && (
+                    <Link to="/mis-pedidos" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis pedidos</Link>
                 )}
                 <Link to="/tienda" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
                 <Link to="/talleres" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
@@ -38,7 +41,7 @@ export default function Navbar() {
                     <Link to="/admin" onClick={close} style={{ fontSize: 14, color: '#C2185B', fontWeight: 500 }}>Admin</Link>
                 )}
 
-                <Link to="/tienda" onClick={close} style={{ position: 'relative', color: '#6B4050' }}>
+                <button onClick={() => { openDrawer(); close() }} style={{ position: 'relative', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 18, lineHeight: 1, color: '#6B4050', padding: '2px 4px' }}>
                     🛒
                     {count > 0 && (
                         <span style={{
@@ -49,7 +52,7 @@ export default function Navbar() {
                             fontWeight: 500,
                         }}>{count}</span>
                     )}
-                </Link>
+                </button>
 
                 {user ? (
                     <button onClick={() => { logout(); close() }} style={{

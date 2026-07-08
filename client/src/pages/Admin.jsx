@@ -2,44 +2,80 @@ import { useState, useEffect } from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices, createService, updateService, deleteService } from '../api/services'
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
+import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '../api/products'
+import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 
-// ─── Shared ──────────────────────────────────────────────────────
-const CATEGORIES = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
-const EMPTY_SVC = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false }
+// ─── Constantes ──────────────────────────────────────────────────────────────
+const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
+const PROD_CATS = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
+const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false }
+const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', image: '' }
 
 const BOOKING_STATUS = {
-    pending: { label: 'Pendiente', bg: '#FFF8E1', color: '#E65100' },
+    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
     confirmed: { label: 'Confirmada', bg: '#E8F5E9', color: '#2E7D32' },
     completed: { label: 'Completada', bg: '#E3F2FD', color: '#1565C0' },
-    cancelled: { label: 'Cancelada', bg: '#F5F5F5', color: '#757575' },
+    cancelled: { label: 'Cancelada',  bg: '#F5F5F5', color: '#757575' },
+}
+const ORDER_STATUS = {
+    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
+    paid:      { label: 'Pagado',     bg: '#E8F5E9', color: '#2E7D32' },
+    shipped:   { label: 'En camino',  bg: '#E3F2FD', color: '#1565C0' },
+    delivered: { label: 'Entregado',  bg: '#F3E5F5', color: '#6A1B9A' },
+    cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
 }
 
-const inputSt = { width: '100%', padding: '9px 12px', border: '1px solid #F0D0DC', borderRadius: 8, fontSize: 13, fontFamily: 'Inter, sans-serif', outline: 'none', background: '#fff', color: '#2D1520', boxSizing: 'border-box' }
+// ─── Estilos reutilizables ───────────────────────────────────────────────────
+const inputSt = {
+    width: '100%', padding: '9px 12px', border: '1px solid #F0D0DC',
+    borderRadius: 8, fontSize: 13, fontFamily: 'Inter, sans-serif',
+    outline: 'none', background: '#fff', color: '#2D1520', boxSizing: 'border-box',
+}
 const labelSt = { fontSize: 12, color: '#6B4050', marginBottom: 4, display: 'block' }
-const tabBtn = (active) => ({ padding: '8px 20px', borderRadius: 20, fontSize: 13, border: '1px solid', borderColor: active ? '#C2185B' : '#F0D0DC', background: active ? '#C2185B' : '#fff', color: active ? '#fff' : '#6B4050', cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s' })
+const tabBtn  = (active) => ({
+    padding: '8px 20px', borderRadius: 20, fontSize: 13, border: '1px solid',
+    borderColor: active ? '#C2185B' : '#F0D0DC',
+    background:  active ? '#C2185B' : '#fff',
+    color:       active ? '#fff'    : '#6B4050',
+    cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s',
+})
 
+// ─────────────────────────────────────────────────────────────────────────────
 export default function Admin() {
     const { user, logout } = useAuthStore()
-    const [tab, setTab] = useState('servicios')  // 'servicios' | 'citas'
+    const [tab, setTab] = useState('servicios') // servicios | citas | productos | pedidos
 
-    // ── Servicios state ──────────────────────────────────────────
+    // ── Servicios ────────────────────────────────────────────────────────────
     const [services, setServices] = useState([])
-    const [svcForm, setSvcForm] = useState(EMPTY_SVC)
-    const [editing, setEditing] = useState(null)
-    const [svcLoad, setSvcLoad] = useState(false)
+    const [svcForm, setSvcForm]   = useState(EMPTY_SVC)
+    const [editing, setEditing]   = useState(null)
+    const [svcLoad, setSvcLoad]   = useState(false)
     const [fetching, setFetching] = useState(true)
 
-    // ── Citas state ──────────────────────────────────────────────
-    const [bookings, setBookings] = useState([])
-    const [bFilter, setBFilter] = useState('all')
+    // ── Citas ────────────────────────────────────────────────────────────────
+    const [bookings, setBookings]   = useState([])
+    const [bFilter, setBFilter]     = useState('all')
     const [bFetching, setBFetching] = useState(false)
     const [updatingId, setUpdatingId] = useState(null)
 
-    // ── Toast ────────────────────────────────────────────────────
+    // ── Productos ────────────────────────────────────────────────────────────
+    const [products, setProducts]   = useState([])
+    const [prodForm, setProdForm]   = useState(EMPTY_PROD)
+    const [editProd, setEditProd]   = useState(null)
+    const [prodLoad, setProdLoad]   = useState(false)
+    const [prodFetching, setProdFetching] = useState(false)
+
+    // ── Pedidos ──────────────────────────────────────────────────────────────
+    const [orders, setOrders]     = useState([])
+    const [oFilter, setOFilter]   = useState('all')
+    const [oFetching, setOFetching] = useState(false)
+    const [updatingOId, setUpdatingOId] = useState(null)
+
+    // ── Toast ────────────────────────────────────────────────────────────────
     const [toast, setToast] = useState('')
     const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
 
-    // ── Load services ────────────────────────────────────────────
+    // ── Carga inicial ────────────────────────────────────────────────────────
     useEffect(() => {
         setFetching(true)
         fetchServices()
@@ -48,33 +84,39 @@ export default function Admin() {
             .finally(() => setFetching(false))
     }, [])
 
-    // ── Load bookings when tab changes ───────────────────────────
     useEffect(() => {
-        if (tab !== 'citas') return
-        setBFetching(true)
-        fetchAllBookings()
-            .then(({ data }) => setBookings(data))
-            .catch(() => showToast('Error al cargar citas'))
-            .finally(() => setBFetching(false))
+        if (tab === 'citas' && bookings.length === 0) {
+            setBFetching(true)
+            fetchAllBookings()
+                .then(({ data }) => setBookings(data))
+                .catch(() => showToast('Error al cargar citas'))
+                .finally(() => setBFetching(false))
+        }
+        if (tab === 'productos' && products.length === 0) {
+            setProdFetching(true)
+            fetchAllProducts()
+                .then(({ data }) => setProducts(data))
+                .catch(() => showToast('Error al cargar productos'))
+                .finally(() => setProdFetching(false))
+        }
+        if (tab === 'pedidos' && orders.length === 0) {
+            setOFetching(true)
+            fetchAllOrders()
+                .then(({ data }) => setOrders(data))
+                .catch(() => showToast('Error al cargar pedidos'))
+                .finally(() => setOFetching(false))
+        }
     }, [tab])
 
-    // ── Services CRUD ────────────────────────────────────────────
+    // ── CRUD Servicios ───────────────────────────────────────────────────────
     const handleSvc = (e) => {
         const { name, value, type, checked } = e.target
         setSvcForm(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
     }
-
-    const startEdit = (svc) => {
-        setEditing(svc._id)
-        setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price, duration: svc.duration, category: svc.category, featured: svc.featured })
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-    }
-
-    const cancelEdit = () => { setEditing(null); setSvcForm(EMPTY_SVC) }
-
+    const startEditSvc  = (svc) => { setEditing(svc._id); setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price, duration: svc.duration, category: svc.category, featured: svc.featured }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const cancelEditSvc = () => { setEditing(null); setSvcForm(EMPTY_SVC) }
     const submitSvc = async (e) => {
-        e.preventDefault()
-        setSvcLoad(true)
+        e.preventDefault(); setSvcLoad(true)
         const payload = { ...svcForm, price: Number(svcForm.price), duration: Number(svcForm.duration) }
         try {
             if (editing) {
@@ -86,25 +128,18 @@ export default function Admin() {
                 setServices(s => [...s, data])
                 showToast('Servicio creado ✓')
             }
-            cancelEdit()
-        } catch (err) {
-            showToast(err.response?.data?.message || 'Error al guardar')
-        } finally {
-            setSvcLoad(false)
-        }
+            cancelEditSvc()
+        } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
+        finally { setSvcLoad(false) }
+    }
+    const handleDeleteSvc = async (id, name) => {
+        if (!window.confirm(`¿Desactivar "${name}"?`)) return
+        try { await deleteService(id); setServices(s => s.filter(x => x._id !== id)); showToast('Servicio desactivado ✓') }
+        catch { showToast('Error al eliminar') }
     }
 
-    const handleDelete = async (id, name) => {
-        if (!window.confirm(`¿Desactivar el servicio "${name}"?`)) return
-        try {
-            await deleteService(id)
-            setServices(s => s.filter(x => x._id !== id))
-            showToast('Servicio desactivado ✓')
-        } catch { showToast('Error al eliminar') }
-    }
-
-    // ── Bookings actions ─────────────────────────────────────────
-    const changeStatus = async (id, status) => {
+    // ── Acciones Citas ───────────────────────────────────────────────────────
+    const changeBookingStatus = async (id, status) => {
         setUpdatingId(id)
         try {
             const { data } = await updateBookingStatus(id, status)
@@ -114,18 +149,65 @@ export default function Admin() {
         finally { setUpdatingId(null) }
     }
 
-    const filteredBookings = bFilter === 'all'
-        ? bookings
-        : bookings.filter(b => b.status === bFilter)
+    // ── CRUD Productos ───────────────────────────────────────────────────────
+    const handleProd = (e) => setProdForm(f => ({ ...f, [e.target.name]: e.target.value }))
+    const startEditProd  = (p) => { setEditProd(p._id); setProdForm({ name: p.name, description: p.description || '', price: p.price, stock: p.stock, brand: p.brand || '', category: p.category || 'esmaltes', image: p.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const cancelEditProd = () => { setEditProd(null); setProdForm(EMPTY_PROD) }
+    const submitProd = async (e) => {
+        e.preventDefault(); setProdLoad(true)
+        const payload = { ...prodForm, price: Number(prodForm.price), stock: Number(prodForm.stock) }
+        try {
+            if (editProd) {
+                const { data } = await updateProduct(editProd, payload)
+                setProducts(p => p.map(x => x._id === editProd ? data : x))
+                showToast('Producto actualizado ✓')
+            } else {
+                const { data } = await createProduct(payload)
+                setProducts(p => [...p, data])
+                showToast('Producto creado ✓')
+            }
+            cancelEditProd()
+        } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
+        finally { setProdLoad(false) }
+    }
+    const handleToggleProd = async (id, name, active) => {
+        if (!window.confirm(`¿${active ? 'Desactivar' : 'Activar'} "${name}"?`)) return
+        try {
+            const { data } = await toggleProduct(id)
+            setProducts(p => p.map(x => x._id === id ? data : x))
+            showToast(`Producto ${data.active ? 'activado' : 'desactivado'} ✓`)
+        } catch { showToast('Error al cambiar estado') }
+    }
+
+    // ── Acciones Pedidos ─────────────────────────────────────────────────────
+    const changeOrderStatus = async (id, status) => {
+        setUpdatingOId(id)
+        try {
+            const { data } = await updateOrderStatus(id, status)
+            setOrders(o => o.map(x => x._id === id ? data : x))
+            showToast(`Pedido ${ORDER_STATUS[status]?.label.toLowerCase()} ✓`)
+        } catch { showToast('Error al actualizar pedido') }
+        finally { setUpdatingOId(null) }
+    }
+
+    // ── Filtros ──────────────────────────────────────────────────────────────
+    const filteredBookings = bFilter === 'all' ? bookings : bookings.filter(b => b.status === bFilter)
+    const filteredOrders   = oFilter === 'all' ? orders   : orders.filter(o => o.status === oFilter)
 
     const bStats = {
-        total: bookings.length,
-        pending: bookings.filter(b => b.status === 'pending').length,
+        total:     bookings.length,
+        pending:   bookings.filter(b => b.status === 'pending').length,
         confirmed: bookings.filter(b => b.status === 'confirmed').length,
-        today: bookings.filter(b => {
+        today:     bookings.filter(b => {
             const d = new Date(b.date); const t = new Date()
             return d.getUTCDate() === t.getDate() && d.getUTCMonth() === t.getMonth() && d.getUTCFullYear() === t.getFullYear()
         }).length,
+    }
+    const oStats = {
+        total:   orders.length,
+        pending: orders.filter(o => o.status === 'pending').length,
+        paid:    orders.filter(o => o.status === 'paid').length,
+        shipped: orders.filter(o => o.status === 'shipped').length,
     }
 
     return (
@@ -154,15 +236,16 @@ export default function Admin() {
             <div style={{ padding: '2rem', maxWidth: 1100, margin: '0 auto' }}>
 
                 {/* Tabs */}
-                <div style={{ display: 'flex', gap: 8, marginBottom: '2rem' }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: '2rem', flexWrap: 'wrap' }}>
                     <button onClick={() => setTab('servicios')} style={tabBtn(tab === 'servicios')}>✂️ Servicios</button>
-                    <button onClick={() => setTab('citas')} style={tabBtn(tab === 'citas')}>📅 Citas</button>
+                    <button onClick={() => setTab('citas')}     style={tabBtn(tab === 'citas')}>📅 Citas</button>
+                    <button onClick={() => setTab('productos')} style={tabBtn(tab === 'productos')}>🛍️ Productos</button>
+                    <button onClick={() => setTab('pedidos')}   style={tabBtn(tab === 'pedidos')}>📦 Pedidos</button>
                 </div>
 
                 {/* ════════ SERVICIOS ════════ */}
                 {tab === 'servicios' && (
                     <>
-                        {/* Stats */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
                             {[
                                 { label: 'Servicios activos', value: services.length },
@@ -183,20 +266,15 @@ export default function Admin() {
                                     Servicios ({services.length})
                                 </h2>
                                 {fetching ? (
-                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando servicios...</p>
+                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
                                 ) : services.length === 0 ? (
                                     <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
-                                        No hay servicios aún. Crea el primero con el formulario.
+                                        No hay servicios. Crea el primero con el formulario.
                                     </div>
                                 ) : (
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                                         {services.map(svc => (
-                                            <div key={svc._id} style={{
-                                                background: editing === svc._id ? '#FFF0F5' : '#fff',
-                                                border: `1px solid ${editing === svc._id ? '#C2185B' : '#F0D0DC'}`,
-                                                borderRadius: 12, padding: '1rem 1.25rem',
-                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                            }}>
+                                            <div key={svc._id} style={{ background: editing === svc._id ? '#FFF0F5' : '#fff', border: `1px solid ${editing === svc._id ? '#C2185B' : '#F0D0DC'}`, borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                                                         <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{svc.name}</span>
@@ -209,8 +287,8 @@ export default function Admin() {
                                                     </div>
                                                 </div>
                                                 <div style={{ display: 'flex', gap: 8 }}>
-                                                    <button onClick={() => startEdit(svc)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
-                                                    <button onClick={() => handleDelete(svc._id, svc.name)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Desactivar</button>
+                                                    <button onClick={() => startEditSvc(svc)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
+                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Desactivar</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -218,36 +296,19 @@ export default function Admin() {
                                 )}
                             </div>
 
-                            {/* Formulario */}
+                            {/* Form servicio */}
                             <div style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
                                 <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
                                     {editing ? 'Editar servicio' : 'Nuevo servicio'}
                                 </h2>
                                 <form onSubmit={submitSvc} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    <div>
-                                        <label style={labelSt}>Nombre *</label>
-                                        <input name="name" value={svcForm.name} onChange={handleSvc} style={inputSt} placeholder="Manicure Gel" required />
-                                    </div>
-                                    <div>
-                                        <label style={labelSt}>Descripción</label>
-                                        <input name="description" value={svcForm.description} onChange={handleSvc} style={inputSt} placeholder="Breve descripción" />
-                                    </div>
+                                    <div><label style={labelSt}>Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} style={inputSt} placeholder="Manicure Gel" required /></div>
+                                    <div><label style={labelSt}>Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} style={inputSt} placeholder="Breve descripción" /></div>
                                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div>
-                                            <label style={labelSt}>Precio ($) *</label>
-                                            <input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} style={inputSt} placeholder="25" required />
-                                        </div>
-                                        <div>
-                                            <label style={labelSt}>Duración (min) *</label>
-                                            <input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} style={inputSt} placeholder="60" required />
-                                        </div>
+                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} style={inputSt} placeholder="25" required /></div>
+                                        <div><label style={labelSt}>Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} style={inputSt} placeholder="60" required /></div>
                                     </div>
-                                    <div>
-                                        <label style={labelSt}>Categoría</label>
-                                        <select name="category" value={svcForm.category} onChange={handleSvc} style={inputSt}>
-                                            {CATEGORIES.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
-                                        </select>
-                                    </div>
+                                    <div><label style={labelSt}>Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} style={inputSt}>{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
                                     <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#6B4050', cursor: 'pointer' }}>
                                         <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} style={{ accentColor: '#C2185B', width: 16, height: 16 }} />
                                         Marcar como destacado
@@ -256,11 +317,7 @@ export default function Admin() {
                                         <button type="submit" disabled={svcLoad} style={{ flex: 1, background: svcLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: svcLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
                                             {svcLoad ? 'Guardando...' : editing ? 'Guardar cambios' : 'Crear servicio'}
                                         </button>
-                                        {editing && (
-                                            <button type="button" onClick={cancelEdit} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-                                                Cancelar
-                                            </button>
-                                        )}
+                                        {editing && <button type="button" onClick={cancelEditSvc} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
@@ -271,13 +328,12 @@ export default function Admin() {
                 {/* ════════ CITAS ════════ */}
                 {tab === 'citas' && (
                     <>
-                        {/* Stats citas */}
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
                             {[
-                                { label: 'Total citas', value: bStats.total, color: '#C2185B' },
-                                { label: 'Pendientes', value: bStats.pending, color: '#E65100' },
-                                { label: 'Confirmadas', value: bStats.confirmed, color: '#2E7D32' },
-                                { label: 'Hoy', value: bStats.today, color: '#1565C0' },
+                                { label: 'Total citas',  value: bStats.total,     color: '#C2185B' },
+                                { label: 'Pendientes',   value: bStats.pending,   color: '#E65100' },
+                                { label: 'Confirmadas',  value: bStats.confirmed, color: '#2E7D32' },
+                                { label: 'Hoy',          value: bStats.today,     color: '#1565C0' },
                             ].map(st => (
                                 <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
                                     <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
@@ -286,7 +342,6 @@ export default function Admin() {
                             ))}
                         </div>
 
-                        {/* Filtro status */}
                         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
                             {[['all', 'Todas'], ['pending', 'Pendientes'], ['confirmed', 'Confirmadas'], ['completed', 'Completadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
                                 <button key={key} onClick={() => setBFilter(key)} style={tabBtn(bFilter === key)}>{lbl}</button>
@@ -303,21 +358,16 @@ export default function Admin() {
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                                 {filteredBookings.map(b => {
                                     const st = BOOKING_STATUS[b.status] || BOOKING_STATUS.pending
-                                    const dateStr = new Date(b.date).toLocaleDateString('es-ES', {
-                                        weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC',
-                                    })
+                                    const dateStr = new Date(b.date).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
                                     return (
                                         <div key={b._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                                                {/* Info */}
                                                 <div style={{ flex: 1 }}>
                                                     <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
                                                         <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{b.client?.name}</span>
-                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>
-                                                            {st.label}
-                                                        </span>
+                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
                                                     </div>
-                                                    <div style={{ fontSize: 13, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 6 }}>
+                                                    <div style={{ fontSize: 13, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 4 }}>
                                                         <span>📅 {dateStr} · {b.timeSlot}</span>
                                                         <span>💅 {b.service?.name}</span>
                                                         {b.service?.price && <span style={{ color: '#C2185B' }}>${b.service.price}</span>}
@@ -328,26 +378,172 @@ export default function Admin() {
                                                     </div>
                                                     {b.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 6, fontStyle: 'italic' }}>"{b.notes}"</p>}
                                                 </div>
-                                                {/* Acciones */}
                                                 <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-                                                    {b.status === 'pending' && (
-                                                        <button onClick={() => changeStatus(b._id, 'confirmed')} disabled={updatingId === b._id}
-                                                            style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-                                                            Confirmar
-                                                        </button>
-                                                    )}
-                                                    {b.status === 'confirmed' && (
-                                                        <button onClick={() => changeStatus(b._id, 'completed')} disabled={updatingId === b._id}
-                                                            style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-                                                            Completar
-                                                        </button>
-                                                    )}
-                                                    {['pending', 'confirmed'].includes(b.status) && (
-                                                        <button onClick={() => changeStatus(b._id, 'cancelled')} disabled={updatingId === b._id}
-                                                            style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
-                                                            Cancelar
-                                                        </button>
-                                                    )}
+                                                    {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Confirmar</button>}
+                                                    {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Completar</button>}
+                                                    {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {/* ════════ PRODUCTOS ════════ */}
+                {tab === 'productos' && (
+                    <>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
+                            {[
+                                { label: 'Total productos', value: products.length },
+                                { label: 'Activos',         value: products.filter(p => p.active).length },
+                                { label: 'Stock bajo (<5)', value: products.filter(p => p.stock < 5 && p.active).length, warn: true },
+                            ].map(st => (
+                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.25rem', textAlign: 'center' }}>
+                                    <div style={{ fontSize: 28, fontWeight: 700, color: st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
+                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+                            {/* Lista */}
+                            <div>
+                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                                    Productos ({products.length})
+                                </h2>
+                                {prodFetching ? (
+                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
+                                ) : products.length === 0 ? (
+                                    <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                        No hay productos. Crea el primero con el formulario.
+                                    </div>
+                                ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                        {products.map(p => (
+                                            <div key={p._id} style={{
+                                                background: editProd === p._id ? '#FFF0F5' : p.active ? '#fff' : '#fafafa',
+                                                border: `1px solid ${editProd === p._id ? '#C2185B' : '#F0D0DC'}`,
+                                                borderRadius: 12, padding: '1rem 1.25rem',
+                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                opacity: p.active ? 1 : 0.6,
+                                            }}>
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                                        <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{p.name}</span>
+                                                        {!p.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#F5F5F5', color: '#9E7080' }}>Inactivo</span>}
+                                                        {p.stock < 5 && p.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#FFF3E0', color: '#E65100' }}>Stock: {p.stock}</span>}
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#6B4050' }}>
+                                                        <span style={{ color: '#C2185B', fontWeight: 500 }}>${p.price}</span>
+                                                        <span>Stock: {p.stock}</span>
+                                                        {p.brand && <span>{p.brand}</span>}
+                                                        <span style={{ textTransform: 'capitalize' }}>{p.category}</span>
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: 8 }}>
+                                                    <button onClick={() => startEditProd(p)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
+                                                    <button onClick={() => handleToggleProd(p._id, p.name, p.active)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                                        {p.active ? 'Desactivar' : 'Activar'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Form producto */}
+                            <div style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
+                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
+                                    {editProd ? 'Editar producto' : 'Nuevo producto'}
+                                </h2>
+                                <form onSubmit={submitProd} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                                    <div><label style={labelSt}>Nombre *</label><input name="name" value={prodForm.name} onChange={handleProd} style={inputSt} placeholder="Esmalte Gel Rojo" required /></div>
+                                    <div><label style={labelSt}>Descripción</label><input name="description" value={prodForm.description} onChange={handleProd} style={inputSt} placeholder="Breve descripción" /></div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={prodForm.price} onChange={handleProd} style={inputSt} placeholder="12.99" required /></div>
+                                        <div><label style={labelSt}>Stock *</label><input name="stock" type="number" min="0" value={prodForm.stock} onChange={handleProd} style={inputSt} placeholder="20" required /></div>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                        <div><label style={labelSt}>Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} style={inputSt} placeholder="OPI" /></div>
+                                        <div><label style={labelSt}>Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} style={inputSt}>{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    </div>
+                                    <div><label style={labelSt}>URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} style={inputSt} placeholder="https://..." /></div>
+                                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                                        <button type="submit" disabled={prodLoad} style={{ flex: 1, background: prodLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: prodLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                            {prodLoad ? 'Guardando...' : editProd ? 'Guardar cambios' : 'Crear producto'}
+                                        </button>
+                                        {editProd && <button type="button" onClick={cancelEditProd} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </>
+                )}
+
+                {/* ════════ PEDIDOS ════════ */}
+                {tab === 'pedidos' && (
+                    <>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                            {[
+                                { label: 'Total pedidos', value: oStats.total,   color: '#C2185B' },
+                                { label: 'Pendientes',    value: oStats.pending, color: '#E65100' },
+                                { label: 'Pagados',       value: oStats.paid,    color: '#2E7D32' },
+                                { label: 'En camino',     value: oStats.shipped, color: '#1565C0' },
+                            ].map(st => (
+                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
+                                    <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
+                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                            {[['all', 'Todos'], ['pending', 'Pendientes'], ['paid', 'Pagados'], ['shipped', 'En camino'], ['delivered', 'Entregados'], ['cancelled', 'Cancelados']].map(([key, lbl]) => (
+                                <button key={key} onClick={() => setOFilter(key)} style={tabBtn(oFilter === key)}>{lbl}</button>
+                            ))}
+                        </div>
+
+                        {oFetching ? (
+                            <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando pedidos...</p>
+                        ) : filteredOrders.length === 0 ? (
+                            <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                No hay pedidos en esta categoría.
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {filteredOrders.map(o => {
+                                    const st = ORDER_STATUS[o.status] || ORDER_STATUS.pending
+                                    const dateStr = new Date(o.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
+                                    return (
+                                        <div key={o._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{o.client?.name}</span>
+                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
+                                                        <span style={{ fontSize: 12, color: '#9E7080' }}>{dateStr}</span>
+                                                    </div>
+                                                    <div style={{ fontSize: 12, color: '#6B4050', marginBottom: 6 }}>
+                                                        {o.items.map((i, idx) => (
+                                                            <span key={idx}>{i.name} ×{i.qty}{idx < o.items.length - 1 ? ', ' : ''}</span>
+                                                        ))}
+                                                    </div>
+                                                    <div style={{ fontSize: 12, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                                                        {o.client?.phone && <span>📱 {o.client.phone}</span>}
+                                                        {o.client?.email && <span>✉️ {o.client.email}</span>}
+                                                        <span style={{ color: '#C2185B', fontWeight: 600 }}>Total: ${o.total.toFixed(2)}</span>
+                                                    </div>
+                                                    {o.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 4, fontStyle: 'italic' }}>"{o.notes}"</p>}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
+                                                    {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar pagado</button>}
+                                                    {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar enviado</button>}
+                                                    {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} style={{ background: '#F3E5F5', border: '1px solid #CE93D8', color: '#6A1B9A', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar entregado</button>}
+                                                    {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
