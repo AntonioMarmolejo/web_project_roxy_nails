@@ -5,6 +5,7 @@ import { useAuthStore } from './store/useAuthStore'
 import Home           from './pages/Home'
 import Services       from './pages/Services'
 import Booking        from './pages/Booking'
+import MyBookings     from './pages/MyBookings'
 import Shop           from './pages/Shop'
 import Workshops      from './pages/Workshops'
 import Admin          from './pages/Admin'
@@ -28,7 +29,12 @@ function App() {
         <Route path="/agendar"   element={<Booking />} />
         <Route path="/tienda"    element={<Shop />} />
         <Route path="/talleres"  element={<Workshops />} />
-        <Route path="/login"     element={<Login />} />
+        <Route path="/login"      element={<Login />} />
+        <Route path="/mis-citas"  element={
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        } />
         <Route path="/admin" element={
           <ProtectedRoute adminRequired>
             <Admin />

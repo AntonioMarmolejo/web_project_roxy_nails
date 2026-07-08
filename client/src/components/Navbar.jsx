@@ -27,10 +27,13 @@ export default function Navbar() {
 
       {/* Links — desktop inline, mobile dropdown */}
       <div className={`nav-links${open ? ' is-open' : ''}`}>
-        <Link to="/servicios" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Servicios</Link>
-        <Link to="/agendar"   onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Agendar</Link>
-        <Link to="/tienda"    onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
-        <Link to="/talleres"  onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
+        <Link to="/servicios"  onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Servicios</Link>
+        <Link to="/agendar"    onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Agendar</Link>
+        {user && (
+          <Link to="/mis-citas" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis citas</Link>
+        )}
+        <Link to="/tienda"     onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
+        <Link to="/talleres"   onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
         {user?.role === 'admin' && (
           <Link to="/admin" onClick={close} style={{ fontSize: 14, color: '#C2185B', fontWeight: 500 }}>Admin</Link>
         )}

@@ -23,3 +23,16 @@ export const adminOnly = (req, res, next) => {
   }
   next()
 }
+
+// Adjunta req.user si hay token, pero no bloquea si no hay token
+export const optionalProtect = async (req, _res, next) => {
+  const token = req.headers.authorization?.startsWith('Bearer ')
+    ? req.headers.authorization.split(' ')[1]
+    : null
+  if (!token) return next()
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    req.user = await User.findById(decoded.id)
+  } catch {}
+  next()
+}
