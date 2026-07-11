@@ -34,7 +34,7 @@ function isPastOrSunday(year, month, day) {
 function Stepper({ step }) {
     const labels = ['Servicio', 'Fecha', 'Horario', 'Datos']
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
+        <div className="rn-stepper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2.5rem' }}>
             {labels.map((label, i) => {
                 const n = i + 1
                 const done = step > n
@@ -42,22 +42,22 @@ function Stepper({ step }) {
                 return (
                     <div key={n} style={{ display: 'flex', alignItems: 'center' }}>
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                            <div style={{
-                                width: 38, height: 38, borderRadius: '50%',
+                            <div className="rn-stepper-circle" style={{
+                                borderRadius: '50%',
                                 background: done || active ? '#C2185B' : '#F0D0DC',
                                 color: done || active ? '#fff' : '#9E7080',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: 14, fontWeight: 600,
+                                fontWeight: 600,
                                 boxShadow: active ? '0 0 0 4px rgba(194,24,91,0.2)' : 'none',
                                 transition: 'all 0.25s',
                             }}>{done ? '✓' : n}</div>
-                            <span style={{ fontSize: 11, color: active ? '#C2185B' : '#9E7080', fontWeight: active ? 600 : 400 }}>
+                            <span className="rn-stepper-label" style={{ color: active ? '#C2185B' : '#9E7080', fontWeight: active ? 600 : 400 }}>
                                 {label}
                             </span>
                         </div>
                         {i < 3 && (
-                            <div style={{
-                                width: 52, height: 2, margin: '0 4px', marginBottom: 22,
+                            <div className="rn-stepper-line" style={{
+                                height: 2, marginBottom: 22,
                                 background: step > n ? '#C2185B' : '#F0D0DC',
                                 transition: 'background 0.3s',
                             }} />

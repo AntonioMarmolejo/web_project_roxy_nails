@@ -128,6 +128,30 @@ a {
     margin-bottom: 1.5rem;
 }
 
+/* Checkout */
+.rn-order-summary {
+    /* sticky by default on desktop; disabled on tablet/mobile below */
+}
+
+/* Admin */
+.rn-admin-form-panel {
+    /* sticky by default on desktop; disabled on tablet/mobile below */
+}
+
+/* Booking stepper */
+.rn-stepper-circle {
+    width: 38px;
+    height: 38px;
+    font-size: 14px;
+}
+.rn-stepper-line {
+    width: 52px;
+    margin: 0 4px;
+}
+.rn-stepper-label {
+    font-size: 11px;
+}
+
 /* ================================================================
    TABLET  ≤ 900px
    ================================================================ */
@@ -139,6 +163,22 @@ a {
     .rn-footer-inner {
         grid-template-columns: 1fr 1fr;
     }
+
+    /* Checkout: stack form + summary, summary no longer sticky */
+    .rn-checkout-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .rn-order-summary {
+        position: static !important;
+    }
+
+    /* Admin: stack list + form, form no longer sticky */
+    .rn-admin-split {
+        grid-template-columns: 1fr !important;
+    }
+    .rn-admin-form-panel {
+        position: static !important;
+    }
 }
 
 /* ================================================================
@@ -146,6 +186,9 @@ a {
    ================================================================ */
 @media (max-width: 640px) {
     /* --- Navbar --- */
+    .rn-navbar {
+        padding: 0.85rem 1.25rem !important;
+    }
     .nav-links {
         display: none;
         position: absolute;
@@ -227,5 +270,30 @@ a {
     .btn-primary,
     .btn-ghost {
         width: 100%;
+    }
+
+    /* --- Admin stat grids: 2 columns --- */
+    .rn-admin-stats-3,
+    .rn-admin-stats-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+/* ================================================================
+   SMALL MOBILE  ≤ 480px — narrowest common phones (iPhone SE, etc.)
+   ================================================================ */
+@media (max-width: 480px) {
+    /* Shrink booking stepper so 4 steps fit without horizontal scroll */
+    .rn-stepper-circle {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+    .rn-stepper-line {
+        width: 18px;
+        margin: 0 2px;
+    }
+    .rn-stepper-label {
+        font-size: 9px;
     }
 }

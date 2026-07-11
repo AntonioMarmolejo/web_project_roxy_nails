@@ -122,7 +122,7 @@ export default function Checkout() {
                 </h1>
             </div>
 
-            <div style={{
+            <div className="rn-checkout-grid" style={{
                 maxWidth: 900, margin: '0 auto', padding: '2rem',
                 display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem',
                 alignItems: 'start',
@@ -182,7 +182,7 @@ export default function Checkout() {
                 </form>
 
                 {/* Resumen del pedido */}
-                <div style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
+                <div className="rn-order-summary" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
                     <h2 style={{ fontSize: 16, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
                         Tu pedido ({items.length})
                     </h2>

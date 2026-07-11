@@ -221,7 +221,7 @@ export default function Admin() {
             )}
 
             {/* Header */}
-            <div style={{ background: '#fff', borderBottom: '1px solid #F0D0DC', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ background: '#fff', borderBottom: '1px solid #F0D0DC', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                 <div>
                     <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, color: '#C2185B', fontWeight: 600 }}>
                         Panel de administración
@@ -246,7 +246,7 @@ export default function Admin() {
                 {/* ════════ SERVICIOS ════════ */}
                 {tab === 'servicios' && (
                     <>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
                             {[
                                 { label: 'Servicios activos', value: services.length },
                                 { label: 'Destacados', value: services.filter(s => s.featured).length },
@@ -259,7 +259,7 @@ export default function Admin() {
                             ))}
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
                             {/* Lista */}
                             <div>
                                 <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
@@ -274,7 +274,7 @@ export default function Admin() {
                                 ) : (
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                                         {services.map(svc => (
-                                            <div key={svc._id} style={{ background: editing === svc._id ? '#FFF0F5' : '#fff', border: `1px solid ${editing === svc._id ? '#C2185B' : '#F0D0DC'}`, borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                            <div key={svc._id} style={{ background: editing === svc._id ? '#FFF0F5' : '#fff', border: `1px solid ${editing === svc._id ? '#C2185B' : '#F0D0DC'}`, borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
                                                 <div>
                                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
                                                         <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{svc.name}</span>
@@ -297,7 +297,7 @@ export default function Admin() {
                             </div>
 
                             {/* Form servicio */}
-                            <div style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
+                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
                                 <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
                                     {editing ? 'Editar servicio' : 'Nuevo servicio'}
                                 </h2>
@@ -328,7 +328,7 @@ export default function Admin() {
                 {/* ════════ CITAS ════════ */}
                 {tab === 'citas' && (
                     <>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
                             {[
                                 { label: 'Total citas',  value: bStats.total,     color: '#C2185B' },
                                 { label: 'Pendientes',   value: bStats.pending,   color: '#E65100' },
@@ -395,7 +395,7 @@ export default function Admin() {
                 {/* ════════ PRODUCTOS ════════ */}
                 {tab === 'productos' && (
                     <>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
                             {[
                                 { label: 'Total productos', value: products.length },
                                 { label: 'Activos',         value: products.filter(p => p.active).length },
@@ -408,7 +408,7 @@ export default function Admin() {
                             ))}
                         </div>
 
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
                             {/* Lista */}
                             <div>
                                 <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
@@ -428,6 +428,7 @@ export default function Admin() {
                                                 border: `1px solid ${editProd === p._id ? '#C2185B' : '#F0D0DC'}`,
                                                 borderRadius: 12, padding: '1rem 1.25rem',
                                                 display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                flexWrap: 'wrap', gap: 10,
                                                 opacity: p.active ? 1 : 0.6,
                                             }}>
                                                 <div>
@@ -456,7 +457,7 @@ export default function Admin() {
                             </div>
 
                             {/* Form producto */}
-                            <div style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
+                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
                                 <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
                                     {editProd ? 'Editar producto' : 'Nuevo producto'}
                                 </h2>
@@ -487,7 +488,7 @@ export default function Admin() {
                 {/* ════════ PEDIDOS ════════ */}
                 {tab === 'pedidos' && (
                     <>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
                             {[
                                 { label: 'Total pedidos', value: oStats.total,   color: '#C2185B' },
                                 { label: 'Pendientes',    value: oStats.pending, color: '#E65100' },

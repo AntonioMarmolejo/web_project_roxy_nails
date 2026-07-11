@@ -11,7 +11,7 @@ export default function Navbar() {
     const close = () => setOpen(false)
 
     return (
-        <nav style={{
+        <nav className="rn-navbar" style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: '1rem 2rem', borderBottom: '1px solid #F0D0DC',
             background: '#fff', position: 'sticky', top: 0, zIndex: 100,
