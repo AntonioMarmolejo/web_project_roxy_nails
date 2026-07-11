@@ -9,7 +9,9 @@ import MyBookings     from './pages/MyBookings'
 import Shop           from './pages/Shop'
 import Checkout       from './pages/Checkout'
 import MyOrders       from './pages/MyOrders'
-import Workshops      from './pages/Workshops'
+import Workshops        from './pages/Workshops'
+import WorkshopCheckout from './pages/WorkshopCheckout'
+import MyWorkshops      from './pages/MyWorkshops'
 import Admin          from './pages/Admin'
 import Login          from './pages/Login'
 import Navbar         from './components/Navbar'
@@ -34,6 +36,7 @@ function App() {
                 <Route path="/tienda"      element={<Shop />} />
                 <Route path="/checkout"    element={<Checkout />} />
                 <Route path="/talleres"    element={<Workshops />} />
+                <Route path="/talleres/:id/inscripcion" element={<WorkshopCheckout />} />
                 <Route path="/login"       element={<Login />} />
                 <Route path="/mis-citas"   element={
                     <ProtectedRoute>
@@ -43,6 +46,11 @@ function App() {
                 <Route path="/mis-pedidos" element={
                     <ProtectedRoute>
                         <MyOrders />
+                    </ProtectedRoute>
+                } />
+                <Route path="/mis-talleres" element={
+                    <ProtectedRoute>
+                        <MyWorkshops />
                     </ProtectedRoute>
                 } />
                 <Route path="/admin" element={

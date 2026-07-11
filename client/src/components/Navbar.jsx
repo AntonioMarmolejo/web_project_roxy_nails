@@ -35,6 +35,9 @@ export default function Navbar() {
                 {user && (
                     <Link to="/mis-pedidos" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis pedidos</Link>
                 )}
+                {user && (
+                    <Link to="/mis-talleres" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis talleres</Link>
+                )}
                 <Link to="/tienda" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
                 <Link to="/talleres" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
                 {user?.role === 'admin' && (

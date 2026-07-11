@@ -4,12 +4,15 @@ import { fetchServices, createService, updateService, deleteService } from '../a
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
 import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '../api/products'
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
+import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
+import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
 const PROD_CATS = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
 const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false }
 const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', image: '' }
+const EMPTY_WS   = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
 
 const BOOKING_STATUS = {
     pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
@@ -22,6 +25,11 @@ const ORDER_STATUS = {
     paid:      { label: 'Pagado',     bg: '#E8F5E9', color: '#2E7D32' },
     shipped:   { label: 'En camino',  bg: '#E3F2FD', color: '#1565C0' },
     delivered: { label: 'Entregado',  bg: '#F3E5F5', color: '#6A1B9A' },
+    cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
+}
+const ENROLLMENT_STATUS = {
+    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
+    paid:      { label: 'Pagado',     bg: '#E8F5E9', color: '#2E7D32' },
     cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
 }
 
@@ -43,7 +51,7 @@ const tabBtn  = (active) => ({
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Admin() {
     const { user, logout } = useAuthStore()
-    const [tab, setTab] = useState('servicios') // servicios | citas | productos | pedidos
+    const [tab, setTab] = useState('servicios') // servicios | citas | productos | pedidos | talleres
 
     // ── Servicios ────────────────────────────────────────────────────────────
     const [services, setServices] = useState([])
@@ -70,6 +78,19 @@ export default function Admin() {
     const [oFilter, setOFilter]   = useState('all')
     const [oFetching, setOFetching] = useState(false)
     const [updatingOId, setUpdatingOId] = useState(null)
+
+    // ── Talleres ─────────────────────────────────────────────────────────────
+    const [workshops, setWorkshops] = useState([])
+    const [wsForm, setWsForm]       = useState(EMPTY_WS)
+    const [editWs, setEditWs]       = useState(null)
+    const [wsLoad, setWsLoad]       = useState(false)
+    const [wsFetching, setWsFetching] = useState(false)
+
+    // ── Inscripciones ────────────────────────────────────────────────────────
+    const [enrollments, setEnrollments]   = useState([])
+    const [enFilter, setEnFilter]         = useState('all')
+    const [enFetching, setEnFetching]     = useState(false)
+    const [updatingEnId, setUpdatingEnId] = useState(null)
 
     // ── Toast ────────────────────────────────────────────────────────────────
     const [toast, setToast] = useState('')
@@ -105,6 +126,20 @@ export default function Admin() {
                 .then(({ data }) => setOrders(data))
                 .catch(() => showToast('Error al cargar pedidos'))
                 .finally(() => setOFetching(false))
+        }
+        if (tab === 'talleres' && workshops.length === 0) {
+            setWsFetching(true)
+            fetchAllWorkshops()
+                .then(({ data }) => setWorkshops(data))
+                .catch(() => showToast('Error al cargar talleres'))
+                .finally(() => setWsFetching(false))
+        }
+        if (tab === 'talleres' && enrollments.length === 0) {
+            setEnFetching(true)
+            fetchAllEnrollments()
+                .then(({ data }) => setEnrollments(data))
+                .catch(() => showToast('Error al cargar inscripciones'))
+                .finally(() => setEnFetching(false))
         }
     }, [tab])
 
@@ -190,9 +225,51 @@ export default function Admin() {
         finally { setUpdatingOId(null) }
     }
 
+    // ── CRUD Talleres ────────────────────────────────────────────────────────
+    const handleWs = (e) => setWsForm(f => ({ ...f, [e.target.name]: e.target.value }))
+    const startEditWs  = (w) => { setEditWs(w._id); setWsForm({ title: w.title, description: w.description || '', date: w.date.slice(0, 10), duration: w.duration || '', modality: w.modality || 'presencial', price: w.price, spots: w.spots, image: w.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const cancelEditWs = () => { setEditWs(null); setWsForm(EMPTY_WS) }
+    const submitWs = async (e) => {
+        e.preventDefault(); setWsLoad(true)
+        const payload = { ...wsForm, price: Number(wsForm.price), spots: Number(wsForm.spots), duration: Number(wsForm.duration) }
+        try {
+            if (editWs) {
+                const { data } = await updateWorkshop(editWs, payload)
+                setWorkshops(w => w.map(x => x._id === editWs ? { ...data, spotsLeft: x.spotsLeft } : x))
+                showToast('Taller actualizado ✓')
+            } else {
+                const { data } = await createWorkshop(payload)
+                setWorkshops(w => [...w, { ...data, spotsLeft: data.spots }])
+                showToast('Taller creado ✓')
+            }
+            cancelEditWs()
+        } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
+        finally { setWsLoad(false) }
+    }
+    const handleToggleWs = async (id, title, active) => {
+        if (!window.confirm(`¿${active ? 'Desactivar' : 'Activar'} "${title}"?`)) return
+        try {
+            const { data } = await toggleWorkshop(id)
+            setWorkshops(w => w.map(x => x._id === id ? { ...x, active: data.active } : x))
+            showToast(`Taller ${data.active ? 'activado' : 'desactivado'} ✓`)
+        } catch { showToast('Error al cambiar estado') }
+    }
+
+    // ── Acciones Inscripciones ───────────────────────────────────────────────
+    const changeEnrollmentStatus = async (id, status) => {
+        setUpdatingEnId(id)
+        try {
+            const { data } = await updateEnrollmentStatus(id, status)
+            setEnrollments(e => e.map(x => x._id === id ? data : x))
+            showToast(`Inscripción ${ENROLLMENT_STATUS[status]?.label.toLowerCase()} ✓`)
+        } catch { showToast('Error al actualizar inscripción') }
+        finally { setUpdatingEnId(null) }
+    }
+
     // ── Filtros ──────────────────────────────────────────────────────────────
     const filteredBookings = bFilter === 'all' ? bookings : bookings.filter(b => b.status === bFilter)
     const filteredOrders   = oFilter === 'all' ? orders   : orders.filter(o => o.status === oFilter)
+    const filteredEnrollments = enFilter === 'all' ? enrollments : enrollments.filter(e => e.status === enFilter)
 
     const bStats = {
         total:     bookings.length,
@@ -208,6 +285,12 @@ export default function Admin() {
         pending: orders.filter(o => o.status === 'pending').length,
         paid:    orders.filter(o => o.status === 'paid').length,
         shipped: orders.filter(o => o.status === 'shipped').length,
+    }
+    const wsStats = {
+        total:    workshops.length,
+        active:   workshops.filter(w => w.active).length,
+        pendingEn: enrollments.filter(e => e.status === 'pending').length,
+        paidEn:    enrollments.filter(e => e.status === 'paid').length,
     }
 
     return (
@@ -241,6 +324,7 @@ export default function Admin() {
                     <button onClick={() => setTab('citas')}     style={tabBtn(tab === 'citas')}>📅 Citas</button>
                     <button onClick={() => setTab('productos')} style={tabBtn(tab === 'productos')}>🛍️ Productos</button>
                     <button onClick={() => setTab('pedidos')}   style={tabBtn(tab === 'pedidos')}>📦 Pedidos</button>
+                    <button onClick={() => setTab('talleres')}  style={tabBtn(tab === 'talleres')}>🎓 Talleres</button>
                 </div>
 
                 {/* ════════ SERVICIOS ════════ */}
@@ -545,6 +629,150 @@ export default function Admin() {
                                                     {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar enviado</button>}
                                                     {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} style={{ background: '#F3E5F5', border: '1px solid #CE93D8', color: '#6A1B9A', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar entregado</button>}
                                                     {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
+                    </>
+                )}
+
+                {/* ════════ TALLERES ════════ */}
+                {tab === 'talleres' && (
+                    <>
+                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                            {[
+                                { label: 'Talleres',              value: wsStats.total,     color: '#C2185B' },
+                                { label: 'Activos',               value: wsStats.active,    color: '#2E7D32' },
+                                { label: 'Inscripciones pend.',    value: wsStats.pendingEn, color: '#E65100' },
+                                { label: 'Inscripciones pagadas',  value: wsStats.paidEn,    color: '#1565C0' },
+                            ].map(st => (
+                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
+                                    <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
+                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start', marginBottom: '2.5rem' }}>
+                            {/* Lista de talleres */}
+                            <div>
+                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                                    Talleres ({workshops.length})
+                                </h2>
+                                {wsFetching ? (
+                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
+                                ) : workshops.length === 0 ? (
+                                    <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                        No hay talleres. Crea el primero con el formulario.
+                                    </div>
+                                ) : (
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                        {workshops.map(w => (
+                                            <div key={w._id} style={{
+                                                background: editWs === w._id ? '#FFF0F5' : w.active ? '#fff' : '#fafafa',
+                                                border: `1px solid ${editWs === w._id ? '#C2185B' : '#F0D0DC'}`,
+                                                borderRadius: 12, padding: '1rem 1.25rem',
+                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                                                opacity: w.active ? 1 : 0.6, flexWrap: 'wrap', gap: 10,
+                                            }}>
+                                                <div>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{w.title}</span>
+                                                        {!w.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#F5F5F5', color: '#9E7080' }}>Inactivo</span>}
+                                                    </div>
+                                                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#6B4050', flexWrap: 'wrap' }}>
+                                                        <span style={{ color: '#C2185B', fontWeight: 500 }}>${w.price}</span>
+                                                        <span>{new Date(w.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                                        <span style={{ textTransform: 'capitalize' }}>{w.modality}</span>
+                                                        <span>{w.spotsLeft}/{w.spots} cupos</span>
+                                                    </div>
+                                                </div>
+                                                <div style={{ display: 'flex', gap: 8 }}>
+                                                    <button onClick={() => startEditWs(w)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
+                                                    <button onClick={() => handleToggleWs(w._id, w.title, w.active)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                                        {w.active ? 'Desactivar' : 'Activar'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Form taller */}
+                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
+                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
+                                    {editWs ? 'Editar taller' : 'Nuevo taller'}
+                                </h2>
+                                <form onSubmit={submitWs} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
+                                    <div><label style={labelSt}>Título *</label><input name="title" value={wsForm.title} onChange={handleWs} style={inputSt} placeholder="Nail Art para principiantes" required /></div>
+                                    <div><label style={labelSt}>Descripción</label><input name="description" value={wsForm.description} onChange={handleWs} style={inputSt} placeholder="Breve descripción" /></div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                        <div><label style={labelSt}>Fecha *</label><input name="date" type="date" value={wsForm.date} onChange={handleWs} style={inputSt} required /></div>
+                                        <div><label style={labelSt}>Duración (h)</label><input name="duration" type="number" min="1" value={wsForm.duration} onChange={handleWs} style={inputSt} placeholder="3" /></div>
+                                    </div>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={wsForm.price} onChange={handleWs} style={inputSt} placeholder="35" required /></div>
+                                        <div><label style={labelSt}>Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} style={inputSt} placeholder="10" required /></div>
+                                    </div>
+                                    <div><label style={labelSt}>Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} style={inputSt}><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
+                                    <div><label style={labelSt}>URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} style={inputSt} placeholder="https://..." /></div>
+                                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                                        <button type="submit" disabled={wsLoad} style={{ flex: 1, background: wsLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: wsLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                            {wsLoad ? 'Guardando...' : editWs ? 'Guardar cambios' : 'Crear taller'}
+                                        </button>
+                                        {editWs && <button type="button" onClick={cancelEditWs} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        {/* Inscripciones */}
+                        <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                            Inscripciones ({enrollments.length})
+                        </h2>
+                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                            {[['all', 'Todas'], ['pending', 'Pendientes'], ['paid', 'Pagadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
+                                <button key={key} onClick={() => setEnFilter(key)} style={tabBtn(enFilter === key)}>{lbl}</button>
+                            ))}
+                        </div>
+
+                        {enFetching ? (
+                            <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando inscripciones...</p>
+                        ) : filteredEnrollments.length === 0 ? (
+                            <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                No hay inscripciones en esta categoría.
+                            </div>
+                        ) : (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                {filteredEnrollments.map(en => {
+                                    const st = ENROLLMENT_STATUS[en.status] || ENROLLMENT_STATUS.pending
+                                    const dateStr = new Date(en.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
+                                    return (
+                                        <div key={en._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
+                                                <div style={{ flex: 1 }}>
+                                                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
+                                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{en.client?.name}</span>
+                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
+                                                    </div>
+                                                    <div style={{ fontSize: 13, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 4 }}>
+                                                        <span>🎓 {en.title}</span>
+                                                        <span>📅 {dateStr}</span>
+                                                        <span style={{ color: '#C2185B' }}>${en.price.toFixed(2)}</span>
+                                                    </div>
+                                                    <div style={{ fontSize: 12, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                                                        {en.client?.phone && <span>📱 {en.client.phone}</span>}
+                                                        {en.client?.email && <span>✉️ {en.client.email}</span>}
+                                                    </div>
+                                                    {en.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 6, fontStyle: 'italic' }}>"{en.notes}"</p>}
+                                                </div>
+                                                <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
+                                                    {en.status === 'pending' && <button onClick={() => changeEnrollmentStatus(en._id, 'paid')} disabled={updatingEnId === en._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar pagado</button>}
+                                                    {['pending', 'paid'].includes(en.status) && <button onClick={() => changeEnrollmentStatus(en._id, 'cancelled')} disabled={updatingEnId === en._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
