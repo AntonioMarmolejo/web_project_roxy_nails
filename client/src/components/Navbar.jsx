@@ -1,7 +1,9 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useCartStore } from '../store/useCartStore'
 import { useAuthStore } from '../store/useAuthStore'
+
+const navLinkClass = ({ isActive }) => `nav-link${isActive ? ' active' : ''}`
 
 export default function Navbar() {
     const { count, openDrawer } = useCartStore()
@@ -27,21 +29,21 @@ export default function Navbar() {
 
             {/* Links — desktop inline, mobile dropdown */}
             <div className={`nav-links${open ? ' is-open' : ''}`}>
-                <Link to="/servicios" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Servicios</Link>
-                <Link to="/agendar" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Agendar</Link>
+                <NavLink to="/servicios" onClick={close} className={navLinkClass}>Servicios</NavLink>
+                <NavLink to="/agendar" onClick={close} className={navLinkClass}>Agendar</NavLink>
                 {user && (
-                    <Link to="/mis-citas"   onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis citas</Link>
+                    <NavLink to="/mis-citas" onClick={close} className={navLinkClass}>Mis citas</NavLink>
                 )}
                 {user && (
-                    <Link to="/mis-pedidos" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis pedidos</Link>
+                    <NavLink to="/mis-pedidos" onClick={close} className={navLinkClass}>Mis pedidos</NavLink>
                 )}
                 {user && (
-                    <Link to="/mis-talleres" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Mis talleres</Link>
+                    <NavLink to="/mis-talleres" onClick={close} className={navLinkClass}>Mis talleres</NavLink>
                 )}
-                <Link to="/tienda" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Tienda</Link>
-                <Link to="/talleres" onClick={close} style={{ fontSize: 14, color: '#6B4050' }}>Talleres</Link>
+                <NavLink to="/tienda" onClick={close} className={navLinkClass}>Tienda</NavLink>
+                <NavLink to="/talleres" onClick={close} className={navLinkClass}>Talleres</NavLink>
                 {user?.role === 'admin' && (
-                    <Link to="/admin" onClick={close} style={{ fontSize: 14, color: '#C2185B', fontWeight: 500 }}>Admin</Link>
+                    <NavLink to="/admin" onClick={close} className={({ isActive }) => `nav-link nav-link-admin${isActive ? ' active' : ''}`}>Admin</NavLink>
                 )}
 
                 <button onClick={() => { openDrawer(); close() }} style={{ position: 'relative', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: 18, lineHeight: 1, color: '#6B4050', padding: '2px 4px' }}>
