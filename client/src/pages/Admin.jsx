@@ -6,6 +6,7 @@ import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '.
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
+import '../styles/Admin.css'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
@@ -33,20 +34,10 @@ const ENROLLMENT_STATUS = {
     cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
 }
 
-// ─── Estilos reutilizables ───────────────────────────────────────────────────
-const inputSt = {
-    width: '100%', padding: '9px 12px', border: '1px solid #F0D0DC',
-    borderRadius: 8, fontSize: 13, fontFamily: 'Inter, sans-serif',
-    outline: 'none', background: '#fff', color: '#2D1520', boxSizing: 'border-box',
-}
-const labelSt = { fontSize: 12, color: '#6B4050', marginBottom: 4, display: 'block' }
-const tabBtn  = (active) => ({
-    padding: '8px 20px', borderRadius: 20, fontSize: 13, border: '1px solid',
-    borderColor: active ? '#C2185B' : '#F0D0DC',
-    background:  active ? '#C2185B' : '#fff',
-    color:       active ? '#fff'    : '#6B4050',
-    cursor: 'pointer', fontFamily: 'Inter, sans-serif', transition: 'all 0.2s',
-})
+// ─── Colores de acciones (botones de estado) ─────────────────────────────────
+const ACTION_GREEN  = { '--btn-bg': '#E8F5E9', '--btn-border': '#A5D6A7', '--btn-color': '#2E7D32' }
+const ACTION_BLUE   = { '--btn-bg': '#E3F2FD', '--btn-border': '#90CAF9', '--btn-color': '#1565C0' }
+const ACTION_PURPLE = { '--btn-bg': '#F3E5F5', '--btn-border': '#CE93D8', '--btn-color': '#6A1B9A' }
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Admin() {
@@ -294,85 +285,85 @@ export default function Admin() {
     }
 
     return (
-        <div style={{ minHeight: '100vh', background: '#FDF0F5' }}>
+        <div className="admin-page">
 
             {/* Toast */}
             {toast && (
-                <div style={{ position: 'fixed', top: 20, right: 20, zIndex: 1000, background: '#1D9E75', color: '#fff', padding: '10px 20px', borderRadius: 10, fontSize: 13, fontWeight: 500, boxShadow: '0 4px 12px rgba(0,0,0,0.15)' }}>
+                <div className="admin-toast">
                     {toast}
                 </div>
             )}
 
             {/* Header */}
-            <div style={{ background: '#fff', borderBottom: '1px solid #F0D0DC', padding: '1rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+            <div className="admin-header">
                 <div>
-                    <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 22, color: '#C2185B', fontWeight: 600 }}>
+                    <h1 className="admin-header-title">
                         Panel de administración
                     </h1>
-                    <p style={{ fontSize: 12, color: '#6B4050', marginTop: 2 }}>Bienvenida, {user?.name}</p>
+                    <p className="admin-header-sub">Bienvenida, {user?.name}</p>
                 </div>
-                <button onClick={logout} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 20, padding: '8px 18px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                <button onClick={logout} className="admin-logout-btn">
                     Cerrar sesión
                 </button>
             </div>
 
-            <div style={{ padding: '2rem', maxWidth: 1100, margin: '0 auto' }}>
+            <div className="admin-body">
 
                 {/* Tabs */}
-                <div style={{ display: 'flex', gap: 8, marginBottom: '2rem', flexWrap: 'wrap' }}>
-                    <button onClick={() => setTab('servicios')} style={tabBtn(tab === 'servicios')}>✂️ Servicios</button>
-                    <button onClick={() => setTab('citas')}     style={tabBtn(tab === 'citas')}>📅 Citas</button>
-                    <button onClick={() => setTab('productos')} style={tabBtn(tab === 'productos')}>🛍️ Productos</button>
-                    <button onClick={() => setTab('pedidos')}   style={tabBtn(tab === 'pedidos')}>📦 Pedidos</button>
-                    <button onClick={() => setTab('talleres')}  style={tabBtn(tab === 'talleres')}>🎓 Talleres</button>
+                <div className="admin-tabs">
+                    <button onClick={() => setTab('servicios')} className={`admin-tab-btn${tab === 'servicios' ? ' active' : ''}`}>✂️ Servicios</button>
+                    <button onClick={() => setTab('citas')}     className={`admin-tab-btn${tab === 'citas' ? ' active' : ''}`}>📅 Citas</button>
+                    <button onClick={() => setTab('productos')} className={`admin-tab-btn${tab === 'productos' ? ' active' : ''}`}>🛍️ Productos</button>
+                    <button onClick={() => setTab('pedidos')}   className={`admin-tab-btn${tab === 'pedidos' ? ' active' : ''}`}>📦 Pedidos</button>
+                    <button onClick={() => setTab('talleres')}  className={`admin-tab-btn${tab === 'talleres' ? ' active' : ''}`}>🎓 Talleres</button>
                 </div>
 
                 {/* ════════ SERVICIOS ════════ */}
                 {tab === 'servicios' && (
                     <>
-                        <div className="rn-admin-stats-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-3 admin-stats-grid-3">
                             {[
                                 { label: 'Servicios activos', value: services.length },
                                 { label: 'Destacados', value: services.filter(s => s.featured).length },
                                 { label: 'Categorías', value: new Set(services.map(s => s.category)).size },
                             ].map(st => (
-                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.25rem', textAlign: 'center' }}>
-                                    <div style={{ fontSize: 28, fontWeight: 700, color: '#C2185B' }}>{st.value}</div>
-                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                <div key={st.label} className="admin-stat-tile padded">
+                                    <div className="admin-stat-value">{st.value}</div>
+                                    <div className="admin-stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+                        <div className="rn-admin-split admin-split">
                             {/* Lista */}
                             <div>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                                <h2 className="admin-list-title">
                                     Servicios ({services.length})
                                 </h2>
                                 {fetching ? (
-                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
+                                    <p className="admin-list-loading">Cargando...</p>
                                 ) : services.length === 0 ? (
-                                    <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                    <div className="admin-list-empty">
                                         No hay servicios. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                    <div className="admin-list">
                                         {services.map(svc => (
-                                            <div key={svc._id} style={{ background: editing === svc._id ? '#FFF0F5' : '#fff', border: `1px solid ${editing === svc._id ? '#C2185B' : '#F0D0DC'}`, borderRadius: 12, padding: '1rem 1.25rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+                                            <div key={svc._id} className={`admin-list-item${editing === svc._id ? ' is-editing' : ''}`}>
                                                 <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{svc.name}</span>
-                                                        {svc.featured && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#F8C8DC', color: '#88134A' }}>Destacado</span>}
+                                                    <div className="admin-item-header">
+                                                        <span className="admin-item-name">{svc.name}</span>
+                                                        {svc.featured && <span className="admin-item-badge" style={{ '--badge-bg': '#F8C8DC', '--badge-color': '#88134A' }}>Destacado</span>}
                                                     </div>
-                                                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#6B4050' }}>
-                                                        <span style={{ color: '#C2185B', fontWeight: 500 }}>${svc.price}</span>
+                                                    <div className="admin-item-meta">
+                                                        <span className="admin-item-meta-price">${svc.price}</span>
                                                         <span>{svc.duration} min</span>
-                                                        <span style={{ textTransform: 'capitalize' }}>{svc.category}</span>
+                                                        <span className="admin-item-meta-cap">{svc.category}</span>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 8 }}>
-                                                    <button onClick={() => startEditSvc(svc)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
-                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Desactivar</button>
+                                                <div className="admin-item-actions">
+                                                    <button onClick={() => startEditSvc(svc)} className="admin-btn-edit">Editar</button>
+                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} className="admin-btn-secondary">Desactivar</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -381,27 +372,27 @@ export default function Admin() {
                             </div>
 
                             {/* Form servicio */}
-                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
+                            <div className="rn-admin-form-panel admin-form-panel">
+                                <h2 className="admin-form-title">
                                     {editing ? 'Editar servicio' : 'Nuevo servicio'}
                                 </h2>
-                                <form onSubmit={submitSvc} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                    <div><label style={labelSt}>Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} style={inputSt} placeholder="Manicure Gel" required /></div>
-                                    <div><label style={labelSt}>Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} style={inputSt} placeholder="Breve descripción" /></div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} style={inputSt} placeholder="25" required /></div>
-                                        <div><label style={labelSt}>Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} style={inputSt} placeholder="60" required /></div>
+                                <form onSubmit={submitSvc} className="admin-form">
+                                    <div><label className="admin-label">Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} className="admin-input" placeholder="Manicure Gel" required /></div>
+                                    <div><label className="admin-label">Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} className="admin-input" placeholder="Breve descripción" /></div>
+                                    <div className="admin-form-row-2">
+                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} className="admin-input" placeholder="25" required /></div>
+                                        <div><label className="admin-label">Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin-input" placeholder="60" required /></div>
                                     </div>
-                                    <div><label style={labelSt}>Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} style={inputSt}>{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
-                                    <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#6B4050', cursor: 'pointer' }}>
-                                        <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} style={{ accentColor: '#C2185B', width: 16, height: 16 }} />
+                                    <div><label className="admin-label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin-input">{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <label className="admin-checkbox-label">
+                                        <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} />
                                         Marcar como destacado
                                     </label>
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-                                        <button type="submit" disabled={svcLoad} style={{ flex: 1, background: svcLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: svcLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                    <div className="admin-form-actions">
+                                        <button type="submit" disabled={svcLoad} className="admin-submit-btn">
                                             {svcLoad ? 'Guardando...' : editing ? 'Guardar cambios' : 'Crear servicio'}
                                         </button>
-                                        {editing && <button type="button" onClick={cancelEditSvc} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                        {editing && <button type="button" onClick={cancelEditSvc} className="admin-cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
@@ -412,60 +403,60 @@ export default function Admin() {
                 {/* ════════ CITAS ════════ */}
                 {tab === 'citas' && (
                     <>
-                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-4 admin-stats-grid-4">
                             {[
                                 { label: 'Total citas',  value: bStats.total,     color: '#C2185B' },
                                 { label: 'Pendientes',   value: bStats.pending,   color: '#E65100' },
                                 { label: 'Confirmadas',  value: bStats.confirmed, color: '#2E7D32' },
                                 { label: 'Hoy',          value: bStats.today,     color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
-                                    <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
-                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                <div key={st.label} className="admin-stat-tile">
+                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin-stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                        <div className="admin-filters">
                             {[['all', 'Todas'], ['pending', 'Pendientes'], ['confirmed', 'Confirmadas'], ['completed', 'Completadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setBFilter(key)} style={tabBtn(bFilter === key)}>{lbl}</button>
+                                <button key={key} onClick={() => setBFilter(key)} className={`admin-tab-btn${bFilter === key ? ' active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {bFetching ? (
-                            <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando citas...</p>
+                            <p className="admin-list-loading">Cargando citas...</p>
                         ) : filteredBookings.length === 0 ? (
-                            <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                            <div className="admin-list-empty">
                                 No hay citas en esta categoría.
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div className="admin-list">
                                 {filteredBookings.map(b => {
                                     const st = BOOKING_STATUS[b.status] || BOOKING_STATUS.pending
                                     const dateStr = new Date(b.date).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
                                     return (
-                                        <div key={b._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                                                <div style={{ flex: 1 }}>
-                                                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{b.client?.name}</span>
-                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
+                                        <div key={b._id} className="admin-record-card">
+                                            <div className="admin-record-header">
+                                                <div className="admin-record-main">
+                                                    <div className="admin-record-title-row">
+                                                        <span className="admin-record-name">{b.client?.name}</span>
+                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
-                                                    <div style={{ fontSize: 13, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 4 }}>
+                                                    <div className="admin-record-meta">
                                                         <span>📅 {dateStr} · {b.timeSlot}</span>
                                                         <span>💅 {b.service?.name}</span>
-                                                        {b.service?.price && <span style={{ color: '#C2185B' }}>${b.service.price}</span>}
+                                                        {b.service?.price && <span className="admin-record-meta-price">${b.service.price}</span>}
                                                     </div>
-                                                    <div style={{ fontSize: 12, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                                                    <div className="admin-record-contact">
                                                         {b.client?.phone && <span>📱 {b.client.phone}</span>}
                                                         {b.client?.email && <span>✉️ {b.client.email}</span>}
                                                     </div>
-                                                    {b.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 6, fontStyle: 'italic' }}>"{b.notes}"</p>}
+                                                    {b.notes && <p className="admin-record-notes">"{b.notes}"</p>}
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-                                                    {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Confirmar</button>}
-                                                    {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Completar</button>}
-                                                    {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                                <div className="admin-record-actions">
+                                                    {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} className="admin-action-btn" style={ACTION_GREEN}>Confirmar</button>}
+                                                    {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} className="admin-action-btn" style={ACTION_BLUE}>Completar</button>}
+                                                    {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} className="admin-action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
@@ -479,58 +470,51 @@ export default function Admin() {
                 {/* ════════ PRODUCTOS ════════ */}
                 {tab === 'productos' && (
                     <>
-                        <div className="rn-admin-stats-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-3 admin-stats-grid-3">
                             {[
                                 { label: 'Total productos', value: products.length },
                                 { label: 'Activos',         value: products.filter(p => p.active).length },
                                 { label: 'Stock bajo (<5)', value: products.filter(p => p.stock < 5 && p.active).length, warn: true },
                             ].map(st => (
-                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.25rem', textAlign: 'center' }}>
-                                    <div style={{ fontSize: 28, fontWeight: 700, color: st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
-                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                <div key={st.label} className="admin-stat-tile padded">
+                                    <div className="admin-stat-value" style={{ '--stat-color': st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
+                                    <div className="admin-stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start' }}>
+                        <div className="rn-admin-split admin-split">
                             {/* Lista */}
                             <div>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                                <h2 className="admin-list-title">
                                     Productos ({products.length})
                                 </h2>
                                 {prodFetching ? (
-                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
+                                    <p className="admin-list-loading">Cargando...</p>
                                 ) : products.length === 0 ? (
-                                    <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                    <div className="admin-list-empty">
                                         No hay productos. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                    <div className="admin-list">
                                         {products.map(p => (
-                                            <div key={p._id} style={{
-                                                background: editProd === p._id ? '#FFF0F5' : p.active ? '#fff' : '#fafafa',
-                                                border: `1px solid ${editProd === p._id ? '#C2185B' : '#F0D0DC'}`,
-                                                borderRadius: 12, padding: '1rem 1.25rem',
-                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                flexWrap: 'wrap', gap: 10,
-                                                opacity: p.active ? 1 : 0.6,
-                                            }}>
+                                            <div key={p._id} className={`admin-list-item${editProd === p._id ? ' is-editing' : !p.active ? ' is-inactive' : ''}`}>
                                                 <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{p.name}</span>
-                                                        {!p.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#F5F5F5', color: '#9E7080' }}>Inactivo</span>}
-                                                        {p.stock < 5 && p.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#FFF3E0', color: '#E65100' }}>Stock: {p.stock}</span>}
+                                                    <div className="admin-item-header">
+                                                        <span className="admin-item-name">{p.name}</span>
+                                                        {!p.active && <span className="admin-item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
+                                                        {p.stock < 5 && p.active && <span className="admin-item-badge" style={{ '--badge-bg': '#FFF3E0', '--badge-color': '#E65100' }}>Stock: {p.stock}</span>}
                                                     </div>
-                                                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#6B4050' }}>
-                                                        <span style={{ color: '#C2185B', fontWeight: 500 }}>${p.price}</span>
+                                                    <div className="admin-item-meta">
+                                                        <span className="admin-item-meta-price">${p.price}</span>
                                                         <span>Stock: {p.stock}</span>
                                                         {p.brand && <span>{p.brand}</span>}
-                                                        <span style={{ textTransform: 'capitalize' }}>{p.category}</span>
+                                                        <span className="admin-item-meta-cap">{p.category}</span>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 8 }}>
-                                                    <button onClick={() => startEditProd(p)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
-                                                    <button onClick={() => handleToggleProd(p._id, p.name, p.active)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                                <div className="admin-item-actions">
+                                                    <button onClick={() => startEditProd(p)} className="admin-btn-edit">Editar</button>
+                                                    <button onClick={() => handleToggleProd(p._id, p.name, p.active)} className="admin-btn-secondary">
                                                         {p.active ? 'Desactivar' : 'Activar'}
                                                     </button>
                                                 </div>
@@ -541,27 +525,27 @@ export default function Admin() {
                             </div>
 
                             {/* Form producto */}
-                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
+                            <div className="rn-admin-form-panel admin-form-panel">
+                                <h2 className="admin-form-title">
                                     {editProd ? 'Editar producto' : 'Nuevo producto'}
                                 </h2>
-                                <form onSubmit={submitProd} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
-                                    <div><label style={labelSt}>Nombre *</label><input name="name" value={prodForm.name} onChange={handleProd} style={inputSt} placeholder="Esmalte Gel Rojo" required /></div>
-                                    <div><label style={labelSt}>Descripción</label><input name="description" value={prodForm.description} onChange={handleProd} style={inputSt} placeholder="Breve descripción" /></div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={prodForm.price} onChange={handleProd} style={inputSt} placeholder="12.99" required /></div>
-                                        <div><label style={labelSt}>Stock *</label><input name="stock" type="number" min="0" value={prodForm.stock} onChange={handleProd} style={inputSt} placeholder="20" required /></div>
+                                <form onSubmit={submitProd} className="admin-form compact">
+                                    <div><label className="admin-label">Nombre *</label><input name="name" value={prodForm.name} onChange={handleProd} className="admin-input" placeholder="Esmalte Gel Rojo" required /></div>
+                                    <div><label className="admin-label">Descripción</label><input name="description" value={prodForm.description} onChange={handleProd} className="admin-input" placeholder="Breve descripción" /></div>
+                                    <div className="admin-form-row-2">
+                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={prodForm.price} onChange={handleProd} className="admin-input" placeholder="12.99" required /></div>
+                                        <div><label className="admin-label">Stock *</label><input name="stock" type="number" min="0" value={prodForm.stock} onChange={handleProd} className="admin-input" placeholder="20" required /></div>
                                     </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div><label style={labelSt}>Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} style={inputSt} placeholder="OPI" /></div>
-                                        <div><label style={labelSt}>Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} style={inputSt}>{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <div className="admin-form-row-2">
+                                        <div><label className="admin-label">Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} className="admin-input" placeholder="OPI" /></div>
+                                        <div><label className="admin-label">Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} className="admin-input">{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
                                     </div>
-                                    <div><label style={labelSt}>URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} style={inputSt} placeholder="https://..." /></div>
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-                                        <button type="submit" disabled={prodLoad} style={{ flex: 1, background: prodLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: prodLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                    <div><label className="admin-label">URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} className="admin-input" placeholder="https://..." /></div>
+                                    <div className="admin-form-actions">
+                                        <button type="submit" disabled={prodLoad} className="admin-submit-btn">
                                             {prodLoad ? 'Guardando...' : editProd ? 'Guardar cambios' : 'Crear producto'}
                                         </button>
-                                        {editProd && <button type="button" onClick={cancelEditProd} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                        {editProd && <button type="button" onClick={cancelEditProd} className="admin-cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
@@ -572,63 +556,63 @@ export default function Admin() {
                 {/* ════════ PEDIDOS ════════ */}
                 {tab === 'pedidos' && (
                     <>
-                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-4 admin-stats-grid-4">
                             {[
                                 { label: 'Total pedidos', value: oStats.total,   color: '#C2185B' },
                                 { label: 'Pendientes',    value: oStats.pending, color: '#E65100' },
                                 { label: 'Pagados',       value: oStats.paid,    color: '#2E7D32' },
                                 { label: 'En camino',     value: oStats.shipped, color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
-                                    <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
-                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                <div key={st.label} className="admin-stat-tile">
+                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin-stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                        <div className="admin-filters">
                             {[['all', 'Todos'], ['pending', 'Pendientes'], ['paid', 'Pagados'], ['shipped', 'En camino'], ['delivered', 'Entregados'], ['cancelled', 'Cancelados']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setOFilter(key)} style={tabBtn(oFilter === key)}>{lbl}</button>
+                                <button key={key} onClick={() => setOFilter(key)} className={`admin-tab-btn${oFilter === key ? ' active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {oFetching ? (
-                            <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando pedidos...</p>
+                            <p className="admin-list-loading">Cargando pedidos...</p>
                         ) : filteredOrders.length === 0 ? (
-                            <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                            <div className="admin-list-empty">
                                 No hay pedidos en esta categoría.
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div className="admin-list">
                                 {filteredOrders.map(o => {
                                     const st = ORDER_STATUS[o.status] || ORDER_STATUS.pending
                                     const dateStr = new Date(o.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
                                     return (
-                                        <div key={o._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                                                <div style={{ flex: 1 }}>
-                                                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{o.client?.name}</span>
-                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
-                                                        <span style={{ fontSize: 12, color: '#9E7080' }}>{dateStr}</span>
+                                        <div key={o._id} className="admin-record-card">
+                                            <div className="admin-record-header">
+                                                <div className="admin-record-main">
+                                                    <div className="admin-record-title-row">
+                                                        <span className="admin-record-name">{o.client?.name}</span>
+                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
+                                                        <span className="admin-record-date">{dateStr}</span>
                                                     </div>
-                                                    <div style={{ fontSize: 12, color: '#6B4050', marginBottom: 6 }}>
+                                                    <div className="admin-order-items-list">
                                                         {o.items.map((i, idx) => (
                                                             <span key={idx}>{i.name} ×{i.qty}{idx < o.items.length - 1 ? ', ' : ''}</span>
                                                         ))}
                                                     </div>
-                                                    <div style={{ fontSize: 12, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                                                    <div className="admin-record-contact">
                                                         {o.client?.phone && <span>📱 {o.client.phone}</span>}
                                                         {o.client?.email && <span>✉️ {o.client.email}</span>}
-                                                        <span style={{ color: '#C2185B', fontWeight: 600 }}>Total: ${o.total.toFixed(2)}</span>
+                                                        <span className="admin-record-total">Total: ${o.total.toFixed(2)}</span>
                                                     </div>
-                                                    {o.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 4, fontStyle: 'italic' }}>"{o.notes}"</p>}
+                                                    {o.notes && <p className="admin-record-notes">"{o.notes}"</p>}
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-                                                    {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar pagado</button>}
-                                                    {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} style={{ background: '#E3F2FD', border: '1px solid #90CAF9', color: '#1565C0', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar enviado</button>}
-                                                    {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} style={{ background: '#F3E5F5', border: '1px solid #CE93D8', color: '#6A1B9A', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar entregado</button>}
-                                                    {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                                <div className="admin-record-actions">
+                                                    {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
+                                                    {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_BLUE}>Marcar enviado</button>}
+                                                    {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_PURPLE}>Marcar entregado</button>}
+                                                    {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} className="admin-action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
@@ -642,57 +626,51 @@ export default function Admin() {
                 {/* ════════ TALLERES ════════ */}
                 {tab === 'talleres' && (
                     <>
-                        <div className="rn-admin-stats-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: '2rem' }}>
+                        <div className="rn-admin-stats-4 admin-stats-grid-4">
                             {[
                                 { label: 'Talleres',              value: wsStats.total,     color: '#C2185B' },
                                 { label: 'Activos',               value: wsStats.active,    color: '#2E7D32' },
                                 { label: 'Inscripciones pend.',    value: wsStats.pendingEn, color: '#E65100' },
                                 { label: 'Inscripciones pagadas',  value: wsStats.paidEn,    color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 12, padding: '1.1rem', textAlign: 'center' }}>
-                                    <div style={{ fontSize: 26, fontWeight: 700, color: st.color }}>{st.value}</div>
-                                    <div style={{ fontSize: 12, color: '#6B4050', marginTop: 4 }}>{st.label}</div>
+                                <div key={st.label} className="admin-stat-tile">
+                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin-stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split" style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '2rem', alignItems: 'start', marginBottom: '2.5rem' }}>
+                        <div className="rn-admin-split admin-split with-margin">
                             {/* Lista de talleres */}
                             <div>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                                <h2 className="admin-list-title">
                                     Talleres ({workshops.length})
                                 </h2>
                                 {wsFetching ? (
-                                    <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando...</p>
+                                    <p className="admin-list-loading">Cargando...</p>
                                 ) : workshops.length === 0 ? (
-                                    <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                                    <div className="admin-list-empty">
                                         No hay talleres. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                                    <div className="admin-list">
                                         {workshops.map(w => (
-                                            <div key={w._id} style={{
-                                                background: editWs === w._id ? '#FFF0F5' : w.active ? '#fff' : '#fafafa',
-                                                border: `1px solid ${editWs === w._id ? '#C2185B' : '#F0D0DC'}`,
-                                                borderRadius: 12, padding: '1rem 1.25rem',
-                                                display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                                                opacity: w.active ? 1 : 0.6, flexWrap: 'wrap', gap: 10,
-                                            }}>
+                                            <div key={w._id} className={`admin-list-item${editWs === w._id ? ' is-editing' : !w.active ? ' is-inactive' : ''}`}>
                                                 <div>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 500, color: '#2D1520' }}>{w.title}</span>
-                                                        {!w.active && <span style={{ fontSize: 10, padding: '2px 8px', borderRadius: 10, background: '#F5F5F5', color: '#9E7080' }}>Inactivo</span>}
+                                                    <div className="admin-item-header">
+                                                        <span className="admin-item-name">{w.title}</span>
+                                                        {!w.active && <span className="admin-item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
                                                     </div>
-                                                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: '#6B4050', flexWrap: 'wrap' }}>
-                                                        <span style={{ color: '#C2185B', fontWeight: 500 }}>${w.price}</span>
+                                                    <div className="admin-item-meta">
+                                                        <span className="admin-item-meta-price">${w.price}</span>
                                                         <span>{new Date(w.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                                                        <span style={{ textTransform: 'capitalize' }}>{w.modality}</span>
+                                                        <span className="admin-item-meta-cap">{w.modality}</span>
                                                         <span>{w.spotsLeft}/{w.spots} cupos</span>
                                                     </div>
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 8 }}>
-                                                    <button onClick={() => startEditWs(w)} style={{ background: '#FDF0F5', border: '1px solid #F0D0DC', color: '#C2185B', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Editar</button>
-                                                    <button onClick={() => handleToggleWs(w._id, w.title, w.active)} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 14px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                                <div className="admin-item-actions">
+                                                    <button onClick={() => startEditWs(w)} className="admin-btn-edit">Editar</button>
+                                                    <button onClick={() => handleToggleWs(w._id, w.title, w.active)} className="admin-btn-secondary">
                                                         {w.active ? 'Desactivar' : 'Activar'}
                                                     </button>
                                                 </div>
@@ -703,76 +681,76 @@ export default function Admin() {
                             </div>
 
                             {/* Form taller */}
-                            <div className="rn-admin-form-panel" style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16, padding: '1.5rem', position: 'sticky', top: 80 }}>
-                                <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1.25rem' }}>
+                            <div className="rn-admin-form-panel admin-form-panel">
+                                <h2 className="admin-form-title">
                                     {editWs ? 'Editar taller' : 'Nuevo taller'}
                                 </h2>
-                                <form onSubmit={submitWs} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
-                                    <div><label style={labelSt}>Título *</label><input name="title" value={wsForm.title} onChange={handleWs} style={inputSt} placeholder="Nail Art para principiantes" required /></div>
-                                    <div><label style={labelSt}>Descripción</label><input name="description" value={wsForm.description} onChange={handleWs} style={inputSt} placeholder="Breve descripción" /></div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div><label style={labelSt}>Fecha *</label><input name="date" type="date" value={wsForm.date} onChange={handleWs} style={inputSt} required /></div>
-                                        <div><label style={labelSt}>Duración (h)</label><input name="duration" type="number" min="1" value={wsForm.duration} onChange={handleWs} style={inputSt} placeholder="3" /></div>
+                                <form onSubmit={submitWs} className="admin-form compact">
+                                    <div><label className="admin-label">Título *</label><input name="title" value={wsForm.title} onChange={handleWs} className="admin-input" placeholder="Nail Art para principiantes" required /></div>
+                                    <div><label className="admin-label">Descripción</label><input name="description" value={wsForm.description} onChange={handleWs} className="admin-input" placeholder="Breve descripción" /></div>
+                                    <div className="admin-form-row-2">
+                                        <div><label className="admin-label">Fecha *</label><input name="date" type="date" value={wsForm.date} onChange={handleWs} className="admin-input" required /></div>
+                                        <div><label className="admin-label">Duración (h)</label><input name="duration" type="number" min="1" value={wsForm.duration} onChange={handleWs} className="admin-input" placeholder="3" /></div>
                                     </div>
-                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-                                        <div><label style={labelSt}>Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={wsForm.price} onChange={handleWs} style={inputSt} placeholder="35" required /></div>
-                                        <div><label style={labelSt}>Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} style={inputSt} placeholder="10" required /></div>
+                                    <div className="admin-form-row-2">
+                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={wsForm.price} onChange={handleWs} className="admin-input" placeholder="35" required /></div>
+                                        <div><label className="admin-label">Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} className="admin-input" placeholder="10" required /></div>
                                     </div>
-                                    <div><label style={labelSt}>Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} style={inputSt}><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
-                                    <div><label style={labelSt}>URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} style={inputSt} placeholder="https://..." /></div>
-                                    <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-                                        <button type="submit" disabled={wsLoad} style={{ flex: 1, background: wsLoad ? '#e88aaa' : '#C2185B', color: '#fff', border: 'none', borderRadius: 24, padding: '11px', fontSize: 13, fontWeight: 500, cursor: wsLoad ? 'not-allowed' : 'pointer', fontFamily: 'Inter, sans-serif' }}>
+                                    <div><label className="admin-label">Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} className="admin-input"><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
+                                    <div><label className="admin-label">URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} className="admin-input" placeholder="https://..." /></div>
+                                    <div className="admin-form-actions">
+                                        <button type="submit" disabled={wsLoad} className="admin-submit-btn">
                                             {wsLoad ? 'Guardando...' : editWs ? 'Guardar cambios' : 'Crear taller'}
                                         </button>
-                                        {editWs && <button type="button" onClick={cancelEditWs} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#6B4050', borderRadius: 24, padding: '11px 16px', fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                        {editWs && <button type="button" onClick={cancelEditWs} className="admin-cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
                         </div>
 
                         {/* Inscripciones */}
-                        <h2 style={{ fontSize: 15, fontWeight: 600, color: '#2D1520', marginBottom: '1rem' }}>
+                        <h2 className="admin-list-title">
                             Inscripciones ({enrollments.length})
                         </h2>
-                        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+                        <div className="admin-filters">
                             {[['all', 'Todas'], ['pending', 'Pendientes'], ['paid', 'Pagadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setEnFilter(key)} style={tabBtn(enFilter === key)}>{lbl}</button>
+                                <button key={key} onClick={() => setEnFilter(key)} className={`admin-tab-btn${enFilter === key ? ' active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {enFetching ? (
-                            <p style={{ color: '#6B4050', fontSize: 13 }}>Cargando inscripciones...</p>
+                            <p className="admin-list-loading">Cargando inscripciones...</p>
                         ) : filteredEnrollments.length === 0 ? (
-                            <div style={{ background: '#fff', border: '1px dashed #F0D0DC', borderRadius: 12, padding: '2rem', textAlign: 'center', color: '#6B4050', fontSize: 13 }}>
+                            <div className="admin-list-empty">
                                 No hay inscripciones en esta categoría.
                             </div>
                         ) : (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                            <div className="admin-list">
                                 {filteredEnrollments.map(en => {
                                     const st = ENROLLMENT_STATUS[en.status] || ENROLLMENT_STATUS.pending
                                     const dateStr = new Date(en.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
                                     return (
-                                        <div key={en._id} style={{ background: '#fff', border: '1px solid #F0D0DC', borderRadius: 14, padding: '1rem 1.25rem' }}>
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, flexWrap: 'wrap' }}>
-                                                <div style={{ flex: 1 }}>
-                                                    <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 6, flexWrap: 'wrap' }}>
-                                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{en.client?.name}</span>
-                                                        <span style={{ fontSize: 11, padding: '3px 10px', borderRadius: 20, background: st.bg, color: st.color, fontWeight: 600 }}>{st.label}</span>
+                                        <div key={en._id} className="admin-record-card">
+                                            <div className="admin-record-header">
+                                                <div className="admin-record-main">
+                                                    <div className="admin-record-title-row">
+                                                        <span className="admin-record-name">{en.client?.name}</span>
+                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
-                                                    <div style={{ fontSize: 13, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap', marginBottom: 4 }}>
+                                                    <div className="admin-record-meta">
                                                         <span>🎓 {en.title}</span>
                                                         <span>📅 {dateStr}</span>
-                                                        <span style={{ color: '#C2185B' }}>${en.price.toFixed(2)}</span>
+                                                        <span className="admin-record-meta-price">${en.price.toFixed(2)}</span>
                                                     </div>
-                                                    <div style={{ fontSize: 12, color: '#9E7080', display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                                                    <div className="admin-record-contact">
                                                         {en.client?.phone && <span>📱 {en.client.phone}</span>}
                                                         {en.client?.email && <span>✉️ {en.client.email}</span>}
                                                     </div>
-                                                    {en.notes && <p style={{ fontSize: 12, color: '#9E7080', marginTop: 6, fontStyle: 'italic' }}>"{en.notes}"</p>}
+                                                    {en.notes && <p className="admin-record-notes">"{en.notes}"</p>}
                                                 </div>
-                                                <div style={{ display: 'flex', gap: 6, flexShrink: 0, flexWrap: 'wrap' }}>
-                                                    {en.status === 'pending' && <button onClick={() => changeEnrollmentStatus(en._id, 'paid')} disabled={updatingEnId === en._id} style={{ background: '#E8F5E9', border: '1px solid #A5D6A7', color: '#2E7D32', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Marcar pagado</button>}
-                                                    {['pending', 'paid'].includes(en.status) && <button onClick={() => changeEnrollmentStatus(en._id, 'cancelled')} disabled={updatingEnId === en._id} style={{ background: 'transparent', border: '1px solid #F0D0DC', color: '#999', borderRadius: 8, padding: '6px 12px', fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif' }}>Cancelar</button>}
+                                                <div className="admin-record-actions">
+                                                    {en.status === 'pending' && <button onClick={() => changeEnrollmentStatus(en._id, 'paid')} disabled={updatingEnId === en._id} className="admin-action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
+                                                    {['pending', 'paid'].includes(en.status) && <button onClick={() => changeEnrollmentStatus(en._id, 'cancelled')} disabled={updatingEnId === en._id} className="admin-action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>

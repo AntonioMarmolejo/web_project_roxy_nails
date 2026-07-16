@@ -1,18 +1,9 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
+import '../styles/Login.css'
 
 const EMPTY_FORM = { name: '', email: '', phone: '', password: '' }
-
-const inputStyle = {
-    width: '100%', padding: '10px 14px',
-    border: '1px solid #F0D0DC', borderRadius: 8,
-    fontSize: 13, fontFamily: 'Inter, sans-serif',
-    outline: 'none', background: '#fff', color: '#2D1520',
-    boxSizing: 'border-box',
-}
-
-const labelStyle = { fontSize: 12, color: '#6B4050', marginBottom: 4, display: 'block' }
 
 export default function Login() {
     const [mode, setMode] = useState('login')
@@ -45,102 +36,68 @@ export default function Login() {
     }
 
     return (
-        <main style={{
-            minHeight: '80vh', display: 'flex',
-            alignItems: 'center', justifyContent: 'center',
-            background: '#FDF0F5', padding: '2rem',
-        }}>
-            <div style={{
-                background: '#fff', borderRadius: 20,
-                padding: '2.5rem 2rem', width: '100%', maxWidth: 400,
-                border: '1px solid #F0D0DC',
-                boxShadow: '0 4px 24px rgba(194,24,91,0.08)',
-            }}>
+        <main className="login-page">
+            <div className="login-card">
                 {/* Logo */}
-                <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-                    <Link to="/" style={{
-                        fontFamily: 'Playfair Display, serif',
-                        fontSize: 26, fontWeight: 600, color: '#C2185B',
-                        textDecoration: 'none',
-                    }}>
-                        Roxy <em style={{ fontStyle: 'italic', color: '#E91E8C' }}>Nails</em>
+                <div className="login-header">
+                    <Link to="/" className="login-logo">
+                        Roxy <em>Nails</em>
                     </Link>
-                    <p style={{ fontSize: 13, color: '#6B4050', marginTop: 6 }}>
+                    <p className="login-subtitle">
                         {mode === 'login' ? 'Ingresa a tu cuenta' : 'Crea tu cuenta'}
                     </p>
                 </div>
 
                 {/* Toggle tabs */}
-                <div style={{
-                    display: 'flex', background: '#FDF0F5',
-                    borderRadius: 10, padding: 4, marginBottom: '1.5rem',
-                }}>
+                <div className="login-tabs">
                     {['login', 'register'].map(m => (
                         <button key={m} onClick={() => { setMode(m); setForm(EMPTY_FORM); setError('') }}
-                            style={{
-                                flex: 1, padding: '8px', border: 'none', borderRadius: 8,
-                                fontSize: 13, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                                background: mode === m ? '#C2185B' : 'transparent',
-                                color: mode === m ? '#fff' : '#6B4050',
-                                fontWeight: mode === m ? 500 : 400,
-                                transition: 'all 0.2s',
-                            }}>
+                            className={`login-tab${mode === m ? ' active' : ''}`}>
                             {m === 'login' ? 'Iniciar sesión' : 'Registrarse'}
                         </button>
                     ))}
                 </div>
 
-                <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <form onSubmit={submit} className="login-form">
                     {mode === 'register' && (
                         <>
                             <div>
-                                <label style={labelStyle}>Nombre completo</label>
+                                <label className="login-label">Nombre completo</label>
                                 <input name="name" value={form.name} onChange={handle}
-                                    style={inputStyle} placeholder="María Torres" required />
+                                    className="login-input" placeholder="María Torres" required />
                             </div>
                             <div>
-                                <label style={labelStyle}>Teléfono / WhatsApp</label>
+                                <label className="login-label">Teléfono / WhatsApp</label>
                                 <input name="phone" value={form.phone} onChange={handle}
-                                    style={inputStyle} placeholder="+593 99 123 4567" />
+                                    className="login-input" placeholder="+593 99 123 4567" />
                             </div>
                         </>
                     )}
 
                     <div>
-                        <label style={labelStyle}>Correo electrónico</label>
+                        <label className="login-label">Correo electrónico</label>
                         <input name="email" type="email" value={form.email} onChange={handle}
-                            style={inputStyle} placeholder="correo@ejemplo.com" required />
+                            className="login-input" placeholder="correo@ejemplo.com" required />
                     </div>
 
                     <div>
-                        <label style={labelStyle}>Contraseña</label>
+                        <label className="login-label">Contraseña</label>
                         <input name="password" type="password" value={form.password} onChange={handle}
-                            style={inputStyle} placeholder="••••••••" required minLength={6} />
+                            className="login-input" placeholder="••••••••" required minLength={6} />
                     </div>
 
                     {error && (
-                        <p style={{
-                            fontSize: 12, color: '#C2185B',
-                            background: '#FDF0F5', padding: '8px 12px',
-                            borderRadius: 8, border: '1px solid #F8C8DC',
-                        }}>{error}</p>
+                        <p className="login-error">{error}</p>
                     )}
 
-                    <button type="submit" disabled={loading} style={{
-                        background: loading ? '#e88aaa' : '#C2185B',
-                        color: '#fff', border: 'none', borderRadius: 24,
-                        padding: '12px', fontSize: 14, fontWeight: 500,
-                        cursor: loading ? 'not-allowed' : 'pointer',
-                        fontFamily: 'Inter, sans-serif', marginTop: 4,
-                    }}>
+                    <button type="submit" disabled={loading} className="login-submit-btn">
                         {loading ? 'Cargando...' : mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
                     </button>
                 </form>
 
-                <p style={{ textAlign: 'center', fontSize: 12, color: '#6B4050', marginTop: '1.25rem' }}>
+                <p className="login-toggle-text">
                     {mode === 'login' ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
-                    <span onClick={toggleMode}
-                        style={{ color: '#C2185B', cursor: 'pointer', fontWeight: 500 }}>
+                    <span onClick={toggleMode} className="login-toggle-link">
                         {mode === 'login' ? 'Regístrate' : 'Inicia sesión'}
                     </span>
                 </p>

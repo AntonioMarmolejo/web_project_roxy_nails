@@ -1,0 +1,10 @@
+.protected-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60vh;
+}
+.protected-loading span {
+    color: #c2185b;
+    font-size: 14px;
+}

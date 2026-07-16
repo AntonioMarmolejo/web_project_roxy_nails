@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { fetchMyBookings, cancelMyBooking } from '../api/bookings'
+import '../styles/MyBookings.css'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: '#FFF8E1', color: '#E65100' },
@@ -42,24 +43,24 @@ export default function MyBookings() {
                 <meta name="description" content="Historial y gestión de tus citas en Roxy Nails." />
             </Helmet>
 
-            <div style={{ background: '#FDF0F5', padding: '2.5rem 2rem', textAlign: 'center', borderBottom: '1px solid #F0D0DC' }}>
-                <p style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#C2185B', fontWeight: 500, marginBottom: 8 }}>
+            <div className="mybookings-header">
+                <p className="mybookings-header-label">
                     Mi historial
                 </p>
-                <h1 style={{ fontSize: 34, marginBottom: 8 }}>Mis citas</h1>
-                <p style={{ fontSize: 15, color: '#9E7080' }}>Aquí aparecen todas tus reservas.</p>
+                <h1 className="mybookings-header-title">Mis citas</h1>
+                <p className="mybookings-header-sub">Aquí aparecen todas tus reservas.</p>
             </div>
 
-            <div style={{ maxWidth: 680, margin: '0 auto', padding: '3rem 2rem' }}>
+            <div className="mybookings-container">
                 {loading ? (
-                    <p style={{ textAlign: 'center', color: '#9E7080', padding: '3rem 0', fontSize: 15 }}>
+                    <p className="mybookings-loading">
                         Cargando citas...
                     </p>
                 ) : bookings.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-                        <div style={{ fontSize: 52, marginBottom: '1.25rem' }}>💅</div>
-                        <h3 style={{ fontSize: 22, color: '#2D1520', marginBottom: 10 }}>Aún no tienes citas</h3>
-                        <p style={{ fontSize: 15, color: '#9E7080', marginBottom: '2rem' }}>
+                    <div className="mybookings-empty">
+                        <div className="mybookings-empty-icon">💅</div>
+                        <h3 className="mybookings-empty-title">Aún no tienes citas</h3>
+                        <p className="mybookings-empty-sub">
                             Cuando agendes, aparecerán aquí con todos los detalles.
                         </p>
                         <Link to="/agendar">
@@ -69,7 +70,7 @@ export default function MyBookings() {
                         </Link>
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                    <div className="mybookings-list">
                         {bookings.map(b => {
                             const st = STATUS[b.status] || STATUS.pending
                             const canCancel = ['pending', 'confirmed'].includes(b.status)
@@ -77,41 +78,29 @@ export default function MyBookings() {
                                 weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC',
                             })
                             return (
-                                <div key={b._id} style={{
-                                    background: '#fff', border: '1px solid #F0D0DC', borderRadius: 16,
-                                    padding: '1.25rem 1.5rem',
-                                    display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16,
-                                }}>
-                                    <div style={{ flex: 1 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8, flexWrap: 'wrap' }}>
-                                            <span style={{ fontSize: 15, fontWeight: 600, color: '#2D1520' }}>
+                                <div key={b._id} className="mybookings-card">
+                                    <div className="mybookings-card-main">
+                                        <div className="mybookings-card-title-row">
+                                            <span className="mybookings-service-name">
                                                 {b.service?.name || '—'}
                                             </span>
-                                            <span style={{
-                                                fontSize: 11, padding: '3px 10px', borderRadius: 20,
-                                                background: st.bg, color: st.color, fontWeight: 600,
-                                            }}>
+                                            <span className="mybookings-status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
                                                 {st.label}
                                             </span>
                                         </div>
-                                        <div style={{ display: 'flex', gap: 14, fontSize: 13, color: '#9E7080', flexWrap: 'wrap' }}>
+                                        <div className="mybookings-meta-row">
                                             <span>📅 {dateStr}</span>
                                             <span>🕐 {b.timeSlot}</span>
-                                            {b.service?.price && <span style={{ color: '#C2185B', fontWeight: 500 }}>💰 ${b.service.price}</span>}
+                                            {b.service?.price && <span className="mybookings-meta-price">💰 ${b.service.price}</span>}
                                         </div>
                                         {b.notes && (
-                                            <p style={{ fontSize: 12, color: '#9E7080', marginTop: 8, fontStyle: 'italic' }}>
+                                            <p className="mybookings-notes">
                                                 "{b.notes}"
                                             </p>
                                         )}
                                     </div>
                                     {canCancel && (
-                                        <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} style={{
-                                            background: 'transparent', border: '1px solid #F0D0DC',
-                                            color: '#9E7080', borderRadius: 8, padding: '7px 16px',
-                                            fontSize: 12, cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                                            flexShrink: 0,
-                                        }}>
+                                        <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} className="mybookings-cancel-btn">
                                             {cancelling === b._id ? '...' : 'Cancelar'}
                                         </button>
                                     )}
@@ -122,7 +111,7 @@ export default function MyBookings() {
                 )}
 
                 {bookings.length > 0 && (
-                    <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+                    <div className="mybookings-cta">
                         <Link to="/agendar">
                             <button className="btn-ghost" style={{ width: 'auto' }}>+ Nueva cita</button>
                         </Link>

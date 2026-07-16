@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import ServiceCard from '../components/ServiceCard'
 import { fetchServices } from '../api/services'
+import '../styles/Services.css'
 
 const FALLBACK = [
     { _id: '1', name: 'Manicure Gel', category: 'manicure', price: 25, duration: 60, featured: true, description: 'Acabado brillante que dura semanas.' },
@@ -45,41 +46,31 @@ export default function Services() {
             </Helmet>
 
             {/* Header */}
-            <div style={{ background: '#FDF0F5', padding: '3rem 2rem', textAlign: 'center', borderBottom: '1px solid #F0D0DC' }}>
-                <p style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#C2185B', fontWeight: 500, marginBottom: 10 }}>
+            <div className="services-header">
+                <p className="services-header-label">
                     Lo que hacemos
                 </p>
-                <h1 style={{ fontSize: 38, marginBottom: 10 }}>Nuestros servicios</h1>
-                <p style={{ fontSize: 15, color: '#9E7080', maxWidth: 460, margin: '0 auto' }}>
+                <h1 className="services-header-title">Nuestros servicios</h1>
+                <p className="services-header-sub">
                     Cada servicio incluye limpieza, hidratación y el acabado que elijas.
                 </p>
             </div>
 
             {/* Filtros */}
-            <div style={{
-                display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center',
-                padding: '1.5rem 2rem', borderBottom: '1px solid #F0D0DC', background: '#fff',
-                position: 'sticky', top: 64, zIndex: 5,
-            }}>
+            <div className="services-filters">
                 {CATS.map(c => (
-                    <button key={c.key} onClick={() => setCat(c.key)} style={{
-                        padding: '8px 20px', borderRadius: 20, fontSize: 14,
-                        border: '1px solid',
-                        borderColor: cat === c.key ? '#C2185B' : '#F0D0DC',
-                        background: cat === c.key ? '#C2185B' : '#fff',
-                        color: cat === c.key ? '#fff' : '#6B4050',
-                        cursor: 'pointer', fontFamily: 'Inter, sans-serif',
-                        transition: 'all 0.2s',
-                    }}>{c.label}</button>
+                    <button key={c.key} onClick={() => setCat(c.key)} className={`services-filter-btn${cat === c.key ? ' active' : ''}`}>
+                        {c.label}
+                    </button>
                 ))}
             </div>
 
             {/* Grid */}
-            <div className="rn-section" style={{ maxWidth: 1100, margin: '0 auto', padding: '3rem 2rem' }}>
+            <div className="rn-section services-grid-section">
                 {loading ? (
-                    <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 15 }}>Cargando servicios...</p>
+                    <p className="services-empty">Cargando servicios...</p>
                 ) : filtered.length === 0 ? (
-                    <p style={{ textAlign: 'center', color: '#9E7080', fontSize: 15 }}>
+                    <p className="services-empty">
                         No hay servicios en esta categoría aún.
                     </p>
                 ) : (

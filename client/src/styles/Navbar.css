@@ -1,0 +1,68 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #f0d0dc;
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+.navbar-logo {
+    font-family: "Playfair Display", serif;
+    font-size: 35px;
+    color: #c2185b;
+    font-weight: 600;
+}
+.navbar-logo em {
+    font-style: italic;
+    color: #e91e8c;
+}
+
+.cart-btn {
+    position: relative;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    color: #6b4050;
+    padding: 2px 4px;
+}
+.cart-btn-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #c2185b;
+    color: #fff;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+.navbar-logout-btn {
+    background: transparent;
+    border: 1px solid #f0d0dc;
+    color: #c2185b;
+    border-radius: 20px;
+    padding: 7px 18px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
+.navbar-login-btn {
+    background: #c2185b;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 9px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}

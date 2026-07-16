@@ -1,0 +1,133 @@
+.hero-slider {
+    position: relative;
+    overflow: hidden;
+    background: var(--hero-bg);
+    transition: background 0.5s;
+}
+.hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 4rem;
+    position: relative;
+}
+.hero-content {
+    max-width: 500px;
+    z-index: 2;
+}
+.hero-tag {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--tag-bg);
+    color: var(--tag-color);
+    padding: 5px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 1.25rem;
+}
+.hero-title {
+    font-family: "Playfair Display", serif;
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.18;
+    font-weight: 600;
+    color: #2d1520;
+    margin-bottom: 1rem;
+}
+.hero-title em {
+    font-style: italic;
+    color: var(--em-color);
+}
+.hero-sub {
+    font-size: 16px;
+    color: #6b4050;
+    margin-bottom: 2rem;
+    line-height: 1.7;
+    max-width: 400px;
+}
+.hero-buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.hero-buttons .btn-primary {
+    background: var(--btn-color);
+}
+.hero-buttons .btn-ghost {
+    color: var(--btn-color);
+    border-color: var(--btn-color);
+}
+
+.hero-nails {
+    position: absolute;
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 16px;
+    opacity: 0.8;
+}
+.hero-nails-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.hero-nail {
+    width: 52px;
+    height: 66px;
+    border-radius: 50% 50% 40% 40%;
+    background: var(--nail-color);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+}
+
+.hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.88);
+    border: none;
+    border-radius: 50%;
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #c2185b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+.hero-arrow-left {
+    left: 1rem;
+}
+.hero-arrow-right {
+    right: 1rem;
+}
+
+.hero-dots {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 7px;
+}
+.hero-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(194, 24, 91, 0.3);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s;
+}
+.hero-dot.active {
+    width: 22px;
+    height: 8px;
+    border-radius: 4px;
+    background: #c2185b;
+}

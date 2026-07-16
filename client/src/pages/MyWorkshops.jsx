@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link }   from 'react-router-dom'
 import { fetchMyEnrollments } from '../api/enrollments'
+import '../styles/MyWorkshops.css'
 
 const STATUS = {
     pending:   { label: 'Pendiente', bg: '#FFF8E1', color: '#E65100' },
@@ -27,24 +28,24 @@ export default function MyWorkshops() {
                 <meta name="description" content="Historial de tus inscripciones a talleres en Roxy Nails." />
             </Helmet>
 
-            <div style={{ background: '#FDF0F5', padding: '2.5rem 2rem', textAlign: 'center', borderBottom: '1px solid #F0D0DC' }}>
-                <p style={{ fontSize: 13, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#C2185B', fontWeight: 500, marginBottom: 8 }}>
+            <div className="myworkshops-header">
+                <p className="myworkshops-header-label">
                     Mi historial
                 </p>
-                <h1 style={{ fontSize: 34, marginBottom: 8 }}>Mis talleres</h1>
-                <p style={{ fontSize: 15, color: '#9E7080' }}>Talleres en los que te has inscrito.</p>
+                <h1 className="myworkshops-header-title">Mis talleres</h1>
+                <p className="myworkshops-header-sub">Talleres en los que te has inscrito.</p>
             </div>
 
-            <div style={{ maxWidth: 700, margin: '0 auto', padding: '3rem 2rem' }}>
+            <div className="myworkshops-container">
                 {loading ? (
-                    <p style={{ textAlign: 'center', color: '#9E7080', padding: '3rem 0', fontSize: 15 }}>
+                    <p className="myworkshops-loading">
                         Cargando talleres...
                     </p>
                 ) : enrollments.length === 0 ? (
-                    <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
-                        <div style={{ fontSize: 52, marginBottom: '1.25rem' }}>🎓</div>
-                        <h3 style={{ fontSize: 22, color: '#2D1520', marginBottom: 10 }}>Aún no te has inscrito a ningún taller</h3>
-                        <p style={{ fontSize: 15, color: '#9E7080', marginBottom: '2rem' }}>
+                    <div className="myworkshops-empty">
+                        <div className="myworkshops-empty-icon">🎓</div>
+                        <h3 className="myworkshops-empty-title">Aún no te has inscrito a ningún taller</h3>
+                        <p className="myworkshops-empty-sub">
                             Explora los talleres disponibles y reserva tu cupo.
                         </p>
                         <Link to="/talleres">
@@ -54,34 +55,28 @@ export default function MyWorkshops() {
                         </Link>
                     </div>
                 ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                    <div className="myworkshops-list">
                         {enrollments.map(en => {
                             const st = STATUS[en.status] || STATUS.pending
                             const dateStr = new Date(en.date).toLocaleDateString('es-ES', {
                                 day: 'numeric', month: 'long', year: 'numeric',
                             })
                             return (
-                                <div key={en._id} style={{
-                                    background: '#fff', border: '1px solid #F0D0DC',
-                                    borderRadius: 16, padding: '1.25rem 1.5rem',
-                                }}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12, marginBottom: 8, flexWrap: 'wrap' }}>
-                                        <span style={{ fontSize: 14, fontWeight: 600, color: '#2D1520' }}>{en.title}</span>
-                                        <span style={{
-                                            fontSize: 11, padding: '4px 12px', borderRadius: 20,
-                                            background: st.bg, color: st.color, fontWeight: 600,
-                                        }}>
+                                <div key={en._id} className="myworkshops-card">
+                                    <div className="myworkshops-card-header">
+                                        <span className="myworkshops-title">{en.title}</span>
+                                        <span className="myworkshops-status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
                                             {st.label}
                                         </span>
                                     </div>
 
-                                    <div style={{ fontSize: 13, color: '#9E7080', marginBottom: 10 }}>
+                                    <div className="myworkshops-date">
                                         📅 {dateStr}
                                     </div>
 
-                                    <div style={{ borderTop: '1px solid #F0D0DC', paddingTop: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                                        <span style={{ fontSize: 13, color: '#6B4050' }}>Precio</span>
-                                        <span style={{ fontSize: 17, fontWeight: 700, color: '#C2185B' }}>
+                                    <div className="myworkshops-total-row">
+                                        <span className="myworkshops-total-label">Precio</span>
+                                        <span className="myworkshops-total-value">
                                             ${en.price.toFixed(2)}
                                         </span>
                                     </div>
@@ -92,7 +87,7 @@ export default function MyWorkshops() {
                 )}
 
                 {enrollments.length > 0 && (
-                    <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+                    <div className="myworkshops-cta">
                         <Link to="/talleres">
                             <button className="btn-ghost" style={{ width: 'auto' }}>Ver más talleres</button>
                         </Link>

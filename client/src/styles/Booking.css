@@ -1,0 +1,366 @@
+.booking-header {
+    background: #fdf0f5;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid #f0d0dc;
+}
+.booking-header-label {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c2185b;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+.booking-header-title {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+.booking-header-sub {
+    font-size: 15px;
+    color: #9e7080;
+    max-width: 420px;
+    margin: 0 auto;
+}
+.booking-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+/* Stepper */
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+}
+.stepper-step {
+    display: flex;
+    align-items: center;
+}
+.stepper-circle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+.stepper-circle {
+    border-radius: 50%;
+    background: #f0d0dc;
+    color: #9e7080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    box-shadow: none;
+    transition: all 0.25s;
+}
+.stepper-circle.is-filled {
+    background: #c2185b;
+    color: #fff;
+}
+.stepper-circle.is-active {
+    box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.2);
+}
+.stepper-label {
+    color: #9e7080;
+    font-weight: 400;
+}
+.stepper-label.is-active {
+    color: #c2185b;
+    font-weight: 600;
+}
+.stepper-line {
+    height: 2px;
+    margin-bottom: 22px;
+    background: #f0d0dc;
+    transition: background 0.3s;
+}
+.stepper-line.is-done {
+    background: #c2185b;
+}
+
+/* Success screen */
+.booking-success-wrap {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: #fdf0f5;
+}
+.booking-success-card {
+    background: #fff;
+    border: 1px solid #f0d0dc;
+    border-radius: 22px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    max-width: 460px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(194, 24, 91, 0.12);
+}
+.booking-success-icon {
+    font-size: 56px;
+    margin-bottom: 1.25rem;
+}
+.booking-success-title {
+    font-family: "Playfair Display", serif;
+    font-size: 30px;
+    color: #c2185b;
+    margin-bottom: 10px;
+}
+.booking-success-sub {
+    font-size: 15px;
+    color: #9e7080;
+    margin-bottom: 2rem;
+}
+.booking-summary-box {
+    background: #fdf0f5;
+    border-radius: 14px;
+    padding: 1.25rem 1.5rem;
+    text-align: left;
+    margin-bottom: 1.75rem;
+}
+.booking-summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+.booking-summary-row:last-child {
+    margin-bottom: 0;
+}
+.booking-summary-key {
+    color: #9e7080;
+}
+.booking-summary-value {
+    color: #2d1520;
+    font-weight: 500;
+}
+.booking-success-email-note {
+    font-size: 13px;
+    color: #9e7080;
+    margin-bottom: 1.5rem;
+}
+
+/* Step 1: servicio */
+.booking-step-title {
+    font-size: 19px;
+    font-weight: 600;
+    color: #2d1520;
+    margin-bottom: 1.5rem;
+}
+.booking-services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+}
+.booking-service-option {
+    border: 2px solid #f0d0dc;
+    background: #fff;
+    border-radius: 14px;
+    padding: 1.1rem 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+.booking-service-option.selected {
+    border-color: #c2185b;
+    background: #fdf0f5;
+}
+.booking-service-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+.booking-service-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: #2d1520;
+    margin-bottom: 4px;
+}
+.booking-service-price {
+    font-size: 14px;
+    color: #c2185b;
+    font-weight: 700;
+}
+.booking-service-duration {
+    font-size: 11px;
+    color: #9e7080;
+}
+
+/* Step 2: calendario */
+.booking-calendar-card {
+    background: #fff;
+    border: 1px solid #f0d0dc;
+    border-radius: 18px;
+    padding: 1.75rem;
+}
+.booking-calendar-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+.booking-calendar-nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: #c2185b;
+    line-height: 1;
+    padding: 4px 10px;
+}
+.booking-calendar-month-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d1520;
+}
+.booking-calendar-days-header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+}
+.booking-calendar-day-label {
+    text-align: center;
+    font-size: 11px;
+    color: #9e7080;
+    font-weight: 600;
+    padding: 4px 0;
+}
+.booking-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+.booking-calendar-day {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #2d1520;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    transition: background 0.15s;
+}
+.booking-calendar-day:not(:disabled):not(.selected):hover {
+    background: #fdf0f5;
+}
+.booking-calendar-day.selected {
+    background: #c2185b;
+    color: #fff;
+    font-weight: 600;
+}
+.booking-calendar-day:disabled {
+    color: #dfc8d0;
+    cursor: not-allowed;
+}
+.booking-calendar-note {
+    font-size: 12px;
+    color: #9e7080;
+    margin-top: 1.25rem;
+    text-align: center;
+}
+
+.booking-nav-row {
+    display: flex;
+    gap: 10px;
+}
+.booking-nav-row.with-margin {
+    margin-top: 1.5rem;
+}
+.booking-btn-flex1 {
+    flex: 1;
+}
+.booking-btn-flex2 {
+    flex: 2;
+}
+.is-disabled-look {
+    opacity: 0.45;
+}
+
+/* Step 3: horario */
+.booking-step-sub {
+    font-size: 14px;
+    color: #9e7080;
+    margin-bottom: 1.75rem;
+}
+.booking-loading-note {
+    text-align: center;
+    color: #9e7080;
+    padding: 2rem 0;
+    font-size: 14px;
+}
+.booking-slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.75rem;
+}
+.booking-slot-btn {
+    padding: 13px 8px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    border: 2px solid #f0d0dc;
+    background: #fff;
+    color: #2d1520;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.booking-slot-btn.selected {
+    border-color: #c2185b;
+    background: #c2185b;
+    color: #fff;
+}
+.booking-slot-btn.unavailable {
+    border-color: #f5eaef;
+    background: #fafafa;
+    color: #ccaabb;
+    cursor: not-allowed;
+}
+.booking-slot-unavailable-label {
+    font-size: 10px;
+    color: #ccaabb;
+    margin-top: 3px;
+}
+.booking-slots-empty-note {
+    text-align: center;
+    color: #9e7080;
+    font-size: 14px;
+    margin-bottom: 1.5rem;
+}
+
+/* Step 4: datos de contacto */
+.booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.booking-field-label {
+    font-size: 13px;
+    color: #6b4050;
+    margin-bottom: 6px;
+    display: block;
+}
+.booking-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #f0d0dc;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: "Inter", sans-serif;
+    outline: none;
+    color: #2d1520;
+    background: #fff;
+}
+.booking-error-box {
+    color: #c2185b;
+    font-size: 13px;
+    background: #fdf0f5;
+    border-radius: 10px;
+    padding: 10px 14px;
+}
