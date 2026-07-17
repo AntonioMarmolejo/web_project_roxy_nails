@@ -27,7 +27,7 @@ const GALLERY = [
 ]
 
 const SectionLabel = ({ children }) => (
-    <p className="section-label">
+    <p className="home__section-label">
         {children}
     </p>
 )
@@ -52,7 +52,7 @@ export default function Home() {
             </Helmet>
 
             {/* Promo bar */}
-            <div className="home-promo-bar">
+            <div className="home__promo-bar">
                 🎉 <strong>Julio: 20% OFF</strong> en manicure gel + pedicure spa —{' '}
                 <Link to="/agendar">
                     Agenda tu cita hoy
@@ -63,31 +63,31 @@ export default function Home() {
             <HeroSlider />
 
             {/* Servicios destacados */}
-            <section className="rn-section home-services-section">
+            <section className="u-section home__services-section">
                 <SectionLabel>Lo que hacemos</SectionLabel>
-                <h2 className="home-section-title">Nuestros servicios</h2>
-                <p className="home-section-sub">
+                <h2 className="home__section-title">Nuestros servicios</h2>
+                <p className="home__section-sub">
                     Cada servicio incluye limpieza, hidratación y el acabado que elijas.
                 </p>
-                <div className="rn-services-grid">
+                <div className="home__services-grid">
                     {display.map(svc => <ServiceCard key={svc._id} service={svc} />)}
                 </div>
-                <div className="home-section-cta">
+                <div className="home__section-cta">
                     <Link to="/servicios">
-                        <button className="btn-ghost" style={{ width: 'auto' }}>Ver todos los servicios</button>
+                        <button className="btn btn--ghost" style={{ width: 'auto' }}>Ver todos los servicios</button>
                     </Link>
                 </div>
             </section>
 
             {/* Galería */}
-            <section className="rn-section home-gallery-section">
+            <section className="u-section home__gallery-section">
                 <SectionLabel>Nuestro trabajo</SectionLabel>
-                <h2 className="home-gallery-title">Galería</h2>
-                <div className="rn-gallery-grid">
+                <h2 className="home__gallery-title">Galería</h2>
+                <div className="home__gallery-grid">
                     {GALLERY.map((item, i) => (
                         <div
                             key={i}
-                            className="home-gallery-item"
+                            className="home__gallery-item"
                             style={{
                                 '--gallery-bg': item.bg,
                                 '--gallery-font-size': item.tall ? '40px' : '30px',
@@ -99,43 +99,43 @@ export default function Home() {
             </section>
 
             {/* CTA Agenda */}
-            <section className="home-cta-section">
-                <h2 className="home-cta-title">¿Lista para tu próxima cita?</h2>
-                <p className="home-cta-sub">
+            <section className="home__cta-section">
+                <h2 className="home__cta-title">¿Lista para tu próxima cita?</h2>
+                <p className="home__cta-sub">
                     Reserva en minutos. Recibirás confirmación por WhatsApp.
                 </p>
                 <Link to="/agendar">
-                    <button className="btn-primary home-cta-btn">
+                    <button className="btn btn--primary home__cta-btn">
                         Agendar cita
                     </button>
                 </Link>
             </section>
 
             {/* Footer */}
-            <footer className="home-footer">
-                <div className="rn-footer-inner">
+            <footer className="home__footer">
+                <div className="home__footer-inner">
                     <div>
-                        <div className="home-footer-brand">
+                        <div className="home__footer-brand">
                             Roxy Nails
                         </div>
-                        <p className="home-footer-desc">
+                        <p className="home__footer-desc">
                             Tu estudio de manicure y pedicure de confianza. Cuidamos cada detalle para que brilles.
                         </p>
                     </div>
                     <div>
-                        <h4 className="home-footer-heading">Servicios</h4>
+                        <h4 className="home__footer-heading">Servicios</h4>
                         {['Manicure Gel', 'Pedicure Spa', 'Nail Art', 'Extensiones'].map(s => (
-                            <Link key={s} to="/servicios" className="home-footer-link">{s}</Link>
+                            <Link key={s} to="/servicios" className="home__footer-link">{s}</Link>
                         ))}
                     </div>
                     <div>
-                        <h4 className="home-footer-heading">Contacto</h4>
+                        <h4 className="home__footer-heading">Contacto</h4>
                         {['📍 Tu dirección aquí', '📱 WhatsApp', '📸 Instagram', '🕐 Lun–Sáb 8–19h'].map(c => (
-                            <p key={c} className="home-footer-text">{c}</p>
+                            <p key={c} className="home__footer-text">{c}</p>
                         ))}
                     </div>
                 </div>
-                <div className="home-footer-bottom">
+                <div className="home__footer-bottom">
                     © 2026 Roxy Nails — Todos los derechos reservados
                 </div>
             </footer>

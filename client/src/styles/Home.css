@@ -1,4 +1,4 @@
-.section-label {
+.home__section-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -7,7 +7,7 @@
     margin-bottom: 8px;
 }
 
-.home-promo-bar {
+.home__promo-bar {
     background: #c2185b;
     color: #fff;
     text-align: center;
@@ -15,42 +15,42 @@
     font-size: 14px;
     letter-spacing: 0.02em;
 }
-.home-promo-bar a {
+.home__promo-bar a {
     color: #fff;
     text-decoration: underline;
     font-weight: 500;
 }
 
-.home-services-section {
+.home__services-section {
     padding: 4rem 2rem;
     max-width: 1100px;
     margin: 0 auto;
 }
-.home-section-title {
+.home__section-title {
     font-size: 34px;
     margin-bottom: 8px;
 }
-.home-section-sub {
+.home__section-sub {
     font-size: 15px;
     color: #9e7080;
     margin-bottom: 2.5rem;
     max-width: 500px;
 }
-.home-section-cta {
+.home__section-cta {
     text-align: center;
     margin-top: 2.5rem;
 }
 
-.home-gallery-section {
+.home__gallery-section {
     padding: 0 2rem 4rem;
     max-width: 1100px;
     margin: 0 auto;
 }
-.home-gallery-title {
+.home__gallery-title {
     font-size: 34px;
     margin-bottom: 1.75rem;
 }
-.home-gallery-item {
+.home__gallery-item {
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -62,64 +62,64 @@
     font-size: var(--gallery-font-size);
     grid-row: var(--gallery-row-span);
 }
-.home-gallery-item:hover {
+.home__gallery-item:hover {
     border-color: #c2185b;
 }
 
-.home-cta-section {
+.home__cta-section {
     background: #fdf0f5;
     padding: 4rem 2rem;
     text-align: center;
 }
-.home-cta-title {
+.home__cta-title {
     font-size: 34px;
     margin-bottom: 10px;
 }
-.home-cta-sub {
+.home__cta-sub {
     font-size: 16px;
     color: #9e7080;
     margin-bottom: 2rem;
 }
-.home-cta-btn {
+.home__cta-btn {
     padding: 14px 36px;
     font-size: 16px;
     width: auto;
 }
 
-.home-footer {
+.home__footer {
     background: #1a0d12;
     color: #907070;
     padding: 2.5rem 2rem 1.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
-.home-footer-brand {
+.home__footer-brand {
     font-family: "Playfair Display", serif;
     font-size: 22px;
     color: #f8c8dc;
     margin-bottom: 10px;
 }
-.home-footer-desc {
+.home__footer-desc {
     font-size: 13px;
     line-height: 1.8;
 }
-.home-footer-heading {
+.home__footer-heading {
     font-size: 13px;
     color: #f8c8dc;
     margin-bottom: 12px;
     font-weight: 500;
     letter-spacing: 0.05em;
 }
-.home-footer-link {
+.home__footer-link {
     display: block;
     font-size: 13px;
     color: #907070;
     margin-bottom: 8px;
 }
-.home-footer-text {
+.home__footer-text {
     font-size: 13px;
     margin-bottom: 8px;
 }
-.home-footer-bottom {
+.home__footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     padding-top: 1.25rem;
     font-size: 12px;

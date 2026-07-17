@@ -46,35 +46,35 @@ export default function Services() {
             </Helmet>
 
             {/* Header */}
-            <div className="services-header">
-                <p className="services-header-label">
+            <div className="services__header">
+                <p className="services__header-label">
                     Lo que hacemos
                 </p>
-                <h1 className="services-header-title">Nuestros servicios</h1>
-                <p className="services-header-sub">
+                <h1 className="services__header-title">Nuestros servicios</h1>
+                <p className="services__header-sub">
                     Cada servicio incluye limpieza, hidratación y el acabado que elijas.
                 </p>
             </div>
 
             {/* Filtros */}
-            <div className="services-filters">
+            <div className="services__filters">
                 {CATS.map(c => (
-                    <button key={c.key} onClick={() => setCat(c.key)} className={`services-filter-btn${cat === c.key ? ' active' : ''}`}>
+                    <button key={c.key} onClick={() => setCat(c.key)} className={`services__filter-btn${cat === c.key ? ' services__filter-btn--active' : ''}`}>
                         {c.label}
                     </button>
                 ))}
             </div>
 
             {/* Grid */}
-            <div className="rn-section services-grid-section">
+            <div className="u-section services__grid-section">
                 {loading ? (
-                    <p className="services-empty">Cargando servicios...</p>
+                    <p className="services__empty">Cargando servicios...</p>
                 ) : filtered.length === 0 ? (
-                    <p className="services-empty">
+                    <p className="services__empty">
                         No hay servicios en esta categoría aún.
                     </p>
                 ) : (
-                    <div className="rn-catalog-grid">
+                    <div className="catalog-grid">
                         {filtered.map(svc => <ServiceCard key={svc._id} service={svc} />)}
                     </div>
                 )}

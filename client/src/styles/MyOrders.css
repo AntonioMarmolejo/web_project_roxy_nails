@@ -1,10 +1,10 @@
-.myorders-header {
+.myorders__header {
     background: #fdf0f5;
     padding: 2.5rem 2rem;
     text-align: center;
     border-bottom: 1px solid #f0d0dc;
 }
-.myorders-header-label {
+.myorders__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -12,57 +12,57 @@
     font-weight: 500;
     margin-bottom: 8px;
 }
-.myorders-header-title {
+.myorders__header-title {
     font-size: 34px;
     margin-bottom: 8px;
 }
-.myorders-header-sub {
+.myorders__header-sub {
     font-size: 15px;
     color: #9e7080;
 }
 
-.myorders-container {
+.myorders__container {
     max-width: 700px;
     margin: 0 auto;
     padding: 3rem 2rem;
 }
-.myorders-loading {
+.myorders__loading {
     text-align: center;
     color: #9e7080;
     padding: 3rem 0;
     font-size: 15px;
 }
-.myorders-empty {
+.myorders__empty {
     text-align: center;
     padding: 4rem 2rem;
 }
-.myorders-empty-icon {
+.myorders__empty-icon {
     font-size: 52px;
     margin-bottom: 1.25rem;
 }
-.myorders-empty-title {
+.myorders__empty-title {
     font-size: 22px;
     color: #2d1520;
     margin-bottom: 10px;
 }
-.myorders-empty-sub {
+.myorders__empty-sub {
     font-size: 15px;
     color: #9e7080;
     margin-bottom: 2rem;
 }
 
-.myorders-list {
+.myorders__list {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-.myorders-card {
+.myorders__card {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
 }
-.myorders-card-header {
+.myorders__card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -70,11 +70,11 @@
     margin-bottom: 12px;
     flex-wrap: wrap;
 }
-.myorders-date {
+.myorders__date {
     font-size: 13px;
     color: #9e7080;
 }
-.myorders-status-badge {
+.myorders__status-badge {
     font-size: 11px;
     padding: 4px 12px;
     border-radius: 20px;
@@ -82,39 +82,39 @@
     background: var(--status-bg);
     color: var(--status-color);
 }
-.myorders-items {
+.myorders__items {
     display: flex;
     flex-direction: column;
     gap: 6px;
     margin-bottom: 12px;
 }
-.myorders-item-row {
+.myorders__item-row {
     display: flex;
     justify-content: space-between;
     font-size: 13px;
     color: #6b4050;
 }
-.myorders-item-qty {
+.myorders__item-qty {
     color: #9e7080;
 }
-.myorders-total-row {
+.myorders__total-row {
     border-top: 1px solid #f0d0dc;
     padding-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: baseline;
 }
-.myorders-total-label {
+.myorders__total-label {
     font-size: 13px;
     color: #6b4050;
 }
-.myorders-total-value {
+.myorders__total-value {
     font-size: 17px;
     font-weight: 700;
     color: #c2185b;
 }
 
-.myorders-cta {
+.myorders__cta {
     text-align: center;
     margin-top: 2.5rem;
 }

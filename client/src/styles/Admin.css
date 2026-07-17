@@ -1,9 +1,9 @@
-.admin-page {
+.admin__page {
     min-height: 100vh;
     background: #fdf0f5;
 }
 
-.admin-toast {
+.admin__toast {
     position: fixed;
     top: 20px;
     right: 20px;
@@ -17,7 +17,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.admin-header {
+.admin__header {
     background: #fff;
     border-bottom: 1px solid #f0d0dc;
     padding: 1rem 2rem;
@@ -27,18 +27,18 @@
     flex-wrap: wrap;
     gap: 10px;
 }
-.admin-header-title {
+.admin__header-title {
     font-family: "Playfair Display", serif;
     font-size: 22px;
     color: #c2185b;
     font-weight: 600;
 }
-.admin-header-sub {
+.admin__header-sub {
     font-size: 12px;
     color: #6b4050;
     margin-top: 2px;
 }
-.admin-logout-btn {
+.admin__logout-btn {
     background: transparent;
     border: 1px solid #f0d0dc;
     color: #c2185b;
@@ -49,26 +49,26 @@
     font-family: "Inter", sans-serif;
 }
 
-.admin-body {
+.admin__body {
     padding: 2rem;
     max-width: 1100px;
     margin: 0 auto;
 }
 
 /* Tabs & filter pills (shared look) */
-.admin-tabs {
+.admin__tabs {
     display: flex;
     gap: 8px;
     margin-bottom: 2rem;
     flex-wrap: wrap;
 }
-.admin-filters {
+.admin__filters {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
     margin-bottom: 1.5rem;
 }
-.admin-tab-btn {
+.admin__tab-btn {
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 13px;
@@ -80,78 +80,78 @@
     background: #fff;
     color: #6b4050;
 }
-.admin-tab-btn.active {
+.admin__tab-btn--active {
     border-color: #c2185b;
     background: #c2185b;
     color: #fff;
 }
 
 /* Stat tile grids */
-.admin-stats-grid-3 {
+.admin__stats-grid--3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
     margin-bottom: 2rem;
 }
-.admin-stats-grid-4 {
+.admin__stats-grid--4 {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     margin-bottom: 2rem;
 }
-.admin-order-items-list {
+.admin__order-items-list {
     font-size: 12px;
     color: #6b4050;
     margin-bottom: 6px;
 }
 
 /* Stat tiles */
-.admin-stat-tile {
+.admin__stat-tile {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 12px;
     padding: 1.1rem;
     text-align: center;
 }
-.admin-stat-tile.padded {
+.admin__stat-tile--padded {
     padding: 1.25rem;
 }
-.admin-stat-value {
+.admin__stat-value {
     font-size: 26px;
     font-weight: 700;
     color: var(--stat-color, #c2185b);
 }
-.admin-stat-tile.padded .admin-stat-value {
+.admin__stat-tile--padded .admin__stat-value {
     font-size: 28px;
 }
-.admin-stat-label {
+.admin__stat-label {
     font-size: 12px;
     color: #6b4050;
     margin-top: 4px;
 }
 
 /* Split layout: list + form */
-.rn-admin-split.admin-split {
+.admin__split {
     display: grid;
     grid-template-columns: 1fr 380px;
     gap: 2rem;
     align-items: start;
 }
-.admin-split.with-margin {
+.admin__split--with-margin {
     margin-bottom: 2.5rem;
 }
 
-.admin-list-title {
+.admin__list-title {
     font-size: 15px;
     font-weight: 600;
     color: #2d1520;
     margin-bottom: 1rem;
 }
-.admin-list-loading {
+.admin__list-loading {
     color: #6b4050;
     font-size: 13px;
 }
-.admin-list-empty {
+.admin__list-empty {
     background: #fff;
     border: 1px dashed #f0d0dc;
     border-radius: 12px;
@@ -160,13 +160,13 @@
     color: #6b4050;
     font-size: 13px;
 }
-.admin-list {
+.admin__list {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.admin-list-item {
+.admin__list-item {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 12px;
@@ -177,52 +177,52 @@
     flex-wrap: wrap;
     gap: 10px;
 }
-.admin-list-item.is-editing {
+.admin__list-item--editing {
     background: #fff0f5;
     border-color: #c2185b;
 }
-.admin-list-item.is-inactive {
+.admin__list-item--inactive {
     background: #fafafa;
     opacity: 0.6;
 }
-.admin-item-header {
+.admin__item-header {
     display: flex;
     align-items: center;
     gap: 8px;
     margin-bottom: 4px;
     flex-wrap: wrap;
 }
-.admin-item-name {
+.admin__item-name {
     font-size: 14px;
     font-weight: 500;
     color: #2d1520;
 }
-.admin-item-badge {
+.admin__item-badge {
     font-size: 10px;
     padding: 2px 8px;
     border-radius: 10px;
     background: var(--badge-bg);
     color: var(--badge-color);
 }
-.admin-item-meta {
+.admin__item-meta {
     display: flex;
     gap: 12px;
     font-size: 12px;
     color: #6b4050;
     flex-wrap: wrap;
 }
-.admin-item-meta-price {
+.admin__item-meta-price {
     color: #c2185b;
     font-weight: 500;
 }
-.admin-item-meta-cap {
+.admin__item-meta-cap {
     text-transform: capitalize;
 }
-.admin-item-actions {
+.admin__item-actions {
     display: flex;
     gap: 8px;
 }
-.admin-btn-edit {
+.admin__btn-edit {
     background: #fdf0f5;
     border: 1px solid #f0d0dc;
     color: #c2185b;
@@ -232,7 +232,7 @@
     cursor: pointer;
     font-family: "Inter", sans-serif;
 }
-.admin-btn-secondary {
+.admin__btn-secondary {
     background: transparent;
     border: 1px solid #f0d0dc;
     color: #999;
@@ -244,7 +244,7 @@
 }
 
 /* Form panel */
-.rn-admin-form-panel.admin-form-panel {
+.admin__form-panel {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 16px;
@@ -252,32 +252,32 @@
     position: sticky;
     top: 80px;
 }
-.admin-form-title {
+.admin__form-title {
     font-size: 15px;
     font-weight: 600;
     color: #2d1520;
     margin-bottom: 1.25rem;
 }
-.admin-form {
+.admin__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
-.admin-form.compact {
+.admin__form--compact {
     gap: 0.9rem;
 }
-.admin-form-row-2 {
+.admin__form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
-.admin-label {
+.admin__label {
     font-size: 12px;
     color: #6b4050;
     margin-bottom: 4px;
     display: block;
 }
-.admin-input {
+.admin__input {
     width: 100%;
     padding: 9px 12px;
     border: 1px solid #f0d0dc;
@@ -289,7 +289,7 @@
     color: #2d1520;
     box-sizing: border-box;
 }
-.admin-checkbox-label {
+.admin__checkbox-label {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -297,17 +297,17 @@
     color: #6b4050;
     cursor: pointer;
 }
-.admin-checkbox-label input {
+.admin__checkbox-label input {
     accent-color: #c2185b;
     width: 16px;
     height: 16px;
 }
-.admin-form-actions {
+.admin__form-actions {
     display: flex;
     gap: 8px;
     margin-top: 4px;
 }
-.admin-submit-btn {
+.admin__submit-btn {
     flex: 1;
     background: #c2185b;
     color: #fff;
@@ -319,11 +319,11 @@
     cursor: pointer;
     font-family: "Inter", sans-serif;
 }
-.admin-submit-btn:disabled {
+.admin__submit-btn:disabled {
     background: #e88aaa;
     cursor: not-allowed;
 }
-.admin-cancel-btn {
+.admin__cancel-btn {
     background: transparent;
     border: 1px solid #f0d0dc;
     color: #6b4050;
@@ -335,35 +335,35 @@
 }
 
 /* Record cards: citas / pedidos / talleres / inscripciones */
-.admin-record-card {
+.admin__record-card {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 14px;
     padding: 1rem 1.25rem;
 }
-.admin-record-header {
+.admin__record-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 12px;
     flex-wrap: wrap;
 }
-.admin-record-main {
+.admin__record-main {
     flex: 1;
 }
-.admin-record-title-row {
+.admin__record-title-row {
     display: flex;
     gap: 10px;
     align-items: center;
     margin-bottom: 6px;
     flex-wrap: wrap;
 }
-.admin-record-name {
+.admin__record-name {
     font-size: 14px;
     font-weight: 600;
     color: #2d1520;
 }
-.admin-record-badge {
+.admin__record-badge {
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 20px;
@@ -371,11 +371,11 @@
     background: var(--status-bg);
     color: var(--status-color);
 }
-.admin-record-date {
+.admin__record-date {
     font-size: 12px;
     color: #9e7080;
 }
-.admin-record-meta {
+.admin__record-meta {
     font-size: 13px;
     color: #9e7080;
     display: flex;
@@ -383,10 +383,10 @@
     flex-wrap: wrap;
     margin-bottom: 4px;
 }
-.admin-record-meta-price {
+.admin__record-meta-price {
     color: #c2185b;
 }
-.admin-record-contact {
+.admin__record-contact {
     font-size: 12px;
     color: #9e7080;
     display: flex;
@@ -394,23 +394,23 @@
     flex-wrap: wrap;
     margin-bottom: 6px;
 }
-.admin-record-total {
+.admin__record-total {
     color: #c2185b;
     font-weight: 600;
 }
-.admin-record-notes {
+.admin__record-notes {
     font-size: 12px;
     color: #9e7080;
     margin-top: 6px;
     font-style: italic;
 }
-.admin-record-actions {
+.admin__record-actions {
     display: flex;
     gap: 6px;
     flex-shrink: 0;
     flex-wrap: wrap;
 }
-.admin-action-btn {
+.admin__action-btn {
     border: 1px solid var(--btn-border, #f0d0dc);
     background: var(--btn-bg, transparent);
     color: var(--btn-color, #999);

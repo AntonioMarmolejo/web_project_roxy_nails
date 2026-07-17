@@ -38,32 +38,32 @@ export default function Shop() {
             </Helmet>
 
             {/* Header */}
-            <div className="shop-header">
-                <p className="shop-header-label">
+            <div className="shop__header">
+                <p className="shop__header-label">
                     Nuestros productos
                 </p>
-                <h1 className="shop-header-title">Tienda</h1>
-                <p className="shop-header-sub">Esmaltes, herramientas y todo para el cuidado de tus uñas.</p>
+                <h1 className="shop__header-title">Tienda</h1>
+                <p className="shop__header-sub">Esmaltes, herramientas y todo para el cuidado de tus uñas.</p>
             </div>
 
             {/* Filtros */}
-            <div className="shop-filters">
+            <div className="shop__filters">
                 {CATS.map(c => (
-                    <button key={c} onClick={() => setCat(c)} className={`shop-filter-btn${cat === c ? ' active' : ''}`}>
+                    <button key={c} onClick={() => setCat(c)} className={`shop__filter-btn${cat === c ? ' shop__filter-btn--active' : ''}`}>
                         {c === 'todo' ? 'Todos' : c.charAt(0).toUpperCase() + c.slice(1)}
                     </button>
                 ))}
             </div>
 
             {/* Grid */}
-            <div className="shop-grid-section">
+            <div className="shop__grid-section">
                 {loading ? (
-                    <p className="shop-loading">
+                    <p className="shop__loading">
                         Cargando productos...
                     </p>
                 ) : filtered.length === 0 ? (
-                    <div className="shop-empty">
-                        <div className="shop-empty-icon">🛍️</div>
+                    <div className="shop__empty">
+                        <div className="shop__empty-icon">🛍️</div>
                         <p>
                             {products.length === 0
                                 ? 'La tienda está vacía. Pronto agregaremos productos.'
@@ -71,7 +71,7 @@ export default function Shop() {
                         </p>
                     </div>
                 ) : (
-                    <div className="rn-catalog-grid">
+                    <div className="catalog-grid">
                         {filtered.map(p => (
                             <ProductCard
                                 key={p._id}
@@ -94,46 +94,46 @@ function ProductCard({ product, onAdd, isAdded }) {
     return (
         <div className="product-card">
             {/* Imagen */}
-            <div className="product-card-image">
+            <div className="product-card__image">
                 {product.image
                     ? <img src={product.image} alt={product.name} />
                     : '💅'
                 }
                 {outOfStock && (
-                    <div className="product-card-badge out-of-stock">
+                    <div className="product-card__badge product-card__badge--out-of-stock">
                         Agotado
                     </div>
                 )}
                 {lowStock && (
-                    <div className="product-card-badge low-stock">
+                    <div className="product-card__badge product-card__badge--low-stock">
                         ¡Últimas {product.stock}!
                     </div>
                 )}
             </div>
 
             {/* Info */}
-            <div className="product-card-info">
+            <div className="product-card__info">
                 {product.brand && (
-                    <span className="product-card-brand">
+                    <span className="product-card__brand">
                         {product.brand}
                     </span>
                 )}
-                <h3 className="product-card-name">
+                <h3 className="product-card__name">
                     {product.name}
                 </h3>
                 {product.description && (
-                    <p className="product-card-desc">
+                    <p className="product-card__desc">
                         {product.description}
                     </p>
                 )}
-                <div className="product-card-footer">
-                    <span className="product-card-price">
+                <div className="product-card__footer">
+                    <span className="product-card__price">
                         ${product.price}
                     </span>
                     <button
                         onClick={() => !outOfStock && onAdd(product)}
                         disabled={outOfStock}
-                        className={`product-card-add-btn${isAdded ? ' is-added' : ''}`}>
+                        className={`product-card__add-btn${isAdded ? ' product-card__add-btn--added' : ''}`}>
                         {isAdded ? '✓ Agregado' : outOfStock ? 'Agotado' : '+ Agregar'}
                     </button>
                 </div>

@@ -6,7 +6,7 @@ export default function ProtectedRoute({ children, adminRequired = false }) {
     const { token, user, authReady } = useAuthStore()
 
     if (!authReady) return (
-        <div className="protected-loading">
+        <div className="protected-route__loading">
             <span>Cargando...</span>
         </div>
     )

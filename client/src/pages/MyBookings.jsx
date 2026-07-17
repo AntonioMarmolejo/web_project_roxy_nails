@@ -43,34 +43,34 @@ export default function MyBookings() {
                 <meta name="description" content="Historial y gestión de tus citas en Roxy Nails." />
             </Helmet>
 
-            <div className="mybookings-header">
-                <p className="mybookings-header-label">
+            <div className="mybookings__header">
+                <p className="mybookings__header-label">
                     Mi historial
                 </p>
-                <h1 className="mybookings-header-title">Mis citas</h1>
-                <p className="mybookings-header-sub">Aquí aparecen todas tus reservas.</p>
+                <h1 className="mybookings__header-title">Mis citas</h1>
+                <p className="mybookings__header-sub">Aquí aparecen todas tus reservas.</p>
             </div>
 
-            <div className="mybookings-container">
+            <div className="mybookings__container">
                 {loading ? (
-                    <p className="mybookings-loading">
+                    <p className="mybookings__loading">
                         Cargando citas...
                     </p>
                 ) : bookings.length === 0 ? (
-                    <div className="mybookings-empty">
-                        <div className="mybookings-empty-icon">💅</div>
-                        <h3 className="mybookings-empty-title">Aún no tienes citas</h3>
-                        <p className="mybookings-empty-sub">
+                    <div className="mybookings__empty">
+                        <div className="mybookings__empty-icon">💅</div>
+                        <h3 className="mybookings__empty-title">Aún no tienes citas</h3>
+                        <p className="mybookings__empty-sub">
                             Cuando agendes, aparecerán aquí con todos los detalles.
                         </p>
                         <Link to="/agendar">
-                            <button className="btn-primary" style={{ width: 'auto', padding: '13px 32px' }}>
+                            <button className="btn btn--primary" style={{ width: 'auto', padding: '13px 32px' }}>
                                 Agendar mi primera cita
                             </button>
                         </Link>
                     </div>
                 ) : (
-                    <div className="mybookings-list">
+                    <div className="mybookings__list">
                         {bookings.map(b => {
                             const st = STATUS[b.status] || STATUS.pending
                             const canCancel = ['pending', 'confirmed'].includes(b.status)
@@ -78,29 +78,29 @@ export default function MyBookings() {
                                 weekday: 'short', day: 'numeric', month: 'long', timeZone: 'UTC',
                             })
                             return (
-                                <div key={b._id} className="mybookings-card">
-                                    <div className="mybookings-card-main">
-                                        <div className="mybookings-card-title-row">
-                                            <span className="mybookings-service-name">
+                                <div key={b._id} className="mybookings__card">
+                                    <div className="mybookings__card-main">
+                                        <div className="mybookings__card-title-row">
+                                            <span className="mybookings__service-name">
                                                 {b.service?.name || '—'}
                                             </span>
-                                            <span className="mybookings-status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
+                                            <span className="mybookings__status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
                                                 {st.label}
                                             </span>
                                         </div>
-                                        <div className="mybookings-meta-row">
+                                        <div className="mybookings__meta-row">
                                             <span>📅 {dateStr}</span>
                                             <span>🕐 {b.timeSlot}</span>
-                                            {b.service?.price && <span className="mybookings-meta-price">💰 ${b.service.price}</span>}
+                                            {b.service?.price && <span className="mybookings__meta-price">💰 ${b.service.price}</span>}
                                         </div>
                                         {b.notes && (
-                                            <p className="mybookings-notes">
+                                            <p className="mybookings__notes">
                                                 "{b.notes}"
                                             </p>
                                         )}
                                     </div>
                                     {canCancel && (
-                                        <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} className="mybookings-cancel-btn">
+                                        <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} className="mybookings__cancel-btn">
                                             {cancelling === b._id ? '...' : 'Cancelar'}
                                         </button>
                                     )}
@@ -111,9 +111,9 @@ export default function MyBookings() {
                 )}
 
                 {bookings.length > 0 && (
-                    <div className="mybookings-cta">
+                    <div className="mybookings__cta">
                         <Link to="/agendar">
-                            <button className="btn-ghost" style={{ width: 'auto' }}>+ Nueva cita</button>
+                            <button className="btn btn--ghost" style={{ width: 'auto' }}>+ Nueva cita</button>
                         </Link>
                     </div>
                 )}

@@ -55,13 +55,13 @@ export default function HeroSlider() {
     const s = SLIDES[cur]
 
     return (
-        <div className="rn-hero-slider hero-slider" style={{ '--hero-bg': s.bg }}>
-            <div className="rn-hero-inner hero-inner">
+        <div className="hero" style={{ '--hero-bg': s.bg }}>
+            <div className="hero__inner">
                 {/* Contenido */}
-                <div className="rn-hero-content hero-content">
-                    <span className="hero-tag" style={{ '--tag-bg': s.tagBg, '--tag-color': s.tagColor }}>{s.tag}</span>
+                <div className="hero__content">
+                    <span className="hero__tag" style={{ '--tag-bg': s.tagBg, '--tag-color': s.tagColor }}>{s.tag}</span>
 
-                    <h1 className="hero-title">
+                    <h1 className="hero__title">
                         {s.title.map((part, i) =>
                             i === s.titleEm
                                 ? <em key={i} style={{ '--em-color': s.emColor }}>{part}</em>
@@ -69,17 +69,17 @@ export default function HeroSlider() {
                         )}
                     </h1>
 
-                    <p className="hero-sub">
+                    <p className="hero__sub">
                         {s.sub}
                     </p>
 
-                    <div className="rn-hero-buttons hero-buttons">
-                        <button className="btn-primary"
+                    <div className="hero__buttons">
+                        <button className="btn btn--primary"
                             style={{ '--btn-color': s.btnPrimary.color }}
                             onClick={() => navigate(s.btnPrimary.to)}>
                             {s.btnPrimary.label}
                         </button>
-                        <button className="btn-ghost"
+                        <button className="btn btn--ghost"
                             style={{ '--btn-color': s.btnGhost.color }}
                             onClick={() => navigate(s.btnGhost.to)}>
                             {s.btnGhost.label}
@@ -88,11 +88,11 @@ export default function HeroSlider() {
                 </div>
 
                 {/* Decoración de uñas */}
-                <div className="rn-hero-nails hero-nails">
+                <div className="hero__nails">
                     {[0, 1].map(col => (
-                        <div key={col} className="hero-nails-col" style={{ marginTop: col * 28 }}>
+                        <div key={col} className="hero__nails-col" style={{ marginTop: col * 28 }}>
                             {s.nails.slice(col * 3, col * 3 + 3).map((color, i) => (
-                                <div key={i} className="hero-nail" style={{ '--nail-color': color }} />
+                                <div key={i} className="hero__nail" style={{ '--nail-color': color }} />
                             ))}
                         </div>
                     ))}
@@ -104,14 +104,14 @@ export default function HeroSlider() {
                 <button
                     key={arrow}
                     onClick={() => go(cur + (i === 0 ? -1 : 1))}
-                    className={`hero-arrow ${i === 0 ? 'hero-arrow-left' : 'hero-arrow-right'}`}
+                    className={`hero__arrow ${i === 0 ? 'hero__arrow--left' : 'hero__arrow--right'}`}
                 >{arrow}</button>
             ))}
 
             {/* Dots */}
-            <div className="hero-dots">
+            <div className="hero__dots">
                 {SLIDES.map((_, i) => (
-                    <button key={i} onClick={() => go(i)} className={`hero-dot${cur === i ? ' active' : ''}`} />
+                    <button key={i} onClick={() => go(i)} className={`hero__dot${cur === i ? ' hero__dot--active' : ''}`} />
                 ))}
             </div>
         </div>

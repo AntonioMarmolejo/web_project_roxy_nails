@@ -1,10 +1,10 @@
-.services-header {
+.services__header {
     background: #fdf0f5;
     padding: 3rem 2rem;
     text-align: center;
     border-bottom: 1px solid #f0d0dc;
 }
-.services-header-label {
+.services__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -12,18 +12,18 @@
     font-weight: 500;
     margin-bottom: 10px;
 }
-.services-header-title {
+.services__header-title {
     font-size: 38px;
     margin-bottom: 10px;
 }
-.services-header-sub {
+.services__header-sub {
     font-size: 15px;
     color: #9e7080;
     max-width: 460px;
     margin: 0 auto;
 }
 
-.services-filters {
+.services__filters {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
@@ -35,7 +35,7 @@
     top: 64px;
     z-index: 5;
 }
-.services-filter-btn {
+.services__filter-btn {
     padding: 8px 20px;
     border-radius: 20px;
     font-size: 14px;
@@ -47,18 +47,18 @@
     background: #fff;
     color: #6b4050;
 }
-.services-filter-btn.active {
+.services__filter-btn--active {
     border-color: #c2185b;
     background: #c2185b;
     color: #fff;
 }
 
-.services-grid-section {
+.services__grid-section {
     max-width: 1100px;
     margin: 0 auto;
     padding: 3rem 2rem;
 }
-.services-empty {
+.services__empty {
     text-align: center;
     color: #9e7080;
     font-size: 15px;

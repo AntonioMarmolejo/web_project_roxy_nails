@@ -9,18 +9,18 @@
     top: 0;
     z-index: 100;
 }
-.navbar-logo {
+.navbar__logo {
     font-family: "Playfair Display", serif;
     font-size: 35px;
     color: #c2185b;
     font-weight: 600;
 }
-.navbar-logo em {
+.navbar__logo em {
     font-style: italic;
     color: #e91e8c;
 }
 
-.cart-btn {
+.navbar__cart-btn {
     position: relative;
     background: transparent;
     border: none;
@@ -30,7 +30,7 @@
     color: #6b4050;
     padding: 2px 4px;
 }
-.cart-btn-badge {
+.navbar__cart-badge {
     position: absolute;
     top: -6px;
     right: -8px;
@@ -46,7 +46,7 @@
     font-weight: 500;
 }
 
-.navbar-logout-btn {
+.navbar__logout-btn {
     background: transparent;
     border: 1px solid #f0d0dc;
     color: #c2185b;
@@ -56,7 +56,7 @@
     cursor: pointer;
     font-family: "Inter", sans-serif;
 }
-.navbar-login-btn {
+.navbar__login-btn {
     background: #c2185b;
     color: #fff;
     border: none;

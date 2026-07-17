@@ -1,10 +1,10 @@
-.mybookings-header {
+.mybookings__header {
     background: #fdf0f5;
     padding: 2.5rem 2rem;
     text-align: center;
     border-bottom: 1px solid #f0d0dc;
 }
-.mybookings-header-label {
+.mybookings__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -12,51 +12,51 @@
     font-weight: 500;
     margin-bottom: 8px;
 }
-.mybookings-header-title {
+.mybookings__header-title {
     font-size: 34px;
     margin-bottom: 8px;
 }
-.mybookings-header-sub {
+.mybookings__header-sub {
     font-size: 15px;
     color: #9e7080;
 }
 
-.mybookings-container {
+.mybookings__container {
     max-width: 680px;
     margin: 0 auto;
     padding: 3rem 2rem;
 }
-.mybookings-loading {
+.mybookings__loading {
     text-align: center;
     color: #9e7080;
     padding: 3rem 0;
     font-size: 15px;
 }
-.mybookings-empty {
+.mybookings__empty {
     text-align: center;
     padding: 4rem 2rem;
 }
-.mybookings-empty-icon {
+.mybookings__empty-icon {
     font-size: 52px;
     margin-bottom: 1.25rem;
 }
-.mybookings-empty-title {
+.mybookings__empty-title {
     font-size: 22px;
     color: #2d1520;
     margin-bottom: 10px;
 }
-.mybookings-empty-sub {
+.mybookings__empty-sub {
     font-size: 15px;
     color: #9e7080;
     margin-bottom: 2rem;
 }
 
-.mybookings-list {
+.mybookings__list {
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
-.mybookings-card {
+.mybookings__card {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 16px;
@@ -66,22 +66,22 @@
     align-items: flex-start;
     gap: 16px;
 }
-.mybookings-card-main {
+.mybookings__card-main {
     flex: 1;
 }
-.mybookings-card-title-row {
+.mybookings__card-title-row {
     display: flex;
     align-items: center;
     gap: 10px;
     margin-bottom: 8px;
     flex-wrap: wrap;
 }
-.mybookings-service-name {
+.mybookings__service-name {
     font-size: 15px;
     font-weight: 600;
     color: #2d1520;
 }
-.mybookings-status-badge {
+.mybookings__status-badge {
     font-size: 11px;
     padding: 3px 10px;
     border-radius: 20px;
@@ -89,24 +89,24 @@
     background: var(--status-bg);
     color: var(--status-color);
 }
-.mybookings-meta-row {
+.mybookings__meta-row {
     display: flex;
     gap: 14px;
     font-size: 13px;
     color: #9e7080;
     flex-wrap: wrap;
 }
-.mybookings-meta-price {
+.mybookings__meta-price {
     color: #c2185b;
     font-weight: 500;
 }
-.mybookings-notes {
+.mybookings__notes {
     font-size: 12px;
     color: #9e7080;
     margin-top: 8px;
     font-style: italic;
 }
-.mybookings-cancel-btn {
+.mybookings__cancel-btn {
     background: transparent;
     border: 1px solid #f0d0dc;
     color: #9e7080;
@@ -118,7 +118,7 @@
     flex-shrink: 0;
 }
 
-.mybookings-cta {
+.mybookings__cta {
     text-align: center;
     margin-top: 2.5rem;
 }

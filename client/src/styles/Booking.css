@@ -1,10 +1,10 @@
-.booking-header {
+.booking__header {
     background: #fdf0f5;
     padding: 2.5rem 2rem;
     text-align: center;
     border-bottom: 1px solid #f0d0dc;
 }
-.booking-header-label {
+.booking__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -12,40 +12,40 @@
     font-weight: 500;
     margin-bottom: 8px;
 }
-.booking-header-title {
+.booking__header-title {
     font-size: 34px;
     margin-bottom: 8px;
 }
-.booking-header-sub {
+.booking__header-sub {
     font-size: 15px;
     color: #9e7080;
     max-width: 420px;
     margin: 0 auto;
 }
-.booking-container {
+.booking__container {
     max-width: 680px;
     margin: 0 auto;
     padding: 3rem 2rem;
 }
 
 /* Stepper */
-.stepper {
+.booking-stepper {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 2.5rem;
 }
-.stepper-step {
+.booking-stepper__step {
     display: flex;
     align-items: center;
 }
-.stepper-circle-wrap {
+.booking-stepper__circle-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 6px;
 }
-.stepper-circle {
+.booking-stepper__circle {
     border-radius: 50%;
     background: #f0d0dc;
     color: #9e7080;
@@ -56,33 +56,33 @@
     box-shadow: none;
     transition: all 0.25s;
 }
-.stepper-circle.is-filled {
+.booking-stepper__circle--filled {
     background: #c2185b;
     color: #fff;
 }
-.stepper-circle.is-active {
+.booking-stepper__circle--active {
     box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.2);
 }
-.stepper-label {
+.booking-stepper__label {
     color: #9e7080;
     font-weight: 400;
 }
-.stepper-label.is-active {
+.booking-stepper__label--active {
     color: #c2185b;
     font-weight: 600;
 }
-.stepper-line {
+.booking-stepper__line {
     height: 2px;
     margin-bottom: 22px;
     background: #f0d0dc;
     transition: background 0.3s;
 }
-.stepper-line.is-done {
+.booking-stepper__line--done {
     background: #c2185b;
 }
 
 /* Success screen */
-.booking-success-wrap {
+.booking__success-wrap {
     min-height: 70vh;
     display: flex;
     align-items: center;
@@ -90,7 +90,7 @@
     padding: 3rem 1.5rem;
     background: #fdf0f5;
 }
-.booking-success-card {
+.booking__success-card {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 22px;
@@ -100,64 +100,64 @@
     width: 100%;
     box-shadow: 0 12px 40px rgba(194, 24, 91, 0.12);
 }
-.booking-success-icon {
+.booking__success-icon {
     font-size: 56px;
     margin-bottom: 1.25rem;
 }
-.booking-success-title {
+.booking__success-title {
     font-family: "Playfair Display", serif;
     font-size: 30px;
     color: #c2185b;
     margin-bottom: 10px;
 }
-.booking-success-sub {
+.booking__success-sub {
     font-size: 15px;
     color: #9e7080;
     margin-bottom: 2rem;
 }
-.booking-summary-box {
+.booking__summary-box {
     background: #fdf0f5;
     border-radius: 14px;
     padding: 1.25rem 1.5rem;
     text-align: left;
     margin-bottom: 1.75rem;
 }
-.booking-summary-row {
+.booking__summary-row {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
     font-size: 14px;
 }
-.booking-summary-row:last-child {
+.booking__summary-row:last-child {
     margin-bottom: 0;
 }
-.booking-summary-key {
+.booking__summary-key {
     color: #9e7080;
 }
-.booking-summary-value {
+.booking__summary-value {
     color: #2d1520;
     font-weight: 500;
 }
-.booking-success-email-note {
+.booking__success-email-note {
     font-size: 13px;
     color: #9e7080;
     margin-bottom: 1.5rem;
 }
 
 /* Step 1: servicio */
-.booking-step-title {
+.booking__step-title {
     font-size: 19px;
     font-weight: 600;
     color: #2d1520;
     margin-bottom: 1.5rem;
 }
-.booking-services-grid {
+.booking__services-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 12px;
     margin-bottom: 2rem;
 }
-.booking-service-option {
+.booking__service-option {
     border: 2px solid #f0d0dc;
     background: #fff;
     border-radius: 14px;
@@ -166,44 +166,44 @@
     text-align: center;
     transition: all 0.2s;
 }
-.booking-service-option.selected {
+.booking__service-option--selected {
     border-color: #c2185b;
     background: #fdf0f5;
 }
-.booking-service-icon {
+.booking__service-icon {
     font-size: 28px;
     margin-bottom: 8px;
 }
-.booking-service-name {
+.booking__service-name {
     font-size: 13px;
     font-weight: 500;
     color: #2d1520;
     margin-bottom: 4px;
 }
-.booking-service-price {
+.booking__service-price {
     font-size: 14px;
     color: #c2185b;
     font-weight: 700;
 }
-.booking-service-duration {
+.booking__service-duration {
     font-size: 11px;
     color: #9e7080;
 }
 
 /* Step 2: calendario */
-.booking-calendar-card {
+.booking__calendar-card {
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 18px;
     padding: 1.75rem;
 }
-.booking-calendar-nav {
+.booking__calendar-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
-.booking-calendar-nav-btn {
+.booking__calendar-nav-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -212,30 +212,30 @@
     line-height: 1;
     padding: 4px 10px;
 }
-.booking-calendar-month-label {
+.booking__calendar-month-label {
     font-size: 16px;
     font-weight: 600;
     color: #2d1520;
 }
-.booking-calendar-days-header {
+.booking__calendar-days-header {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
     margin-bottom: 8px;
 }
-.booking-calendar-day-label {
+.booking__calendar-day-label {
     text-align: center;
     font-size: 11px;
     color: #9e7080;
     font-weight: 600;
     padding: 4px 0;
 }
-.booking-calendar-grid {
+.booking__calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
 }
-.booking-calendar-day {
+.booking__calendar-day {
     aspect-ratio: 1;
     border-radius: 8px;
     border: none;
@@ -246,61 +246,61 @@
     font-weight: 400;
     transition: background 0.15s;
 }
-.booking-calendar-day:not(:disabled):not(.selected):hover {
+.booking__calendar-day:not(:disabled):not(.booking__calendar-day--selected):hover {
     background: #fdf0f5;
 }
-.booking-calendar-day.selected {
+.booking__calendar-day--selected {
     background: #c2185b;
     color: #fff;
     font-weight: 600;
 }
-.booking-calendar-day:disabled {
+.booking__calendar-day:disabled {
     color: #dfc8d0;
     cursor: not-allowed;
 }
-.booking-calendar-note {
+.booking__calendar-note {
     font-size: 12px;
     color: #9e7080;
     margin-top: 1.25rem;
     text-align: center;
 }
 
-.booking-nav-row {
+.booking__nav-row {
     display: flex;
     gap: 10px;
 }
-.booking-nav-row.with-margin {
+.booking__nav-row--with-margin {
     margin-top: 1.5rem;
 }
-.booking-btn-flex1 {
+.booking__btn-flex1 {
     flex: 1;
 }
-.booking-btn-flex2 {
+.booking__btn-flex2 {
     flex: 2;
 }
-.is-disabled-look {
+.btn--disabled {
     opacity: 0.45;
 }
 
 /* Step 3: horario */
-.booking-step-sub {
+.booking__step-sub {
     font-size: 14px;
     color: #9e7080;
     margin-bottom: 1.75rem;
 }
-.booking-loading-note {
+.booking__loading-note {
     text-align: center;
     color: #9e7080;
     padding: 2rem 0;
     font-size: 14px;
 }
-.booking-slots-grid {
+.booking__slots-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     margin-bottom: 1.75rem;
 }
-.booking-slot-btn {
+.booking__slot-btn {
     padding: 13px 8px;
     border-radius: 12px;
     font-size: 15px;
@@ -311,23 +311,23 @@
     cursor: pointer;
     transition: all 0.15s;
 }
-.booking-slot-btn.selected {
+.booking__slot-btn--selected {
     border-color: #c2185b;
     background: #c2185b;
     color: #fff;
 }
-.booking-slot-btn.unavailable {
+.booking__slot-btn--unavailable {
     border-color: #f5eaef;
     background: #fafafa;
     color: #ccaabb;
     cursor: not-allowed;
 }
-.booking-slot-unavailable-label {
+.booking__slot-unavailable-label {
     font-size: 10px;
     color: #ccaabb;
     margin-top: 3px;
 }
-.booking-slots-empty-note {
+.booking__slots-empty-note {
     text-align: center;
     color: #9e7080;
     font-size: 14px;
@@ -335,18 +335,18 @@
 }
 
 /* Step 4: datos de contacto */
-.booking-form {
+.booking__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
-.booking-field-label {
+.booking__field-label {
     font-size: 13px;
     color: #6b4050;
     margin-bottom: 6px;
     display: block;
 }
-.booking-input {
+.booking__input {
     width: 100%;
     padding: 12px 14px;
     border: 1px solid #f0d0dc;
@@ -357,7 +357,7 @@
     color: #2d1520;
     background: #fff;
 }
-.booking-error-box {
+.booking__error-box {
     color: #c2185b;
     font-size: 13px;
     background: #fdf0f5;

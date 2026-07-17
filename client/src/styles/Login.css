@@ -1,4 +1,4 @@
-.login-page {
+.login {
     min-height: 80vh;
     display: flex;
     align-items: center;
@@ -6,7 +6,7 @@
     background: #fdf0f5;
     padding: 2rem;
 }
-.login-card {
+.login__card {
     background: #fff;
     border-radius: 20px;
     padding: 2.5rem 2rem;
@@ -15,35 +15,35 @@
     border: 1px solid #f0d0dc;
     box-shadow: 0 4px 24px rgba(194, 24, 91, 0.08);
 }
-.login-header {
+.login__header {
     text-align: center;
     margin-bottom: 1.75rem;
 }
-.login-logo {
+.login__logo {
     font-family: "Playfair Display", serif;
     font-size: 26px;
     font-weight: 600;
     color: #c2185b;
     text-decoration: none;
 }
-.login-logo em {
+.login__logo em {
     font-style: italic;
     color: #e91e8c;
 }
-.login-subtitle {
+.login__subtitle {
     font-size: 13px;
     color: #6b4050;
     margin-top: 6px;
 }
 
-.login-tabs {
+.login__tabs {
     display: flex;
     background: #fdf0f5;
     border-radius: 10px;
     padding: 4px;
     margin-bottom: 1.5rem;
 }
-.login-tab {
+.login__tab {
     flex: 1;
     padding: 8px;
     border: none;
@@ -56,24 +56,24 @@
     font-weight: 400;
     transition: all 0.2s;
 }
-.login-tab.active {
+.login__tab--active {
     background: #c2185b;
     color: #fff;
     font-weight: 500;
 }
 
-.login-form {
+.login__form {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
-.login-label {
+.login__label {
     font-size: 12px;
     color: #6b4050;
     margin-bottom: 4px;
     display: block;
 }
-.login-input {
+.login__input {
     width: 100%;
     padding: 10px 14px;
     border: 1px solid #f0d0dc;
@@ -85,7 +85,7 @@
     color: #2d1520;
     box-sizing: border-box;
 }
-.login-error {
+.login__error {
     font-size: 12px;
     color: #c2185b;
     background: #fdf0f5;
@@ -93,7 +93,7 @@
     border-radius: 8px;
     border: 1px solid #f8c8dc;
 }
-.login-submit-btn {
+.login__submit-btn {
     background: #c2185b;
     color: #fff;
     border: none;
@@ -105,18 +105,18 @@
     font-family: "Inter", sans-serif;
     margin-top: 4px;
 }
-.login-submit-btn:disabled {
+.login__submit-btn:disabled {
     background: #e88aaa;
     cursor: not-allowed;
 }
 
-.login-toggle-text {
+.login__toggle-text {
     text-align: center;
     font-size: 12px;
     color: #6b4050;
     margin-top: 1.25rem;
 }
-.login-toggle-link {
+.login__toggle-link {
     color: #c2185b;
     cursor: pointer;
     font-weight: 500;

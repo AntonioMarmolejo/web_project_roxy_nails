@@ -1,10 +1,10 @@
-.hero-slider {
+.hero {
     position: relative;
     overflow: hidden;
     background: var(--hero-bg);
     transition: background 0.5s;
 }
-.hero-inner {
+.hero__inner {
     max-width: 1100px;
     margin: 0 auto;
     height: 100%;
@@ -13,11 +13,11 @@
     padding: 0 4rem;
     position: relative;
 }
-.hero-content {
+.hero__content {
     max-width: 500px;
     z-index: 2;
 }
-.hero-tag {
+.hero__tag {
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.1em;
@@ -29,7 +29,7 @@
     display: inline-block;
     margin-bottom: 1.25rem;
 }
-.hero-title {
+.hero__title {
     font-family: "Playfair Display", serif;
     font-size: clamp(34px, 5vw, 52px);
     line-height: 1.18;
@@ -37,31 +37,31 @@
     color: #2d1520;
     margin-bottom: 1rem;
 }
-.hero-title em {
+.hero__title em {
     font-style: italic;
     color: var(--em-color);
 }
-.hero-sub {
+.hero__sub {
     font-size: 16px;
     color: #6b4050;
     margin-bottom: 2rem;
     line-height: 1.7;
     max-width: 400px;
 }
-.hero-buttons {
+.hero__buttons {
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
 }
-.hero-buttons .btn-primary {
+.hero__buttons .btn--primary {
     background: var(--btn-color);
 }
-.hero-buttons .btn-ghost {
+.hero__buttons .btn--ghost {
     color: var(--btn-color);
     border-color: var(--btn-color);
 }
 
-.hero-nails {
+.hero__nails {
     position: absolute;
     right: 4rem;
     top: 50%;
@@ -70,12 +70,12 @@
     gap: 16px;
     opacity: 0.8;
 }
-.hero-nails-col {
+.hero__nails-col {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
-.hero-nail {
+.hero__nail {
     width: 52px;
     height: 66px;
     border-radius: 50% 50% 40% 40%;
@@ -83,7 +83,7 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 }
 
-.hero-arrow {
+.hero__arrow {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -100,14 +100,14 @@
     justify-content: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
 }
-.hero-arrow-left {
+.hero__arrow--left {
     left: 1rem;
 }
-.hero-arrow-right {
+.hero__arrow--right {
     right: 1rem;
 }
 
-.hero-dots {
+.hero__dots {
     position: absolute;
     bottom: 1.5rem;
     left: 50%;
@@ -115,7 +115,7 @@
     display: flex;
     gap: 7px;
 }
-.hero-dot {
+.hero__dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
@@ -125,7 +125,7 @@
     padding: 0;
     transition: all 0.3s;
 }
-.hero-dot.active {
+.hero__dot--active {
     width: 22px;
     height: 8px;
     border-radius: 4px;

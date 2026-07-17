@@ -35,23 +35,23 @@ function isPastOrSunday(year, month, day) {
 function Stepper({ step }) {
     const labels = ['Servicio', 'Fecha', 'Horario', 'Datos']
     return (
-        <div className="rn-stepper stepper">
+        <div className="booking-stepper">
             {labels.map((label, i) => {
                 const n = i + 1
                 const done = step > n
                 const active = step === n
                 return (
-                    <div key={n} className="stepper-step">
-                        <div className="stepper-circle-wrap">
-                            <div className={`rn-stepper-circle stepper-circle${(done || active) ? ' is-filled' : ''}${active ? ' is-active' : ''}`}>
+                    <div key={n} className="booking-stepper__step">
+                        <div className="booking-stepper__circle-wrap">
+                            <div className={`booking-stepper__circle${(done || active) ? ' booking-stepper__circle--filled' : ''}${active ? ' booking-stepper__circle--active' : ''}`}>
                                 {done ? '✓' : n}
                             </div>
-                            <span className={`rn-stepper-label stepper-label${active ? ' is-active' : ''}`}>
+                            <span className={`booking-stepper__label${active ? ' booking-stepper__label--active' : ''}`}>
                                 {label}
                             </span>
                         </div>
                         {i < 3 && (
-                            <div className={`rn-stepper-line stepper-line${step > n ? ' is-done' : ''}`} />
+                            <div className={`booking-stepper__line${step > n ? ' booking-stepper__line--done' : ''}`} />
                         )}
                     </div>
                 )
@@ -150,34 +150,34 @@ export default function Booking() {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
         })
         return (
-            <div className="booking-success-wrap">
-                <div className="booking-success-card">
-                    <div className="booking-success-icon">💅</div>
-                    <h2 className="booking-success-title">
+            <div className="booking__success-wrap">
+                <div className="booking__success-card">
+                    <div className="booking__success-icon">💅</div>
+                    <h2 className="booking__success-title">
                         ¡Cita agendada!
                     </h2>
-                    <p className="booking-success-sub">
+                    <p className="booking__success-sub">
                         Te esperamos con muchas ganas. 🌸
                     </p>
-                    <div className="booking-summary-box">
+                    <div className="booking__summary-box">
                         {[
                             ['Servicio', result.service?.name || selSvc?.name],
                             ['Fecha', dateFormatted],
                             ['Hora', result.timeSlot],
                             ['Cliente', result.client?.name],
                         ].map(([k, v]) => (
-                            <div key={k} className="booking-summary-row">
-                                <span className="booking-summary-key">{k}</span>
-                                <span className="booking-summary-value">{v}</span>
+                            <div key={k} className="booking__summary-row">
+                                <span className="booking__summary-key">{k}</span>
+                                <span className="booking__summary-value">{v}</span>
                             </div>
                         ))}
                     </div>
                     {result.client?.email && (
-                        <p className="booking-success-email-note">
+                        <p className="booking__success-email-note">
                             Recibirás confirmación en <strong>{result.client.email}</strong>
                         </p>
                     )}
-                    <button onClick={resetWizard} className="btn-primary" style={{ width: 'auto', padding: '13px 32px' }}>
+                    <button onClick={resetWizard} className="btn btn--primary" style={{ width: 'auto', padding: '13px 32px' }}>
                         Agendar otra cita
                     </button>
                 </div>
@@ -193,36 +193,36 @@ export default function Booking() {
             </Helmet>
 
             {/* Header */}
-            <div className="booking-header">
-                <p className="booking-header-label">
+            <div className="booking__header">
+                <p className="booking__header-label">
                     Tu próxima sesión
                 </p>
-                <h1 className="booking-header-title">Agendar cita</h1>
-                <p className="booking-header-sub">
+                <h1 className="booking__header-title">Agendar cita</h1>
+                <p className="booking__header-sub">
                     Elige tu servicio, fecha y hora favorita en minutos.
                 </p>
             </div>
 
-            <div className="booking-container">
+            <div className="booking__container">
                 <Stepper step={step} />
 
                 {/* ── Paso 1: Servicio ─────────────────────────── */}
                 {step === 1 && (
                     <div>
-                        <h2 className="booking-step-title">
+                        <h2 className="booking__step-title">
                             ¿Qué servicio deseas?
                         </h2>
-                        <div className="booking-services-grid">
+                        <div className="booking__services-grid">
                             {services.map(svc => (
-                                <div key={svc._id} onClick={() => setSelSvc(svc)} className={`booking-service-option${selSvc?._id === svc._id ? ' selected' : ''}`}>
-                                    <div className="booking-service-icon">{CAT_ICONS[svc.category] || '💅'}</div>
-                                    <div className="booking-service-name">{svc.name}</div>
-                                    <div className="booking-service-price">${svc.price}</div>
-                                    <div className="booking-service-duration">{svc.duration} min</div>
+                                <div key={svc._id} onClick={() => setSelSvc(svc)} className={`booking__service-option${selSvc?._id === svc._id ? ' booking__service-option--selected' : ''}`}>
+                                    <div className="booking__service-icon">{CAT_ICONS[svc.category] || '💅'}</div>
+                                    <div className="booking__service-name">{svc.name}</div>
+                                    <div className="booking__service-price">${svc.price}</div>
+                                    <div className="booking__service-duration">{svc.duration} min</div>
                                 </div>
                             ))}
                         </div>
-                        <button onClick={() => setStep(2)} disabled={!selSvc} className={`btn-primary${!selSvc ? ' is-disabled-look' : ''}`}
+                        <button onClick={() => setStep(2)} disabled={!selSvc} className={`btn btn--primary${!selSvc ? ' btn--disabled' : ''}`}
                             style={{ width: '100%' }}>
                             Siguiente →
                         </button>
@@ -232,28 +232,28 @@ export default function Booking() {
                 {/* ── Paso 2: Fecha (Calendario) ───────────────── */}
                 {step === 2 && (
                     <div>
-                        <h2 className="booking-step-title">
+                        <h2 className="booking__step-title">
                             ¿Qué día te viene bien?
                         </h2>
-                        <div className="booking-calendar-card">
+                        <div className="booking__calendar-card">
                             {/* Navegación mes */}
-                            <div className="booking-calendar-nav">
+                            <div className="booking__calendar-nav">
                                 <button onClick={() => { const d = new Date(calYear, calMonth - 1, 1); setCalYear(d.getFullYear()); setCalMonth(d.getMonth()) }}
-                                    className="booking-calendar-nav-btn">‹</button>
-                                <span className="booking-calendar-month-label">{MONTHS[calMonth]} {calYear}</span>
+                                    className="booking__calendar-nav-btn">‹</button>
+                                <span className="booking__calendar-month-label">{MONTHS[calMonth]} {calYear}</span>
                                 <button onClick={() => { const d = new Date(calYear, calMonth + 1, 1); setCalYear(d.getFullYear()); setCalMonth(d.getMonth()) }}
-                                    className="booking-calendar-nav-btn">›</button>
+                                    className="booking__calendar-nav-btn">›</button>
                             </div>
 
                             {/* Headers días */}
-                            <div className="booking-calendar-days-header">
+                            <div className="booking__calendar-days-header">
                                 {DAYS.map(d => (
-                                    <div key={d} className="booking-calendar-day-label">{d}</div>
+                                    <div key={d} className="booking__calendar-day-label">{d}</div>
                                 ))}
                             </div>
 
                             {/* Grid días */}
-                            <div className="booking-calendar-grid">
+                            <div className="booking__calendar-grid">
                                 {getDaysGrid(calYear, calMonth).map((day, i) => {
                                     if (!day) return <div key={i} />
                                     const dateStr = toDateStr(calYear, calMonth, day)
@@ -261,18 +261,18 @@ export default function Booking() {
                                     const selected = dateStr === selDate
                                     return (
                                         <button key={i} onClick={() => !disabled && pickDate(day)} disabled={disabled}
-                                            className={`booking-calendar-day${selected ? ' selected' : ''}`}
+                                            className={`booking__calendar-day${selected ? ' booking__calendar-day--selected' : ''}`}
                                         >{day}</button>
                                     )
                                 })}
                             </div>
-                            <p className="booking-calendar-note">
+                            <p className="booking__calendar-note">
                                 Abrimos Lunes–Sábado. Los domingos estamos cerradas. 🌸
                             </p>
                         </div>
-                        <div className="booking-nav-row with-margin">
-                            <button onClick={() => setStep(1)} className="btn-ghost booking-btn-flex1">← Atrás</button>
-                            <button onClick={() => setStep(3)} disabled={!selDate} className={`btn-primary booking-btn-flex2${!selDate ? ' is-disabled-look' : ''}`}>
+                        <div className="booking__nav-row booking__nav-row--with-margin">
+                            <button onClick={() => setStep(1)} className="btn btn--ghost booking__btn-flex1">← Atrás</button>
+                            <button onClick={() => setStep(3)} disabled={!selDate} className={`btn btn--primary booking__btn-flex2${!selDate ? ' btn--disabled' : ''}`}>
                                 Siguiente →
                             </button>
                         </div>
@@ -282,45 +282,45 @@ export default function Booking() {
                 {/* ── Paso 3: Horario ─────────────────────────── */}
                 {step === 3 && (
                     <div>
-                        <h2 className="booking-step-title" style={{ marginBottom: 6 }}>
+                        <h2 className="booking__step-title" style={{ marginBottom: 6 }}>
                             ¿A qué hora?
                         </h2>
-                        <p className="booking-step-sub">
+                        <p className="booking__step-sub">
                             {new Date(selDate + 'T00:00:00').toLocaleDateString('es-ES', {
                                 weekday: 'long', day: 'numeric', month: 'long',
                             })}
                         </p>
 
                         {loadingSlots ? (
-                            <p className="booking-loading-note">
+                            <p className="booking__loading-note">
                                 Consultando disponibilidad...
                             </p>
                         ) : (
                             <>
-                                <div className="booking-slots-grid">
+                                <div className="booking__slots-grid">
                                     {ALL_SLOTS.map(slot => {
                                         const avail = slots.available.includes(slot)
                                         const selected = slot === selSlot
                                         return (
                                             <button key={slot} onClick={() => avail && setSelSlot(slot)}
-                                                className={`booking-slot-btn${selected ? ' selected' : ''}${!avail ? ' unavailable' : ''}`}>
+                                                className={`booking__slot-btn${selected ? ' booking__slot-btn--selected' : ''}${!avail ? ' booking__slot-btn--unavailable' : ''}`}>
                                                 {slot}
-                                                {!avail && <div className="booking-slot-unavailable-label">Ocupado</div>}
+                                                {!avail && <div className="booking__slot-unavailable-label">Ocupado</div>}
                                             </button>
                                         )
                                     })}
                                 </div>
                                 {slots.available.length === 0 && (
-                                    <p className="booking-slots-empty-note">
+                                    <p className="booking__slots-empty-note">
                                         No hay horarios disponibles este día. Por favor elige otra fecha.
                                     </p>
                                 )}
                             </>
                         )}
 
-                        <div className="booking-nav-row">
-                            <button onClick={() => { setStep(2); setSelSlot(null) }} className="btn-ghost booking-btn-flex1">← Atrás</button>
-                            <button onClick={() => setStep(4)} disabled={!selSlot} className={`btn-primary booking-btn-flex2${!selSlot ? ' is-disabled-look' : ''}`}>
+                        <div className="booking__nav-row">
+                            <button onClick={() => { setStep(2); setSelSlot(null) }} className="btn btn--ghost booking__btn-flex1">← Atrás</button>
+                            <button onClick={() => setStep(4)} disabled={!selSlot} className={`btn btn--primary booking__btn-flex2${!selSlot ? ' btn--disabled' : ''}`}>
                                 Siguiente →
                             </button>
                         </div>
@@ -330,60 +330,60 @@ export default function Booking() {
                 {/* ── Paso 4: Datos de contacto ────────────────── */}
                 {step === 4 && (
                     <div>
-                        <h2 className="booking-step-title" style={{ marginBottom: 6 }}>
+                        <h2 className="booking__step-title" style={{ marginBottom: 6 }}>
                             Tus datos de contacto
                         </h2>
-                        <p className="booking-step-sub">
+                        <p className="booking__step-sub">
                             Te avisaremos para recordarte la cita.
                         </p>
 
                         {/* Resumen */}
-                        <div className="booking-summary-box">
+                        <div className="booking__summary-box">
                             {[
                                 ['Servicio', selSvc?.name],
                                 ['Fecha', new Date(selDate + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })],
                                 ['Hora', selSlot],
                                 ['Precio', `$${selSvc?.price}`],
                             ].map(([k, v]) => (
-                                <div key={k} className="booking-summary-row">
-                                    <span className="booking-summary-key">{k}</span>
-                                    <span className="booking-summary-value">{v}</span>
+                                <div key={k} className="booking__summary-row">
+                                    <span className="booking__summary-key">{k}</span>
+                                    <span className="booking__summary-value">{v}</span>
                                 </div>
                             ))}
                         </div>
 
-                        <form onSubmit={submit} className="booking-form">
+                        <form onSubmit={submit} className="booking__form">
                             {[
                                 { name: 'name', label: 'Nombre completo *', type: 'text', placeholder: 'Tu nombre', required: true },
                                 { name: 'phone', label: 'Teléfono / WhatsApp *', type: 'tel', placeholder: '+1 234 567 8900', required: true },
                                 { name: 'email', label: 'Email (para confirmación)', type: 'email', placeholder: 'opcional', required: false },
                             ].map(f => (
                                 <div key={f.name}>
-                                    <label className="booking-field-label">{f.label}</label>
+                                    <label className="booking__field-label">{f.label}</label>
                                     <input name={f.name} type={f.type} value={form[f.name]} onChange={handleForm}
-                                        placeholder={f.placeholder} required={f.required} className="booking-input" />
+                                        placeholder={f.placeholder} required={f.required} className="booking__input" />
                                 </div>
                             ))}
 
                             <div>
-                                <label className="booking-field-label">
+                                <label className="booking__field-label">
                                     Notas (alergias, diseño, color…)
                                 </label>
                                 <textarea name="notes" value={form.notes} onChange={handleForm} rows={3}
-                                    placeholder="Opcional" className="booking-input" style={{ resize: 'vertical' }} />
+                                    placeholder="Opcional" className="booking__input" style={{ resize: 'vertical' }} />
                             </div>
 
                             {error && (
-                                <div className="booking-error-box">
+                                <div className="booking__error-box">
                                     {error}
                                 </div>
                             )}
 
-                            <div className="booking-nav-row" style={{ marginTop: 4 }}>
-                                <button type="button" onClick={() => setStep(3)} className="btn-ghost booking-btn-flex1">
+                            <div className="booking__nav-row" style={{ marginTop: 4 }}>
+                                <button type="button" onClick={() => setStep(3)} className="btn btn--ghost booking__btn-flex1">
                                     ← Atrás
                                 </button>
-                                <button type="submit" disabled={submitting} className={`btn-primary booking-btn-flex2${submitting ? ' is-disabled-look' : ''}`}>
+                                <button type="submit" disabled={submitting} className={`btn btn--primary booking__btn-flex2${submitting ? ' btn--disabled' : ''}`}>
                                     {submitting ? 'Confirmando...' : 'Confirmar cita 💅'}
                                 </button>
                             </div>

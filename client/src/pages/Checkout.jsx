@@ -53,11 +53,11 @@ export default function Checkout() {
     // Carrito vacío (sin pedido confirmado)
     if (items.length === 0 && !success) {
         return (
-            <div className="checkout-empty">
-                <div className="checkout-empty-icon">🛒</div>
-                <h2 className="checkout-empty-title">Tu carrito está vacío</h2>
-                <p className="checkout-empty-sub">Agrega productos antes de continuar.</p>
-                <button onClick={() => navigate('/tienda')} className="btn-primary" style={{ width: 'auto', padding: '12px 32px' }}>
+            <div className="checkout__empty">
+                <div className="checkout__empty-icon">🛒</div>
+                <h2 className="checkout__empty-title">Tu carrito está vacío</h2>
+                <p className="checkout__empty-sub">Agrega productos antes de continuar.</p>
+                <button onClick={() => navigate('/tienda')} className="btn btn--primary" style={{ width: 'auto', padding: '12px 32px' }}>
                     Ver tienda
                 </button>
             </div>
@@ -67,33 +67,33 @@ export default function Checkout() {
     // Pedido confirmado
     if (success) {
         return (
-            <div className="checkout-success">
-                <div className="checkout-success-icon">🎉</div>
-                <h2 className="checkout-success-title">
+            <div className="checkout__success">
+                <div className="checkout__success-icon">🎉</div>
+                <h2 className="checkout__success-title">
                     ¡Pedido realizado!
                 </h2>
-                <p className="checkout-success-sub">
+                <p className="checkout__success-sub">
                     Hemos recibido tu pedido. Te contactaremos pronto para coordinar la entrega.
                 </p>
 
-                <div className="checkout-success-box">
-                    <div className="checkout-success-details">
+                <div className="checkout__success-box">
+                    <div className="checkout__success-details">
                         <span><strong>Cliente:</strong> {success.client.name}</span>
                         <span><strong>Correo:</strong> {success.client.email}</span>
                         <span>
                             <strong>Total:</strong>{' '}
-                            <span className="checkout-success-total">${success.total.toFixed(2)}</span>
+                            <span className="checkout__success-total">${success.total.toFixed(2)}</span>
                         </span>
                         <span><strong>Pago:</strong> En tienda / al retirar</span>
                     </div>
                 </div>
 
-                <button onClick={() => navigate('/tienda')} className="btn-primary" style={{ width: 'auto', padding: '12px 32px' }}>
+                <button onClick={() => navigate('/tienda')} className="btn btn--primary" style={{ width: 'auto', padding: '12px 32px' }}>
                     Seguir comprando
                 </button>
                 {user && (
                     <div style={{ marginTop: '1rem' }}>
-                        <button onClick={() => navigate('/mis-pedidos')} className="checkout-success-link-btn">
+                        <button onClick={() => navigate('/mis-pedidos')} className="checkout__success-link-btn">
                             Ver mis pedidos
                         </button>
                     </div>
@@ -108,20 +108,20 @@ export default function Checkout() {
                 <title>Checkout — Roxy Nails</title>
             </Helmet>
 
-            <div className="checkout-page-header">
-                <h1 className="checkout-page-title">
+            <div className="checkout__page-header">
+                <h1 className="checkout__page-title">
                     Finalizar compra
                 </h1>
             </div>
 
-            <div className="rn-checkout-grid checkout-grid">
+            <div className="checkout__grid">
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="checkout-form">
-                    <h2 className="checkout-form-title">
+                <form onSubmit={handleSubmit} className="checkout__form">
+                    <h2 className="checkout__form-title">
                         Datos de entrega
                     </h2>
 
-                    <div className="checkout-fields">
+                    <div className="checkout__fields">
                         {[
                             { name: 'name',    label: 'Nombre completo *',       placeholder: 'Tu nombre',           required: true },
                             { name: 'email',   label: 'Correo electrónico *',    placeholder: 'correo@ejemplo.com',  required: true, type: 'email' },
@@ -129,69 +129,69 @@ export default function Checkout() {
                             { name: 'address', label: 'Dirección / punto de retiro', placeholder: 'Calle, sector, ciudad' },
                         ].map(f => (
                             <div key={f.name}>
-                                <label className="checkout-label">{f.label}</label>
+                                <label className="checkout__label">{f.label}</label>
                                 <input
                                     name={f.name} type={f.type || 'text'}
                                     value={form[f.name]} onChange={handleChange}
                                     placeholder={f.placeholder} required={f.required}
-                                    className="checkout-input"
+                                    className="checkout__input"
                                 />
                             </div>
                         ))}
 
                         <div>
-                            <label className="checkout-label">Notas del pedido</label>
+                            <label className="checkout__label">Notas del pedido</label>
                             <textarea
                                 name="notes" value={form.notes} onChange={handleChange}
                                 rows={3} placeholder="Instrucciones especiales, horario de entrega..."
-                                className="checkout-input" style={{ resize: 'vertical' }}
+                                className="checkout__input" style={{ resize: 'vertical' }}
                             />
                         </div>
                     </div>
 
                     {/* Método de pago */}
-                    <div className="checkout-payment-box">
-                        <p className="checkout-payment-title">Método de pago</p>
-                        <div className="checkout-payment-row">
+                    <div className="checkout__payment-box">
+                        <p className="checkout__payment-title">Método de pago</p>
+                        <div className="checkout__payment-row">
                             <span style={{ fontSize: 18 }}>💵</span>
                             Pago al retirar / en tienda
                         </div>
                     </div>
 
                     {error && (
-                        <p className="checkout-error">
+                        <p className="checkout__error">
                             {error}
                         </p>
                     )}
 
-                    <button type="submit" disabled={submitting} className="btn-primary" style={{ width: '100%', marginTop: '1.5rem' }}>
+                    <button type="submit" disabled={submitting} className="btn btn--primary" style={{ width: '100%', marginTop: '1.5rem' }}>
                         {submitting ? 'Procesando...' : 'Confirmar pedido'}
                     </button>
                 </form>
 
                 {/* Resumen del pedido */}
-                <div className="rn-order-summary checkout-summary">
-                    <h2 className="checkout-summary-title">
+                <div className="checkout__summary">
+                    <h2 className="checkout__summary-title">
                         Tu pedido ({items.length})
                     </h2>
 
-                    <div className="checkout-summary-items">
+                    <div className="checkout__summary-items">
                         {items.map(item => (
-                            <div key={item._id} className="checkout-summary-item">
-                                <span className="checkout-summary-item-name">
+                            <div key={item._id} className="checkout__summary-item">
+                                <span className="checkout__summary-item-name">
                                     {item.name}
-                                    <span className="checkout-summary-item-qty"> ×{item.qty}</span>
+                                    <span className="checkout__summary-item-qty"> ×{item.qty}</span>
                                 </span>
-                                <span className="checkout-summary-item-price">
+                                <span className="checkout__summary-item-price">
                                     ${(item.price * item.qty).toFixed(2)}
                                 </span>
                             </div>
                         ))}
                     </div>
 
-                    <div className="checkout-summary-total-row">
-                        <span className="checkout-summary-total-label">Total</span>
-                        <span className="checkout-summary-total-value">${total.toFixed(2)}</span>
+                    <div className="checkout__summary-total-row">
+                        <span className="checkout__summary-total-label">Total</span>
+                        <span className="checkout__summary-total-value">${total.toFixed(2)}</span>
                     </div>
                 </div>
             </div>

@@ -22,26 +22,26 @@ export default function Workshops() {
                 <meta name="description" content="Aprende técnicas de manicure y nail art en nuestros talleres." />
             </Helmet>
 
-            <div className="workshops-header">
-                <p className="workshops-header-label">
+            <div className="workshops__header">
+                <p className="workshops__header-label">
                     Aprende con nosotras
                 </p>
-                <h1 className="workshops-header-title">Talleres</h1>
-                <p className="workshops-header-sub">Cupos limitados. Inscríbete antes de que se agoten.</p>
+                <h1 className="workshops__header-title">Talleres</h1>
+                <p className="workshops__header-sub">Cupos limitados. Inscríbete antes de que se agoten.</p>
             </div>
 
-            <div className="workshops-grid-section">
+            <div className="workshops__grid-section">
                 {loading ? (
-                    <p className="workshops-loading">
+                    <p className="workshops__loading">
                         Cargando talleres...
                     </p>
                 ) : workshops.length === 0 ? (
-                    <div className="workshops-empty">
-                        <div className="workshops-empty-icon">🎓</div>
+                    <div className="workshops__empty">
+                        <div className="workshops__empty-icon">🎓</div>
                         <p>No hay talleres programados por ahora. ¡Vuelve pronto!</p>
                     </div>
                 ) : (
-                    <div className="rn-catalog-grid">
+                    <div className="catalog-grid">
                         {workshops.map(w => <WorkshopCard key={w._id} workshop={w} />)}
                     </div>
                 )}
@@ -58,46 +58,46 @@ function WorkshopCard({ workshop }) {
 
     return (
         <div className="workshop-card">
-            <div className="workshop-card-image">
+            <div className="workshop-card__image">
                 {workshop.image
                     ? <img src={workshop.image} alt={workshop.title} />
                     : '🎓'
                 }
                 {full && (
-                    <div className="workshop-card-badge full">
+                    <div className="workshop-card__badge workshop-card__badge--full">
                         Cupos agotados
                     </div>
                 )}
                 {!full && workshop.spotsLeft <= 3 && (
-                    <div className="workshop-card-badge low-spots">
+                    <div className="workshop-card__badge workshop-card__badge--low-spots">
                         ¡Últimos {workshop.spotsLeft} cupos!
                     </div>
                 )}
             </div>
 
-            <div className="workshop-card-info">
-                <span className="workshop-card-meta">
+            <div className="workshop-card__info">
+                <span className="workshop-card__meta">
                     {workshop.modality === 'virtual' ? 'Virtual' : 'Presencial'} · {dateStr}
                 </span>
-                <h3 className="workshop-card-title">
+                <h3 className="workshop-card__title">
                     {workshop.title}
                 </h3>
                 {workshop.description && (
-                    <p className="workshop-card-desc">
+                    <p className="workshop-card__desc">
                         {workshop.description}
                     </p>
                 )}
-                <div className="workshop-card-footer">
-                    <span className="workshop-card-price">
+                <div className="workshop-card__footer">
+                    <span className="workshop-card__price">
                         ${workshop.price}
                     </span>
                     {full ? (
-                        <button disabled className="workshop-card-btn">
+                        <button disabled className="workshop-card__btn">
                             Agotado
                         </button>
                     ) : (
                         <Link to={`/talleres/${workshop._id}/inscripcion`}>
-                            <button className="workshop-card-btn">
+                            <button className="workshop-card__btn">
                                 Inscribirme
                             </button>
                         </Link>

@@ -16,34 +16,34 @@ export default function CartDrawer() {
     return (
         <>
             {/* Backdrop */}
-            <div className="cart-backdrop" onClick={closeDrawer} />
+            <div className="cart__backdrop" onClick={closeDrawer} />
 
             {/* Panel */}
-            <div className="cart-panel">
+            <div className="cart__panel">
                 {/* Header */}
-                <div className="cart-header">
+                <div className="cart__header">
                     <h2>
                         Carrito{' '}
                         {count > 0 && (
-                            <span className="cart-header-count">({count})</span>
+                            <span className="cart__header-count">({count})</span>
                         )}
                     </h2>
-                    <button onClick={closeDrawer} className="cart-close-btn">✕</button>
+                    <button onClick={closeDrawer} className="cart__close-btn">✕</button>
                 </div>
 
                 {/* Items */}
-                <div className="cart-items">
+                <div className="cart__items">
                     {items.length === 0 ? (
-                        <div className="cart-empty">
-                            <div className="cart-empty-icon">🛒</div>
+                        <div className="cart__empty">
+                            <div className="cart__empty-icon">🛒</div>
                             <p>Tu carrito está vacío.</p>
                         </div>
                     ) : (
-                        <div className="cart-item-list">
+                        <div className="cart__item-list">
                             {items.map(item => (
-                                <div key={item._id} className="cart-item">
+                                <div key={item._id} className="cart__item">
                                     {/* Imagen */}
-                                    <div className="cart-item-image">
+                                    <div className="cart__item-image">
                                         {item.image
                                             ? <img src={item.image} alt={item.name} />
                                             : '💅'
@@ -51,24 +51,24 @@ export default function CartDrawer() {
                                     </div>
 
                                     {/* Info */}
-                                    <div className="cart-item-info">
-                                        <p className="cart-item-name">
+                                    <div className="cart__item-info">
+                                        <p className="cart__item-name">
                                             {item.name}
                                         </p>
-                                        <p className="cart-item-price">
+                                        <p className="cart__item-price">
                                             ${(item.price * item.qty).toFixed(2)}
                                         </p>
                                     </div>
 
                                     {/* Cantidad + quitar */}
-                                    <div className="cart-item-actions">
-                                        <button className="cart-qty-btn" onClick={() => updateQty(item._id, item.qty - 1)}>−</button>
-                                        <span className="cart-item-qty">
+                                    <div className="cart__item-actions">
+                                        <button className="cart__qty-btn" onClick={() => updateQty(item._id, item.qty - 1)}>−</button>
+                                        <span className="cart__item-qty">
                                             {item.qty}
                                         </span>
-                                        <button className="cart-qty-btn" onClick={() => updateQty(item._id, item.qty + 1)}>+</button>
+                                        <button className="cart__qty-btn" onClick={() => updateQty(item._id, item.qty + 1)}>+</button>
                                         <button
-                                            className="cart-qty-btn cart-qty-remove"
+                                            className="cart__qty-btn cart__remove-btn"
                                             onClick={() => removeItem(item._id)}
                                         >×</button>
                                     </div>
@@ -80,17 +80,17 @@ export default function CartDrawer() {
 
                 {/* Footer */}
                 {items.length > 0 && (
-                    <div className="cart-footer">
-                        <div className="cart-total-row">
-                            <span className="cart-total-label">Total</span>
-                            <span className="cart-total-value">
+                    <div className="cart__footer">
+                        <div className="cart__total-row">
+                            <span className="cart__total-label">Total</span>
+                            <span className="cart__total-value">
                                 ${total.toFixed(2)}
                             </span>
                         </div>
-                        <button onClick={handleCheckout} className="btn-primary" style={{ width: '100%' }}>
+                        <button onClick={handleCheckout} className="btn btn--primary" style={{ width: '100%' }}>
                             Ir a pagar
                         </button>
-                        <button onClick={clearCart} className="cart-clear-btn">
+                        <button onClick={clearCart} className="cart__clear-btn">
                             Vaciar carrito
                         </button>
                     </div>

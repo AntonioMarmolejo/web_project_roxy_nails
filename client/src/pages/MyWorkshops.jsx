@@ -28,55 +28,55 @@ export default function MyWorkshops() {
                 <meta name="description" content="Historial de tus inscripciones a talleres en Roxy Nails." />
             </Helmet>
 
-            <div className="myworkshops-header">
-                <p className="myworkshops-header-label">
+            <div className="myworkshops__header">
+                <p className="myworkshops__header-label">
                     Mi historial
                 </p>
-                <h1 className="myworkshops-header-title">Mis talleres</h1>
-                <p className="myworkshops-header-sub">Talleres en los que te has inscrito.</p>
+                <h1 className="myworkshops__header-title">Mis talleres</h1>
+                <p className="myworkshops__header-sub">Talleres en los que te has inscrito.</p>
             </div>
 
-            <div className="myworkshops-container">
+            <div className="myworkshops__container">
                 {loading ? (
-                    <p className="myworkshops-loading">
+                    <p className="myworkshops__loading">
                         Cargando talleres...
                     </p>
                 ) : enrollments.length === 0 ? (
-                    <div className="myworkshops-empty">
-                        <div className="myworkshops-empty-icon">🎓</div>
-                        <h3 className="myworkshops-empty-title">Aún no te has inscrito a ningún taller</h3>
-                        <p className="myworkshops-empty-sub">
+                    <div className="myworkshops__empty">
+                        <div className="myworkshops__empty-icon">🎓</div>
+                        <h3 className="myworkshops__empty-title">Aún no te has inscrito a ningún taller</h3>
+                        <p className="myworkshops__empty-sub">
                             Explora los talleres disponibles y reserva tu cupo.
                         </p>
                         <Link to="/talleres">
-                            <button className="btn-primary" style={{ width: 'auto', padding: '13px 32px' }}>
+                            <button className="btn btn--primary" style={{ width: 'auto', padding: '13px 32px' }}>
                                 Ver talleres
                             </button>
                         </Link>
                     </div>
                 ) : (
-                    <div className="myworkshops-list">
+                    <div className="myworkshops__list">
                         {enrollments.map(en => {
                             const st = STATUS[en.status] || STATUS.pending
                             const dateStr = new Date(en.date).toLocaleDateString('es-ES', {
                                 day: 'numeric', month: 'long', year: 'numeric',
                             })
                             return (
-                                <div key={en._id} className="myworkshops-card">
-                                    <div className="myworkshops-card-header">
-                                        <span className="myworkshops-title">{en.title}</span>
-                                        <span className="myworkshops-status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
+                                <div key={en._id} className="myworkshops__card">
+                                    <div className="myworkshops__card-header">
+                                        <span className="myworkshops__title">{en.title}</span>
+                                        <span className="myworkshops__status-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>
                                             {st.label}
                                         </span>
                                     </div>
 
-                                    <div className="myworkshops-date">
+                                    <div className="myworkshops__date">
                                         📅 {dateStr}
                                     </div>
 
-                                    <div className="myworkshops-total-row">
-                                        <span className="myworkshops-total-label">Precio</span>
-                                        <span className="myworkshops-total-value">
+                                    <div className="myworkshops__total-row">
+                                        <span className="myworkshops__total-label">Precio</span>
+                                        <span className="myworkshops__total-value">
                                             ${en.price.toFixed(2)}
                                         </span>
                                     </div>
@@ -87,9 +87,9 @@ export default function MyWorkshops() {
                 )}
 
                 {enrollments.length > 0 && (
-                    <div className="myworkshops-cta">
+                    <div className="myworkshops__cta">
                         <Link to="/talleres">
-                            <button className="btn-ghost" style={{ width: 'auto' }}>Ver más talleres</button>
+                            <button className="btn btn--ghost" style={{ width: 'auto' }}>Ver más talleres</button>
                         </Link>
                     </div>
                 )}

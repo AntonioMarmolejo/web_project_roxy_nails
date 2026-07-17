@@ -285,85 +285,85 @@ export default function Admin() {
     }
 
     return (
-        <div className="admin-page">
+        <div className="admin__page">
 
             {/* Toast */}
             {toast && (
-                <div className="admin-toast">
+                <div className="admin__toast">
                     {toast}
                 </div>
             )}
 
             {/* Header */}
-            <div className="admin-header">
+            <div className="admin__header">
                 <div>
-                    <h1 className="admin-header-title">
+                    <h1 className="admin__header-title">
                         Panel de administración
                     </h1>
-                    <p className="admin-header-sub">Bienvenida, {user?.name}</p>
+                    <p className="admin__header-sub">Bienvenida, {user?.name}</p>
                 </div>
-                <button onClick={logout} className="admin-logout-btn">
+                <button onClick={logout} className="admin__logout-btn">
                     Cerrar sesión
                 </button>
             </div>
 
-            <div className="admin-body">
+            <div className="admin__body">
 
                 {/* Tabs */}
-                <div className="admin-tabs">
-                    <button onClick={() => setTab('servicios')} className={`admin-tab-btn${tab === 'servicios' ? ' active' : ''}`}>✂️ Servicios</button>
-                    <button onClick={() => setTab('citas')}     className={`admin-tab-btn${tab === 'citas' ? ' active' : ''}`}>📅 Citas</button>
-                    <button onClick={() => setTab('productos')} className={`admin-tab-btn${tab === 'productos' ? ' active' : ''}`}>🛍️ Productos</button>
-                    <button onClick={() => setTab('pedidos')}   className={`admin-tab-btn${tab === 'pedidos' ? ' active' : ''}`}>📦 Pedidos</button>
-                    <button onClick={() => setTab('talleres')}  className={`admin-tab-btn${tab === 'talleres' ? ' active' : ''}`}>🎓 Talleres</button>
+                <div className="admin__tabs">
+                    <button onClick={() => setTab('servicios')} className={`admin__tab-btn${tab === 'servicios' ? ' admin__tab-btn--active' : ''}`}>✂️ Servicios</button>
+                    <button onClick={() => setTab('citas')}     className={`admin__tab-btn${tab === 'citas' ? ' admin__tab-btn--active' : ''}`}>📅 Citas</button>
+                    <button onClick={() => setTab('productos')} className={`admin__tab-btn${tab === 'productos' ? ' admin__tab-btn--active' : ''}`}>🛍️ Productos</button>
+                    <button onClick={() => setTab('pedidos')}   className={`admin__tab-btn${tab === 'pedidos' ? ' admin__tab-btn--active' : ''}`}>📦 Pedidos</button>
+                    <button onClick={() => setTab('talleres')}  className={`admin__tab-btn${tab === 'talleres' ? ' admin__tab-btn--active' : ''}`}>🎓 Talleres</button>
                 </div>
 
                 {/* ════════ SERVICIOS ════════ */}
                 {tab === 'servicios' && (
                     <>
-                        <div className="rn-admin-stats-3 admin-stats-grid-3">
+                        <div className="admin__stats-grid--3">
                             {[
                                 { label: 'Servicios activos', value: services.length },
                                 { label: 'Destacados', value: services.filter(s => s.featured).length },
                                 { label: 'Categorías', value: new Set(services.map(s => s.category)).size },
                             ].map(st => (
-                                <div key={st.label} className="admin-stat-tile padded">
-                                    <div className="admin-stat-value">{st.value}</div>
-                                    <div className="admin-stat-label">{st.label}</div>
+                                <div key={st.label} className="admin__stat-tile admin__stat-tile--padded">
+                                    <div className="admin__stat-value">{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split admin-split">
+                        <div className="admin__split">
                             {/* Lista */}
                             <div>
-                                <h2 className="admin-list-title">
+                                <h2 className="admin__list-title">
                                     Servicios ({services.length})
                                 </h2>
                                 {fetching ? (
-                                    <p className="admin-list-loading">Cargando...</p>
+                                    <p className="admin__list-loading">Cargando...</p>
                                 ) : services.length === 0 ? (
-                                    <div className="admin-list-empty">
+                                    <div className="admin__list-empty">
                                         No hay servicios. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div className="admin-list">
+                                    <div className="admin__list">
                                         {services.map(svc => (
-                                            <div key={svc._id} className={`admin-list-item${editing === svc._id ? ' is-editing' : ''}`}>
+                                            <div key={svc._id} className={`admin__list-item${editing === svc._id ? ' admin__list-item--editing' : ''}`}>
                                                 <div>
-                                                    <div className="admin-item-header">
-                                                        <span className="admin-item-name">{svc.name}</span>
-                                                        {svc.featured && <span className="admin-item-badge" style={{ '--badge-bg': '#F8C8DC', '--badge-color': '#88134A' }}>Destacado</span>}
+                                                    <div className="admin__item-header">
+                                                        <span className="admin__item-name">{svc.name}</span>
+                                                        {svc.featured && <span className="admin__item-badge" style={{ '--badge-bg': '#F8C8DC', '--badge-color': '#88134A' }}>Destacado</span>}
                                                     </div>
-                                                    <div className="admin-item-meta">
-                                                        <span className="admin-item-meta-price">${svc.price}</span>
+                                                    <div className="admin__item-meta">
+                                                        <span className="admin__item-meta-price">${svc.price}</span>
                                                         <span>{svc.duration} min</span>
-                                                        <span className="admin-item-meta-cap">{svc.category}</span>
+                                                        <span className="admin__item-meta-cap">{svc.category}</span>
                                                     </div>
                                                 </div>
-                                                <div className="admin-item-actions">
-                                                    <button onClick={() => startEditSvc(svc)} className="admin-btn-edit">Editar</button>
-                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} className="admin-btn-secondary">Desactivar</button>
+                                                <div className="admin__item-actions">
+                                                    <button onClick={() => startEditSvc(svc)} className="admin__btn-edit">Editar</button>
+                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} className="admin__btn-secondary">Desactivar</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -372,27 +372,27 @@ export default function Admin() {
                             </div>
 
                             {/* Form servicio */}
-                            <div className="rn-admin-form-panel admin-form-panel">
-                                <h2 className="admin-form-title">
+                            <div className="admin__form-panel">
+                                <h2 className="admin__form-title">
                                     {editing ? 'Editar servicio' : 'Nuevo servicio'}
                                 </h2>
-                                <form onSubmit={submitSvc} className="admin-form">
-                                    <div><label className="admin-label">Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} className="admin-input" placeholder="Manicure Gel" required /></div>
-                                    <div><label className="admin-label">Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} className="admin-input" placeholder="Breve descripción" /></div>
-                                    <div className="admin-form-row-2">
-                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} className="admin-input" placeholder="25" required /></div>
-                                        <div><label className="admin-label">Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin-input" placeholder="60" required /></div>
+                                <form onSubmit={submitSvc} className="admin__form">
+                                    <div><label className="admin__label">Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} className="admin__input" placeholder="Manicure Gel" required /></div>
+                                    <div><label className="admin__label">Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} className="admin__input" placeholder="Breve descripción" /></div>
+                                    <div className="admin__form-row">
+                                        <div><label className="admin__label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} className="admin__input" placeholder="25" required /></div>
+                                        <div><label className="admin__label">Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin__input" placeholder="60" required /></div>
                                     </div>
-                                    <div><label className="admin-label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin-input">{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
-                                    <label className="admin-checkbox-label">
+                                    <div><label className="admin__label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin__input">{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <label className="admin__checkbox-label">
                                         <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} />
                                         Marcar como destacado
                                     </label>
-                                    <div className="admin-form-actions">
-                                        <button type="submit" disabled={svcLoad} className="admin-submit-btn">
+                                    <div className="admin__form-actions">
+                                        <button type="submit" disabled={svcLoad} className="admin__submit-btn">
                                             {svcLoad ? 'Guardando...' : editing ? 'Guardar cambios' : 'Crear servicio'}
                                         </button>
-                                        {editing && <button type="button" onClick={cancelEditSvc} className="admin-cancel-btn">Cancelar</button>}
+                                        {editing && <button type="button" onClick={cancelEditSvc} className="admin__cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
@@ -403,60 +403,60 @@ export default function Admin() {
                 {/* ════════ CITAS ════════ */}
                 {tab === 'citas' && (
                     <>
-                        <div className="rn-admin-stats-4 admin-stats-grid-4">
+                        <div className="admin__stats-grid--4">
                             {[
                                 { label: 'Total citas',  value: bStats.total,     color: '#C2185B' },
                                 { label: 'Pendientes',   value: bStats.pending,   color: '#E65100' },
                                 { label: 'Confirmadas',  value: bStats.confirmed, color: '#2E7D32' },
                                 { label: 'Hoy',          value: bStats.today,     color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} className="admin-stat-tile">
-                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
-                                    <div className="admin-stat-label">{st.label}</div>
+                                <div key={st.label} className="admin__stat-tile">
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="admin-filters">
+                        <div className="admin__filters">
                             {[['all', 'Todas'], ['pending', 'Pendientes'], ['confirmed', 'Confirmadas'], ['completed', 'Completadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setBFilter(key)} className={`admin-tab-btn${bFilter === key ? ' active' : ''}`}>{lbl}</button>
+                                <button key={key} onClick={() => setBFilter(key)} className={`admin__tab-btn${bFilter === key ? ' admin__tab-btn--active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {bFetching ? (
-                            <p className="admin-list-loading">Cargando citas...</p>
+                            <p className="admin__list-loading">Cargando citas...</p>
                         ) : filteredBookings.length === 0 ? (
-                            <div className="admin-list-empty">
+                            <div className="admin__list-empty">
                                 No hay citas en esta categoría.
                             </div>
                         ) : (
-                            <div className="admin-list">
+                            <div className="admin__list">
                                 {filteredBookings.map(b => {
                                     const st = BOOKING_STATUS[b.status] || BOOKING_STATUS.pending
                                     const dateStr = new Date(b.date).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' })
                                     return (
-                                        <div key={b._id} className="admin-record-card">
-                                            <div className="admin-record-header">
-                                                <div className="admin-record-main">
-                                                    <div className="admin-record-title-row">
-                                                        <span className="admin-record-name">{b.client?.name}</span>
-                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
+                                        <div key={b._id} className="admin__record-card">
+                                            <div className="admin__record-header">
+                                                <div className="admin__record-main">
+                                                    <div className="admin__record-title-row">
+                                                        <span className="admin__record-name">{b.client?.name}</span>
+                                                        <span className="admin__record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
-                                                    <div className="admin-record-meta">
+                                                    <div className="admin__record-meta">
                                                         <span>📅 {dateStr} · {b.timeSlot}</span>
                                                         <span>💅 {b.service?.name}</span>
-                                                        {b.service?.price && <span className="admin-record-meta-price">${b.service.price}</span>}
+                                                        {b.service?.price && <span className="admin__record-meta-price">${b.service.price}</span>}
                                                     </div>
-                                                    <div className="admin-record-contact">
+                                                    <div className="admin__record-contact">
                                                         {b.client?.phone && <span>📱 {b.client.phone}</span>}
                                                         {b.client?.email && <span>✉️ {b.client.email}</span>}
                                                     </div>
-                                                    {b.notes && <p className="admin-record-notes">"{b.notes}"</p>}
+                                                    {b.notes && <p className="admin__record-notes">"{b.notes}"</p>}
                                                 </div>
-                                                <div className="admin-record-actions">
-                                                    {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} className="admin-action-btn" style={ACTION_GREEN}>Confirmar</button>}
-                                                    {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} className="admin-action-btn" style={ACTION_BLUE}>Completar</button>}
-                                                    {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} className="admin-action-btn">Cancelar</button>}
+                                                <div className="admin__record-actions">
+                                                    {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_GREEN}>Confirmar</button>}
+                                                    {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_BLUE}>Completar</button>}
+                                                    {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} className="admin__action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
@@ -470,51 +470,51 @@ export default function Admin() {
                 {/* ════════ PRODUCTOS ════════ */}
                 {tab === 'productos' && (
                     <>
-                        <div className="rn-admin-stats-3 admin-stats-grid-3">
+                        <div className="admin__stats-grid--3">
                             {[
                                 { label: 'Total productos', value: products.length },
                                 { label: 'Activos',         value: products.filter(p => p.active).length },
                                 { label: 'Stock bajo (<5)', value: products.filter(p => p.stock < 5 && p.active).length, warn: true },
                             ].map(st => (
-                                <div key={st.label} className="admin-stat-tile padded">
-                                    <div className="admin-stat-value" style={{ '--stat-color': st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
-                                    <div className="admin-stat-label">{st.label}</div>
+                                <div key={st.label} className="admin__stat-tile admin__stat-tile--padded">
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split admin-split">
+                        <div className="admin__split">
                             {/* Lista */}
                             <div>
-                                <h2 className="admin-list-title">
+                                <h2 className="admin__list-title">
                                     Productos ({products.length})
                                 </h2>
                                 {prodFetching ? (
-                                    <p className="admin-list-loading">Cargando...</p>
+                                    <p className="admin__list-loading">Cargando...</p>
                                 ) : products.length === 0 ? (
-                                    <div className="admin-list-empty">
+                                    <div className="admin__list-empty">
                                         No hay productos. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div className="admin-list">
+                                    <div className="admin__list">
                                         {products.map(p => (
-                                            <div key={p._id} className={`admin-list-item${editProd === p._id ? ' is-editing' : !p.active ? ' is-inactive' : ''}`}>
+                                            <div key={p._id} className={`admin__list-item${editProd === p._id ? ' admin__list-item--editing' : !p.active ? ' admin__list-item--inactive' : ''}`}>
                                                 <div>
-                                                    <div className="admin-item-header">
-                                                        <span className="admin-item-name">{p.name}</span>
-                                                        {!p.active && <span className="admin-item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
-                                                        {p.stock < 5 && p.active && <span className="admin-item-badge" style={{ '--badge-bg': '#FFF3E0', '--badge-color': '#E65100' }}>Stock: {p.stock}</span>}
+                                                    <div className="admin__item-header">
+                                                        <span className="admin__item-name">{p.name}</span>
+                                                        {!p.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
+                                                        {p.stock < 5 && p.active && <span className="admin__item-badge" style={{ '--badge-bg': '#FFF3E0', '--badge-color': '#E65100' }}>Stock: {p.stock}</span>}
                                                     </div>
-                                                    <div className="admin-item-meta">
-                                                        <span className="admin-item-meta-price">${p.price}</span>
+                                                    <div className="admin__item-meta">
+                                                        <span className="admin__item-meta-price">${p.price}</span>
                                                         <span>Stock: {p.stock}</span>
                                                         {p.brand && <span>{p.brand}</span>}
-                                                        <span className="admin-item-meta-cap">{p.category}</span>
+                                                        <span className="admin__item-meta-cap">{p.category}</span>
                                                     </div>
                                                 </div>
-                                                <div className="admin-item-actions">
-                                                    <button onClick={() => startEditProd(p)} className="admin-btn-edit">Editar</button>
-                                                    <button onClick={() => handleToggleProd(p._id, p.name, p.active)} className="admin-btn-secondary">
+                                                <div className="admin__item-actions">
+                                                    <button onClick={() => startEditProd(p)} className="admin__btn-edit">Editar</button>
+                                                    <button onClick={() => handleToggleProd(p._id, p.name, p.active)} className="admin__btn-secondary">
                                                         {p.active ? 'Desactivar' : 'Activar'}
                                                     </button>
                                                 </div>
@@ -525,27 +525,27 @@ export default function Admin() {
                             </div>
 
                             {/* Form producto */}
-                            <div className="rn-admin-form-panel admin-form-panel">
-                                <h2 className="admin-form-title">
+                            <div className="admin__form-panel">
+                                <h2 className="admin__form-title">
                                     {editProd ? 'Editar producto' : 'Nuevo producto'}
                                 </h2>
-                                <form onSubmit={submitProd} className="admin-form compact">
-                                    <div><label className="admin-label">Nombre *</label><input name="name" value={prodForm.name} onChange={handleProd} className="admin-input" placeholder="Esmalte Gel Rojo" required /></div>
-                                    <div><label className="admin-label">Descripción</label><input name="description" value={prodForm.description} onChange={handleProd} className="admin-input" placeholder="Breve descripción" /></div>
-                                    <div className="admin-form-row-2">
-                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={prodForm.price} onChange={handleProd} className="admin-input" placeholder="12.99" required /></div>
-                                        <div><label className="admin-label">Stock *</label><input name="stock" type="number" min="0" value={prodForm.stock} onChange={handleProd} className="admin-input" placeholder="20" required /></div>
+                                <form onSubmit={submitProd} className="admin__form admin__form--compact">
+                                    <div><label className="admin__label">Nombre *</label><input name="name" value={prodForm.name} onChange={handleProd} className="admin__input" placeholder="Esmalte Gel Rojo" required /></div>
+                                    <div><label className="admin__label">Descripción</label><input name="description" value={prodForm.description} onChange={handleProd} className="admin__input" placeholder="Breve descripción" /></div>
+                                    <div className="admin__form-row">
+                                        <div><label className="admin__label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={prodForm.price} onChange={handleProd} className="admin__input" placeholder="12.99" required /></div>
+                                        <div><label className="admin__label">Stock *</label><input name="stock" type="number" min="0" value={prodForm.stock} onChange={handleProd} className="admin__input" placeholder="20" required /></div>
                                     </div>
-                                    <div className="admin-form-row-2">
-                                        <div><label className="admin-label">Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} className="admin-input" placeholder="OPI" /></div>
-                                        <div><label className="admin-label">Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} className="admin-input">{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <div className="admin__form-row">
+                                        <div><label className="admin__label">Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} className="admin__input" placeholder="OPI" /></div>
+                                        <div><label className="admin__label">Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} className="admin__input">{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
                                     </div>
-                                    <div><label className="admin-label">URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} className="admin-input" placeholder="https://..." /></div>
-                                    <div className="admin-form-actions">
-                                        <button type="submit" disabled={prodLoad} className="admin-submit-btn">
+                                    <div><label className="admin__label">URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} className="admin__input" placeholder="https://..." /></div>
+                                    <div className="admin__form-actions">
+                                        <button type="submit" disabled={prodLoad} className="admin__submit-btn">
                                             {prodLoad ? 'Guardando...' : editProd ? 'Guardar cambios' : 'Crear producto'}
                                         </button>
-                                        {editProd && <button type="button" onClick={cancelEditProd} className="admin-cancel-btn">Cancelar</button>}
+                                        {editProd && <button type="button" onClick={cancelEditProd} className="admin__cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
@@ -556,63 +556,63 @@ export default function Admin() {
                 {/* ════════ PEDIDOS ════════ */}
                 {tab === 'pedidos' && (
                     <>
-                        <div className="rn-admin-stats-4 admin-stats-grid-4">
+                        <div className="admin__stats-grid--4">
                             {[
                                 { label: 'Total pedidos', value: oStats.total,   color: '#C2185B' },
                                 { label: 'Pendientes',    value: oStats.pending, color: '#E65100' },
                                 { label: 'Pagados',       value: oStats.paid,    color: '#2E7D32' },
                                 { label: 'En camino',     value: oStats.shipped, color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} className="admin-stat-tile">
-                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
-                                    <div className="admin-stat-label">{st.label}</div>
+                                <div key={st.label} className="admin__stat-tile">
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="admin-filters">
+                        <div className="admin__filters">
                             {[['all', 'Todos'], ['pending', 'Pendientes'], ['paid', 'Pagados'], ['shipped', 'En camino'], ['delivered', 'Entregados'], ['cancelled', 'Cancelados']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setOFilter(key)} className={`admin-tab-btn${oFilter === key ? ' active' : ''}`}>{lbl}</button>
+                                <button key={key} onClick={() => setOFilter(key)} className={`admin__tab-btn${oFilter === key ? ' admin__tab-btn--active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {oFetching ? (
-                            <p className="admin-list-loading">Cargando pedidos...</p>
+                            <p className="admin__list-loading">Cargando pedidos...</p>
                         ) : filteredOrders.length === 0 ? (
-                            <div className="admin-list-empty">
+                            <div className="admin__list-empty">
                                 No hay pedidos en esta categoría.
                             </div>
                         ) : (
-                            <div className="admin-list">
+                            <div className="admin__list">
                                 {filteredOrders.map(o => {
                                     const st = ORDER_STATUS[o.status] || ORDER_STATUS.pending
                                     const dateStr = new Date(o.createdAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
                                     return (
-                                        <div key={o._id} className="admin-record-card">
-                                            <div className="admin-record-header">
-                                                <div className="admin-record-main">
-                                                    <div className="admin-record-title-row">
-                                                        <span className="admin-record-name">{o.client?.name}</span>
-                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
-                                                        <span className="admin-record-date">{dateStr}</span>
+                                        <div key={o._id} className="admin__record-card">
+                                            <div className="admin__record-header">
+                                                <div className="admin__record-main">
+                                                    <div className="admin__record-title-row">
+                                                        <span className="admin__record-name">{o.client?.name}</span>
+                                                        <span className="admin__record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
+                                                        <span className="admin__record-date">{dateStr}</span>
                                                     </div>
-                                                    <div className="admin-order-items-list">
+                                                    <div className="admin__order-items-list">
                                                         {o.items.map((i, idx) => (
                                                             <span key={idx}>{i.name} ×{i.qty}{idx < o.items.length - 1 ? ', ' : ''}</span>
                                                         ))}
                                                     </div>
-                                                    <div className="admin-record-contact">
+                                                    <div className="admin__record-contact">
                                                         {o.client?.phone && <span>📱 {o.client.phone}</span>}
                                                         {o.client?.email && <span>✉️ {o.client.email}</span>}
-                                                        <span className="admin-record-total">Total: ${o.total.toFixed(2)}</span>
+                                                        <span className="admin__record-total">Total: ${o.total.toFixed(2)}</span>
                                                     </div>
-                                                    {o.notes && <p className="admin-record-notes">"{o.notes}"</p>}
+                                                    {o.notes && <p className="admin__record-notes">"{o.notes}"</p>}
                                                 </div>
-                                                <div className="admin-record-actions">
-                                                    {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
-                                                    {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_BLUE}>Marcar enviado</button>}
-                                                    {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} className="admin-action-btn" style={ACTION_PURPLE}>Marcar entregado</button>}
-                                                    {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} className="admin-action-btn">Cancelar</button>}
+                                                <div className="admin__record-actions">
+                                                    {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} className="admin__action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
+                                                    {o.status === 'paid'    && <button onClick={() => changeOrderStatus(o._id, 'shipped')}   disabled={updatingOId === o._id} className="admin__action-btn" style={ACTION_BLUE}>Marcar enviado</button>}
+                                                    {o.status === 'shipped' && <button onClick={() => changeOrderStatus(o._id, 'delivered')} disabled={updatingOId === o._id} className="admin__action-btn" style={ACTION_PURPLE}>Marcar entregado</button>}
+                                                    {['pending', 'paid'].includes(o.status) && <button onClick={() => changeOrderStatus(o._id, 'cancelled')} disabled={updatingOId === o._id} className="admin__action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>
@@ -626,51 +626,51 @@ export default function Admin() {
                 {/* ════════ TALLERES ════════ */}
                 {tab === 'talleres' && (
                     <>
-                        <div className="rn-admin-stats-4 admin-stats-grid-4">
+                        <div className="admin__stats-grid--4">
                             {[
                                 { label: 'Talleres',              value: wsStats.total,     color: '#C2185B' },
                                 { label: 'Activos',               value: wsStats.active,    color: '#2E7D32' },
                                 { label: 'Inscripciones pend.',    value: wsStats.pendingEn, color: '#E65100' },
                                 { label: 'Inscripciones pagadas',  value: wsStats.paidEn,    color: '#1565C0' },
                             ].map(st => (
-                                <div key={st.label} className="admin-stat-tile">
-                                    <div className="admin-stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
-                                    <div className="admin-stat-label">{st.label}</div>
+                                <div key={st.label} className="admin__stat-tile">
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="rn-admin-split admin-split with-margin">
+                        <div className="admin__split admin__split--with-margin">
                             {/* Lista de talleres */}
                             <div>
-                                <h2 className="admin-list-title">
+                                <h2 className="admin__list-title">
                                     Talleres ({workshops.length})
                                 </h2>
                                 {wsFetching ? (
-                                    <p className="admin-list-loading">Cargando...</p>
+                                    <p className="admin__list-loading">Cargando...</p>
                                 ) : workshops.length === 0 ? (
-                                    <div className="admin-list-empty">
+                                    <div className="admin__list-empty">
                                         No hay talleres. Crea el primero con el formulario.
                                     </div>
                                 ) : (
-                                    <div className="admin-list">
+                                    <div className="admin__list">
                                         {workshops.map(w => (
-                                            <div key={w._id} className={`admin-list-item${editWs === w._id ? ' is-editing' : !w.active ? ' is-inactive' : ''}`}>
+                                            <div key={w._id} className={`admin__list-item${editWs === w._id ? ' admin__list-item--editing' : !w.active ? ' admin__list-item--inactive' : ''}`}>
                                                 <div>
-                                                    <div className="admin-item-header">
-                                                        <span className="admin-item-name">{w.title}</span>
-                                                        {!w.active && <span className="admin-item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
+                                                    <div className="admin__item-header">
+                                                        <span className="admin__item-name">{w.title}</span>
+                                                        {!w.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
                                                     </div>
-                                                    <div className="admin-item-meta">
-                                                        <span className="admin-item-meta-price">${w.price}</span>
+                                                    <div className="admin__item-meta">
+                                                        <span className="admin__item-meta-price">${w.price}</span>
                                                         <span>{new Date(w.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
-                                                        <span className="admin-item-meta-cap">{w.modality}</span>
+                                                        <span className="admin__item-meta-cap">{w.modality}</span>
                                                         <span>{w.spotsLeft}/{w.spots} cupos</span>
                                                     </div>
                                                 </div>
-                                                <div className="admin-item-actions">
-                                                    <button onClick={() => startEditWs(w)} className="admin-btn-edit">Editar</button>
-                                                    <button onClick={() => handleToggleWs(w._id, w.title, w.active)} className="admin-btn-secondary">
+                                                <div className="admin__item-actions">
+                                                    <button onClick={() => startEditWs(w)} className="admin__btn-edit">Editar</button>
+                                                    <button onClick={() => handleToggleWs(w._id, w.title, w.active)} className="admin__btn-secondary">
                                                         {w.active ? 'Desactivar' : 'Activar'}
                                                     </button>
                                                 </div>
@@ -681,76 +681,76 @@ export default function Admin() {
                             </div>
 
                             {/* Form taller */}
-                            <div className="rn-admin-form-panel admin-form-panel">
-                                <h2 className="admin-form-title">
+                            <div className="admin__form-panel">
+                                <h2 className="admin__form-title">
                                     {editWs ? 'Editar taller' : 'Nuevo taller'}
                                 </h2>
-                                <form onSubmit={submitWs} className="admin-form compact">
-                                    <div><label className="admin-label">Título *</label><input name="title" value={wsForm.title} onChange={handleWs} className="admin-input" placeholder="Nail Art para principiantes" required /></div>
-                                    <div><label className="admin-label">Descripción</label><input name="description" value={wsForm.description} onChange={handleWs} className="admin-input" placeholder="Breve descripción" /></div>
-                                    <div className="admin-form-row-2">
-                                        <div><label className="admin-label">Fecha *</label><input name="date" type="date" value={wsForm.date} onChange={handleWs} className="admin-input" required /></div>
-                                        <div><label className="admin-label">Duración (h)</label><input name="duration" type="number" min="1" value={wsForm.duration} onChange={handleWs} className="admin-input" placeholder="3" /></div>
+                                <form onSubmit={submitWs} className="admin__form admin__form--compact">
+                                    <div><label className="admin__label">Título *</label><input name="title" value={wsForm.title} onChange={handleWs} className="admin__input" placeholder="Nail Art para principiantes" required /></div>
+                                    <div><label className="admin__label">Descripción</label><input name="description" value={wsForm.description} onChange={handleWs} className="admin__input" placeholder="Breve descripción" /></div>
+                                    <div className="admin__form-row">
+                                        <div><label className="admin__label">Fecha *</label><input name="date" type="date" value={wsForm.date} onChange={handleWs} className="admin__input" required /></div>
+                                        <div><label className="admin__label">Duración (h)</label><input name="duration" type="number" min="1" value={wsForm.duration} onChange={handleWs} className="admin__input" placeholder="3" /></div>
                                     </div>
-                                    <div className="admin-form-row-2">
-                                        <div><label className="admin-label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={wsForm.price} onChange={handleWs} className="admin-input" placeholder="35" required /></div>
-                                        <div><label className="admin-label">Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} className="admin-input" placeholder="10" required /></div>
+                                    <div className="admin__form-row">
+                                        <div><label className="admin__label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={wsForm.price} onChange={handleWs} className="admin__input" placeholder="35" required /></div>
+                                        <div><label className="admin__label">Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} className="admin__input" placeholder="10" required /></div>
                                     </div>
-                                    <div><label className="admin-label">Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} className="admin-input"><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
-                                    <div><label className="admin-label">URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} className="admin-input" placeholder="https://..." /></div>
-                                    <div className="admin-form-actions">
-                                        <button type="submit" disabled={wsLoad} className="admin-submit-btn">
+                                    <div><label className="admin__label">Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} className="admin__input"><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
+                                    <div><label className="admin__label">URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} className="admin__input" placeholder="https://..." /></div>
+                                    <div className="admin__form-actions">
+                                        <button type="submit" disabled={wsLoad} className="admin__submit-btn">
                                             {wsLoad ? 'Guardando...' : editWs ? 'Guardar cambios' : 'Crear taller'}
                                         </button>
-                                        {editWs && <button type="button" onClick={cancelEditWs} className="admin-cancel-btn">Cancelar</button>}
+                                        {editWs && <button type="button" onClick={cancelEditWs} className="admin__cancel-btn">Cancelar</button>}
                                     </div>
                                 </form>
                             </div>
                         </div>
 
                         {/* Inscripciones */}
-                        <h2 className="admin-list-title">
+                        <h2 className="admin__list-title">
                             Inscripciones ({enrollments.length})
                         </h2>
-                        <div className="admin-filters">
+                        <div className="admin__filters">
                             {[['all', 'Todas'], ['pending', 'Pendientes'], ['paid', 'Pagadas'], ['cancelled', 'Canceladas']].map(([key, lbl]) => (
-                                <button key={key} onClick={() => setEnFilter(key)} className={`admin-tab-btn${enFilter === key ? ' active' : ''}`}>{lbl}</button>
+                                <button key={key} onClick={() => setEnFilter(key)} className={`admin__tab-btn${enFilter === key ? ' admin__tab-btn--active' : ''}`}>{lbl}</button>
                             ))}
                         </div>
 
                         {enFetching ? (
-                            <p className="admin-list-loading">Cargando inscripciones...</p>
+                            <p className="admin__list-loading">Cargando inscripciones...</p>
                         ) : filteredEnrollments.length === 0 ? (
-                            <div className="admin-list-empty">
+                            <div className="admin__list-empty">
                                 No hay inscripciones en esta categoría.
                             </div>
                         ) : (
-                            <div className="admin-list">
+                            <div className="admin__list">
                                 {filteredEnrollments.map(en => {
                                     const st = ENROLLMENT_STATUS[en.status] || ENROLLMENT_STATUS.pending
                                     const dateStr = new Date(en.date).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
                                     return (
-                                        <div key={en._id} className="admin-record-card">
-                                            <div className="admin-record-header">
-                                                <div className="admin-record-main">
-                                                    <div className="admin-record-title-row">
-                                                        <span className="admin-record-name">{en.client?.name}</span>
-                                                        <span className="admin-record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
+                                        <div key={en._id} className="admin__record-card">
+                                            <div className="admin__record-header">
+                                                <div className="admin__record-main">
+                                                    <div className="admin__record-title-row">
+                                                        <span className="admin__record-name">{en.client?.name}</span>
+                                                        <span className="admin__record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
-                                                    <div className="admin-record-meta">
+                                                    <div className="admin__record-meta">
                                                         <span>🎓 {en.title}</span>
                                                         <span>📅 {dateStr}</span>
-                                                        <span className="admin-record-meta-price">${en.price.toFixed(2)}</span>
+                                                        <span className="admin__record-meta-price">${en.price.toFixed(2)}</span>
                                                     </div>
-                                                    <div className="admin-record-contact">
+                                                    <div className="admin__record-contact">
                                                         {en.client?.phone && <span>📱 {en.client.phone}</span>}
                                                         {en.client?.email && <span>✉️ {en.client.email}</span>}
                                                     </div>
-                                                    {en.notes && <p className="admin-record-notes">"{en.notes}"</p>}
+                                                    {en.notes && <p className="admin__record-notes">"{en.notes}"</p>}
                                                 </div>
-                                                <div className="admin-record-actions">
-                                                    {en.status === 'pending' && <button onClick={() => changeEnrollmentStatus(en._id, 'paid')} disabled={updatingEnId === en._id} className="admin-action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
-                                                    {['pending', 'paid'].includes(en.status) && <button onClick={() => changeEnrollmentStatus(en._id, 'cancelled')} disabled={updatingEnId === en._id} className="admin-action-btn">Cancelar</button>}
+                                                <div className="admin__record-actions">
+                                                    {en.status === 'pending' && <button onClick={() => changeEnrollmentStatus(en._id, 'paid')} disabled={updatingEnId === en._id} className="admin__action-btn" style={ACTION_GREEN}>Marcar pagado</button>}
+                                                    {['pending', 'paid'].includes(en.status) && <button onClick={() => changeEnrollmentStatus(en._id, 'cancelled')} disabled={updatingEnId === en._id} className="admin__action-btn">Cancelar</button>}
                                                 </div>
                                             </div>
                                         </div>

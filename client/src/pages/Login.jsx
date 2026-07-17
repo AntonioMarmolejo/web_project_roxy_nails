@@ -36,68 +36,68 @@ export default function Login() {
     }
 
     return (
-        <main className="login-page">
-            <div className="login-card">
+        <main className="login">
+            <div className="login__card">
                 {/* Logo */}
-                <div className="login-header">
-                    <Link to="/" className="login-logo">
+                <div className="login__header">
+                    <Link to="/" className="login__logo">
                         Roxy <em>Nails</em>
                     </Link>
-                    <p className="login-subtitle">
+                    <p className="login__subtitle">
                         {mode === 'login' ? 'Ingresa a tu cuenta' : 'Crea tu cuenta'}
                     </p>
                 </div>
 
                 {/* Toggle tabs */}
-                <div className="login-tabs">
+                <div className="login__tabs">
                     {['login', 'register'].map(m => (
                         <button key={m} onClick={() => { setMode(m); setForm(EMPTY_FORM); setError('') }}
-                            className={`login-tab${mode === m ? ' active' : ''}`}>
+                            className={`login__tab${mode === m ? ' login__tab--active' : ''}`}>
                             {m === 'login' ? 'Iniciar sesión' : 'Registrarse'}
                         </button>
                     ))}
                 </div>
 
-                <form onSubmit={submit} className="login-form">
+                <form onSubmit={submit} className="login__form">
                     {mode === 'register' && (
                         <>
                             <div>
-                                <label className="login-label">Nombre completo</label>
+                                <label className="login__label">Nombre completo</label>
                                 <input name="name" value={form.name} onChange={handle}
-                                    className="login-input" placeholder="María Torres" required />
+                                    className="login__input" placeholder="María Torres" required />
                             </div>
                             <div>
-                                <label className="login-label">Teléfono / WhatsApp</label>
+                                <label className="login__label">Teléfono / WhatsApp</label>
                                 <input name="phone" value={form.phone} onChange={handle}
-                                    className="login-input" placeholder="+593 99 123 4567" />
+                                    className="login__input" placeholder="+593 99 123 4567" />
                             </div>
                         </>
                     )}
 
                     <div>
-                        <label className="login-label">Correo electrónico</label>
+                        <label className="login__label">Correo electrónico</label>
                         <input name="email" type="email" value={form.email} onChange={handle}
-                            className="login-input" placeholder="correo@ejemplo.com" required />
+                            className="login__input" placeholder="correo@ejemplo.com" required />
                     </div>
 
                     <div>
-                        <label className="login-label">Contraseña</label>
+                        <label className="login__label">Contraseña</label>
                         <input name="password" type="password" value={form.password} onChange={handle}
-                            className="login-input" placeholder="••••••••" required minLength={6} />
+                            className="login__input" placeholder="••••••••" required minLength={6} />
                     </div>
 
                     {error && (
-                        <p className="login-error">{error}</p>
+                        <p className="login__error">{error}</p>
                     )}
 
-                    <button type="submit" disabled={loading} className="login-submit-btn">
+                    <button type="submit" disabled={loading} className="login__submit-btn">
                         {loading ? 'Cargando...' : mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
                     </button>
                 </form>
 
-                <p className="login-toggle-text">
+                <p className="login__toggle-text">
                     {mode === 'login' ? '¿No tienes cuenta?' : '¿Ya tienes cuenta?'}{' '}
-                    <span onClick={toggleMode} className="login-toggle-link">
+                    <span onClick={toggleMode} className="login__toggle-link">
                         {mode === 'login' ? 'Regístrate' : 'Inicia sesión'}
                     </span>
                 </p>

@@ -15,28 +15,28 @@ export default function ServiceCard({ service, onClick }) {
 
     return (
         <div className="service-card" onClick={() => onClick ? onClick(service) : navigate('/agendar')}>
-            <div className="service-card-icon">{icon}</div>
+            <div className="service-card__icon">{icon}</div>
 
-            <div className="service-card-name">
+            <div className="service-card__name">
                 {service.name}
             </div>
 
             {service.description && (
-                <div className="service-card-desc">
+                <div className="service-card__desc">
                     {service.description}
                 </div>
             )}
 
-            <div className="service-card-price">
+            <div className="service-card__price">
                 desde ${service.price}
             </div>
 
-            <div className="service-card-duration">
+            <div className="service-card__duration">
                 {service.duration} min
             </div>
 
             {service.featured && (
-                <span className="service-card-featured">⭐ Destacado</span>
+                <span className="service-card__featured">⭐ Destacado</span>
             )}
         </div>
     )
