@@ -15,7 +15,9 @@ export default function ServiceCard({ service, onClick }) {
 
     return (
         <div className="service-card" onClick={() => onClick ? onClick(service) : navigate('/agendar')}>
-            <div className="service-card__icon">{icon}</div>
+            <div className="service-card__icon">
+                {service.image ? <img src={service.image} alt={service.name} className="service-card__image" /> : icon}
+            </div>
 
             <div className="service-card__name">
                 {service.name}

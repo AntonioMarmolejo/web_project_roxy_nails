@@ -1,0 +1,86 @@
+.image-input__label {
+    font-size: 12px;
+    color: #6b4050;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.image-input__tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.image-input__tab-btn {
+    padding: 5px 14px;
+    border-radius: 16px;
+    font-size: 11px;
+    border: 1px solid #f0d0dc;
+    background: #fff;
+    color: #6b4050;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    transition: all 0.2s;
+}
+.image-input__tab-btn--active {
+    border-color: #c2185b;
+    background: #c2185b;
+    color: #fff;
+}
+
+.image-input__input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #f0d0dc;
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: "Inter", sans-serif;
+    outline: none;
+    background: #fff;
+    color: #2d1520;
+    box-sizing: border-box;
+}
+
+.image-input__file-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.image-input__file-input {
+    font-size: 12px;
+    color: #6b4050;
+    font-family: "Inter", sans-serif;
+}
+.image-input__uploading {
+    font-size: 12px;
+    color: #c2185b;
+}
+
+.image-input__error {
+    font-size: 11px;
+    color: #c62828;
+    margin-top: 4px;
+}
+
+.image-input__preview {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.image-input__preview-img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid #f0d0dc;
+}
+.image-input__remove-btn {
+    background: transparent;
+    border: 1px solid #f0d0dc;
+    color: #999;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}

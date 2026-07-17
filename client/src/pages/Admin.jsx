@@ -6,12 +6,13 @@ import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '.
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
+import ImageInput from '../components/ImageInput'
 import '../styles/Admin.css'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
 const PROD_CATS = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
-const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false }
+const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false, image: '' }
 const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', image: '' }
 const EMPTY_WS   = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
 
@@ -139,7 +140,7 @@ export default function Admin() {
         const { name, value, type, checked } = e.target
         setSvcForm(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
     }
-    const startEditSvc  = (svc) => { setEditing(svc._id); setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price, duration: svc.duration, category: svc.category, featured: svc.featured }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const startEditSvc  = (svc) => { setEditing(svc._id); setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price, duration: svc.duration, category: svc.category, featured: svc.featured, image: svc.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
     const cancelEditSvc = () => { setEditing(null); setSvcForm(EMPTY_SVC) }
     const submitSvc = async (e) => {
         e.preventDefault(); setSvcLoad(true)
@@ -384,6 +385,7 @@ export default function Admin() {
                                         <div><label className="admin__label">Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin__input" placeholder="60" required /></div>
                                     </div>
                                     <div><label className="admin__label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin__input">{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <ImageInput label="Imagen" value={svcForm.image} onChange={(url) => setSvcForm(f => ({ ...f, image: url }))} />
                                     <label className="admin__checkbox-label">
                                         <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} />
                                         Marcar como destacado
@@ -540,7 +542,7 @@ export default function Admin() {
                                         <div><label className="admin__label">Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} className="admin__input" placeholder="OPI" /></div>
                                         <div><label className="admin__label">Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} className="admin__input">{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
                                     </div>
-                                    <div><label className="admin__label">URL de imagen</label><input name="image" value={prodForm.image} onChange={handleProd} className="admin__input" placeholder="https://..." /></div>
+                                    <ImageInput label="Imagen" value={prodForm.image} onChange={(url) => setProdForm(f => ({ ...f, image: url }))} />
                                     <div className="admin__form-actions">
                                         <button type="submit" disabled={prodLoad} className="admin__submit-btn">
                                             {prodLoad ? 'Guardando...' : editProd ? 'Guardar cambios' : 'Crear producto'}
@@ -697,7 +699,7 @@ export default function Admin() {
                                         <div><label className="admin__label">Cupos *</label><input name="spots" type="number" min="1" value={wsForm.spots} onChange={handleWs} className="admin__input" placeholder="10" required /></div>
                                     </div>
                                     <div><label className="admin__label">Modalidad</label><select name="modality" value={wsForm.modality} onChange={handleWs} className="admin__input"><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></div>
-                                    <div><label className="admin__label">URL de imagen</label><input name="image" value={wsForm.image} onChange={handleWs} className="admin__input" placeholder="https://..." /></div>
+                                    <ImageInput label="Imagen" value={wsForm.image} onChange={(url) => setWsForm(f => ({ ...f, image: url }))} />
                                     <div className="admin__form-actions">
                                         <button type="submit" disabled={wsLoad} className="admin__submit-btn">
                                             {wsLoad ? 'Guardando...' : editWs ? 'Guardar cambios' : 'Crear taller'}

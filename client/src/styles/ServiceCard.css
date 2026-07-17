@@ -22,6 +22,12 @@
     justify-content: center;
     margin: 0 auto 0.9rem;
     font-size: 28px;
+    overflow: hidden;
+}
+.service-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .service-card__name {
     font-size: 15px;

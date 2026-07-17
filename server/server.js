@@ -10,6 +10,7 @@ import productRoutes    from './routes/product.routes.js'
 import orderRoutes      from './routes/order.routes.js'
 import workshopRoutes   from './routes/workshop.routes.js'
 import enrollmentRoutes from './routes/enrollment.routes.js'
+import uploadRoutes     from './routes/upload.routes.js'
 
 dotenv.config()
 
@@ -29,6 +30,7 @@ app.use('/api/v1/products',    productRoutes)
 app.use('/api/v1/orders',      orderRoutes)
 app.use('/api/v1/workshops',   workshopRoutes)
 app.use('/api/v1/enrollments', enrollmentRoutes)
+app.use('/api/v1/upload',      uploadRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: 'Roxy Nails API' }))
@@ -36,6 +38,9 @@ app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: 'Roxy Nails 
 // Manejador de errores global
 app.use((err, _req, res, _next) => {
   console.error(err.stack)
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ message: 'La imagen supera el tamaño máximo permitido (5MB)' })
+  }
   res.status(err.status || 500).json({ message: err.message || 'Error interno del servidor' })
 })
 
