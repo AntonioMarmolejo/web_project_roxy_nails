@@ -2,9 +2,11 @@
     background: #fff;
     border: 1px solid #f0d0dc;
     border-radius: 18px;
-    padding: 1.5rem 1.25rem;
+    overflow: hidden;
     cursor: pointer;
     text-align: center;
+    display: flex;
+    flex-direction: column;
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .service-card:hover {
@@ -12,22 +14,22 @@
     transform: translateY(-5px);
     box-shadow: 0 10px 28px rgba(194, 24, 91, 0.13);
 }
-.service-card__icon {
-    width: 66px;
-    height: 66px;
-    border-radius: 50%;
+.service-card__image {
+    height: 210px;
     background: #fdf0f5;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 0.9rem;
-    font-size: 28px;
+    font-size: 60px;
     overflow: hidden;
 }
-.service-card__image {
+.service-card__image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+.service-card__body {
+    padding: 1.25rem 1.25rem 1.5rem;
 }
 .service-card__name {
     font-size: 15px;
