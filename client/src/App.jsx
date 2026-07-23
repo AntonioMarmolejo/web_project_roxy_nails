@@ -16,6 +16,7 @@ import Admin          from './pages/Admin'
 import Login          from './pages/Login'
 import Navbar         from './components/Navbar'
 import CartDrawer     from './components/CartDrawer'
+import WhatsAppButton from './components/WhatsAppButton'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <CartDrawer />
+            <WhatsAppButton />
             <Routes>
                 <Route path="/"            element={<Home />} />
                 <Route path="/servicios"   element={<Services />} />
