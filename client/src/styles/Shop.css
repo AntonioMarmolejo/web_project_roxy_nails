@@ -71,26 +71,39 @@
 
 .product-card {
     background: #fff;
-    border: 1px solid #f0d0dc;
-    border-radius: 18px;
+    border: 1px solid #f4dbe4;
+    border-radius: 22px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 2px 12px rgba(194, 24, 91, 0.06);
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+}
+.product-card:hover {
+    border-color: var(--rn-pink);
+    transform: translateY(-7px);
+    box-shadow: 0 20px 36px rgba(194, 24, 91, 0.18);
 }
 .product-card__image {
-    height: 190px;
-    background: #fdf0f5;
+    position: relative;
+    margin: 14px 14px 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    background: linear-gradient(155deg, #fdf0f5, #fce4ee);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 56px;
-    position: relative;
+    font-size: 60px;
     overflow: hidden;
 }
 .product-card__image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.5s ease;
+}
+.product-card:hover .product-card__image img {
+    transform: scale(1.08);
 }
 .product-card__badge {
     position: absolute;
@@ -98,9 +111,10 @@
     right: 10px;
     color: #fff;
     font-size: 10px;
-    padding: 3px 9px;
+    padding: 4px 10px;
     border-radius: 10px;
     font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 .product-card__badge--out-of-stock {
     background: #9e7080;
@@ -109,7 +123,7 @@
     background: #e65100;
 }
 .product-card__info {
-    padding: 1rem;
+    padding: 1.1rem 1.25rem 1.3rem;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -123,9 +137,10 @@
     font-weight: 500;
 }
 .product-card__name {
-    font-size: 14px;
+    font-family: "Playfair Display", serif;
+    font-size: 16px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--rn-dark);
     line-height: 1.3;
 }
 .product-card__desc {
@@ -138,7 +153,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f8e8ee;
 }
 .product-card__price {
     font-size: 18px;
