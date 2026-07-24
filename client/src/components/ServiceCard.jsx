@@ -44,7 +44,7 @@ export default function ServiceCard({ service, onClick }) {
     }, [open])
 
     const handleBook = () => {
-        onClick ? onClick(service) : navigate('/agendar')
+        onClick ? onClick(service) : navigate('/agendar', { state: { serviceId: service._id } })
     }
 
     return (

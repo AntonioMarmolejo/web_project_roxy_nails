@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useLocation } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
@@ -63,6 +64,7 @@ function Stepper({ step }) {
 // ─── Main component ───────────────────────────────────────────────
 export default function Booking() {
     const { user } = useAuthStore()
+    const location = useLocation()
 
     const [step, setStep] = useState(1)
     const [services, setServices] = useState([])
@@ -85,6 +87,13 @@ export default function Booking() {
     useEffect(() => {
         fetchServices().then(({ data }) => setServices(data)).catch(() => { })
     }, [])
+
+    useEffect(() => {
+        const id = location.state?.serviceId
+        if (!id || services.length === 0) return
+        const match = services.find(s => s._id === id)
+        if (match) setSelSvc(match)
+    }, [services, location.state])
 
     useEffect(() => {
         if (user) setForm(f => ({
