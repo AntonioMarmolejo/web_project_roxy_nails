@@ -43,10 +43,13 @@
 }
 
 .workshop-card {
+    position: relative;
     background: #fff;
     border: 1px solid #f4dbe4;
     border-radius: 22px;
     overflow: hidden;
+    cursor: pointer;
+    text-align: center;
     display: flex;
     flex-direction: column;
     box-shadow: 0 2px 12px rgba(194, 24, 91, 0.06);
@@ -95,59 +98,180 @@
 .workshop-card__badge--low-spots {
     background: #e65100;
 }
-.workshop-card__info {
-    padding: 1.1rem 1.25rem 1.3rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-.workshop-card__meta {
-    font-size: 10px;
-    color: #9e7080;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 500;
-}
 .workshop-card__title {
     font-family: "Playfair Display", serif;
     font-size: 16px;
     font-weight: 600;
     color: var(--rn-dark);
     line-height: 1.3;
+    padding: 12px 14px 16px;
 }
-.workshop-card__desc {
-    font-size: 12px;
-    color: #9e7080;
-    line-height: 1.45;
-    flex: 1;
-}
-.workshop-card__footer {
+
+/* Popup de detalle */
+.workshop-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid #f8e8ee;
+    justify-content: center;
+    padding: 20px;
 }
-.workshop-card__price {
+.workshop-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(45, 21, 32, 0);
+    transition: background 0.35s ease;
+}
+.workshop-modal--visible .workshop-modal__backdrop {
+    background: rgba(45, 21, 32, 0.55);
+}
+.workshop-modal__panel {
+    position: relative;
+    background: #fff;
+    border-radius: 26px;
+    width: 360px;
+    max-width: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    perspective: 1400px;
+    opacity: 0;
+    transform: rotateY(-100deg) scale(0.92);
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.workshop-modal--visible .workshop-modal__panel {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+}
+.workshop-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--rn-muted);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    transition: background 0.2s, color 0.2s;
+}
+.workshop-modal__close:hover {
+    background: var(--rn-pink-l);
+    color: var(--rn-pink);
+}
+.workshop-modal__image {
+    flex-shrink: 0;
+    height: 160px;
+    margin: 14px 14px 0;
+    border-radius: 18px;
+    background: linear-gradient(155deg, #fdf0f5, #fce4ee);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    overflow: hidden;
+}
+.workshop-modal__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.workshop-modal__body {
+    padding: 1.1rem 1.75rem 1.9rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.workshop-modal__body::-webkit-scrollbar {
+    display: none;
+}
+.workshop-modal__meta {
+    font-size: 11px;
+    color: #9e7080;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+}
+.workshop-modal__name {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--rn-dark);
+    margin: 4px 0 1rem;
+}
+.workshop-modal__list {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+.workshop-modal__list li {
+    font-size: 13.5px;
+    color: #6b4050;
+    line-height: 1.5;
+    padding-left: 22px;
+    position: relative;
+}
+.workshop-modal__list li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    top: -2px;
+    color: var(--rn-pink);
     font-size: 18px;
     font-weight: 700;
-    color: #c2185b;
 }
-.workshop-card__btn {
-    border: none;
-    border-radius: 20px;
-    padding: 7px 16px;
+.workshop-modal__footer {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 14px 4px;
+    margin-bottom: 1rem;
+    border-top: 1px solid #f8e8ee;
+    border-bottom: 1px solid #f8e8ee;
+}
+.workshop-modal__price {
+    font-size: 20px;
+    color: var(--rn-pink);
+    font-weight: 700;
+}
+.workshop-modal__spots {
     font-size: 12px;
+    color: #9e7080;
+}
+.workshop-modal__btn {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 24px;
+    padding: 13px;
+    font-size: 14px;
     font-weight: 500;
     font-family: "Inter", sans-serif;
-    flex-shrink: 0;
-    background: #c2185b;
-    color: #fff;
     cursor: pointer;
+    background: var(--rn-pink);
+    color: #fff;
+    transition: opacity 0.2s;
 }
-.workshop-card__btn:disabled {
+.workshop-modal__btn:hover {
+    opacity: 0.88;
+}
+.workshop-modal__btn:disabled {
     background: #f5f5f5;
     color: #9e7080;
     cursor: not-allowed;

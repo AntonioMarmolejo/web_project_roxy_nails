@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { useLocation } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
@@ -64,7 +63,6 @@ function Stepper({ step }) {
 // ─── Main component ───────────────────────────────────────────────
 export default function Booking() {
     const { user } = useAuthStore()
-    const location = useLocation()
 
     const [step, setStep] = useState(1)
     const [services, setServices] = useState([])
@@ -87,13 +85,6 @@ export default function Booking() {
     useEffect(() => {
         fetchServices().then(({ data }) => setServices(data)).catch(() => { })
     }, [])
-
-    useEffect(() => {
-        const id = location.state?.serviceId
-        if (!id || services.length === 0) return
-        const match = services.find(s => s._id === id)
-        if (match) setSelSvc(match)
-    }, [services, location.state])
 
     useEffect(() => {
         if (user) setForm(f => ({
@@ -224,17 +215,27 @@ export default function Booking() {
                         <div className="booking__services-grid">
                             {services.map(svc => (
                                 <div key={svc._id} onClick={() => setSelSvc(svc)} className={`booking__service-option${selSvc?._id === svc._id ? ' booking__service-option--selected' : ''}`}>
-                                    <div className="booking__service-icon">{CAT_ICONS[svc.category] || '💅'}</div>
-                                    <div className="booking__service-name">{svc.name}</div>
-                                    <div className="booking__service-price">${svc.price}</div>
-                                    <div className="booking__service-duration">{svc.duration} min</div>
+                                    <div className="booking__service-image">
+                                        {svc.image
+                                            ? <img src={svc.image} alt={svc.name} />
+                                            : (CAT_ICONS[svc.category] || '💅')
+                                        }
+                                    </div>
+                                    <div className="booking__service-body">
+                                        <div className="booking__service-name">{svc.name}</div>
+                                        <div className="booking__service-meta">
+                                            <span className="booking__service-price">${svc.price}</span>
+                                            <span className="booking__service-duration">{svc.duration} min</span>
+                                        </div>
+                                    </div>
                                 </div>
                             ))}
                         </div>
-                        <button onClick={() => setStep(2)} disabled={!selSvc} className={`btn btn--primary${!selSvc ? ' btn--disabled' : ''}`}
-                            style={{ width: '100%' }}>
-                            Siguiente →
-                        </button>
+                        <div className="booking__nav-row">
+                            <button onClick={() => setStep(2)} disabled={!selSvc} className={`btn btn--primary booking__btn-next${!selSvc ? ' btn--disabled' : ''}`}>
+                                Siguiente →
+                            </button>
+                        </div>
                     </div>
                 )}
 
