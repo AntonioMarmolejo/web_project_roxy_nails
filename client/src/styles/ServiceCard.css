@@ -1,4 +1,5 @@
 .service-card {
+    position: relative;
     background: #fff;
     border: 1px solid #f4dbe4;
     border-radius: 22px;

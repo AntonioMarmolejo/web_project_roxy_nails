@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { fetchWorkshops } from '../api/workshops'
+import LikeButton from '../components/LikeButton'
 import '../styles/Workshops.css'
 
 export default function Workshops() {
@@ -59,6 +60,7 @@ function WorkshopCard({ workshop }) {
     return (
         <div className="workshop-card">
             <div className="workshop-card__image">
+                <LikeButton id={workshop._id} />
                 {workshop.image
                     ? <img src={workshop.image} alt={workshop.title} />
                     : '🎓'

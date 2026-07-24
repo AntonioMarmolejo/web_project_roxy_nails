@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
   stock:       { type: Number, default: 0 },
   brand:       { type: String },
   category:    { type: String },
-  image:       { type: String },
+  images:      { type: [String], default: [], validate: v => v.length <= 3 },
   active:      { type: Boolean, default: true },
 }, { timestamps: true })
 

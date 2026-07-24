@@ -2,9 +2,12 @@ import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { fetchProducts } from '../api/products'
 import { useCartStore } from '../store/useCartStore'
+import LikeButton from '../components/LikeButton'
+import Lightbox from '../components/Lightbox'
 import '../styles/Shop.css'
 
 const CATS = ['todo', 'esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
+const CLOSE_MS = 350
 
 export default function Shop() {
     const [products, setProducts] = useState([])
@@ -88,56 +91,140 @@ export default function Shop() {
 }
 
 function ProductCard({ product, onAdd, isAdded }) {
+    const images = product.images?.length ? product.images : []
     const outOfStock = product.stock < 1
     const lowStock   = !outOfStock && product.stock <= 5
 
-    return (
-        <div className="product-card">
-            {/* Imagen */}
-            <div className="product-card__image">
-                {product.image
-                    ? <img src={product.image} alt={product.name} />
-                    : '💅'
-                }
-                {outOfStock && (
-                    <div className="product-card__badge product-card__badge--out-of-stock">
-                        Agotado
-                    </div>
-                )}
-                {lowStock && (
-                    <div className="product-card__badge product-card__badge--low-stock">
-                        ¡Últimas {product.stock}!
-                    </div>
-                )}
-            </div>
+    const [open, setOpen] = useState(false)
+    const [visible, setVisible] = useState(false)
+    const [activeImg, setActiveImg] = useState(0)
+    const [lightboxOpen, setLightboxOpen] = useState(false)
 
-            {/* Info */}
-            <div className="product-card__info">
-                {product.brand && (
-                    <span className="product-card__brand">
-                        {product.brand}
-                    </span>
-                )}
-                <h3 className="product-card__name">
+    const descItems = product.description
+        ? product.description.split(',').map(s => s.trim()).filter(Boolean)
+        : []
+
+    const openModal = () => {
+        setActiveImg(0)
+        setOpen(true)
+        requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)))
+    }
+
+    const closeModal = () => {
+        setVisible(false)
+        setTimeout(() => setOpen(false), CLOSE_MS)
+    }
+
+    useEffect(() => {
+        if (!open) return
+        document.body.style.overflow = 'hidden'
+        const onKeyDown = (e) => { if (e.key === 'Escape') closeModal() }
+        window.addEventListener('keydown', onKeyDown)
+        return () => {
+            document.body.style.overflow = ''
+            window.removeEventListener('keydown', onKeyDown)
+        }
+    }, [open])
+
+    return (
+        <>
+            <div className="product-card" onClick={openModal}>
+                <LikeButton id={product._id} />
+                <div className="product-card__image">
+                    {images[0]
+                        ? <img src={images[0]} alt={product.name} />
+                        : '💅'
+                    }
+                    {outOfStock && (
+                        <div className="product-card__badge product-card__badge--out-of-stock">
+                            Agotado
+                        </div>
+                    )}
+                    {lowStock && (
+                        <div className="product-card__badge product-card__badge--low-stock">
+                            ¡Últimas {product.stock}!
+                        </div>
+                    )}
+                </div>
+                <div className="product-card__name">
                     {product.name}
-                </h3>
-                {product.description && (
-                    <p className="product-card__desc">
-                        {product.description}
-                    </p>
-                )}
-                <div className="product-card__footer">
-                    <span className="product-card__price">
-                        ${product.price}
-                    </span>
-                    <button
-                        onClick={() => !outOfStock && onAdd(product)}
-                        disabled={outOfStock}
-                        className={`product-card__add-btn${isAdded ? ' product-card__add-btn--added' : ''}`}>
-                        {isAdded ? '✓ Agregado' : outOfStock ? 'Agotado' : '+ Agregar'}
-                    </button>
                 </div>
             </div>
-        </div>
+
+            {open && (
+                <div className={`product-modal${visible ? ' product-modal--visible' : ''}`}>
+                    <div className="product-modal__backdrop" onClick={closeModal} />
+
+                    <div className="product-modal__panel">
+                        <button className="product-modal__close" onClick={closeModal} aria-label="Cerrar">
+                            ✕
+                        </button>
+
+                        <div
+                            className="product-modal__image"
+                            onClick={() => images.length && setLightboxOpen(true)}
+                        >
+                            {images[activeImg]
+                                ? <img src={images[activeImg]} alt={product.name} />
+                                : '💅'
+                            }
+                        </div>
+
+                        {images.length > 1 && (
+                            <div className="product-modal__thumbs">
+                                {images.map((img, i) => (
+                                    <button
+                                        key={i}
+                                        className={`product-modal__thumb${i === activeImg ? ' product-modal__thumb--active' : ''}`}
+                                        onClick={(e) => { e.stopPropagation(); setActiveImg(i) }}
+                                    >
+                                        <img src={img} alt="" />
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        <div className="product-modal__body">
+                            {product.brand && (
+                                <span className="product-modal__brand">
+                                    {product.brand}
+                                </span>
+                            )}
+                            <h3 className="product-modal__name">{product.name}</h3>
+
+                            {descItems.length > 0 && (
+                                <ul className="product-modal__list">
+                                    {descItems.map((item, i) => (
+                                        <li key={i}>{item}</li>
+                                    ))}
+                                </ul>
+                            )}
+
+                            <div className="product-modal__footer">
+                                <span className="product-modal__price">
+                                    ${product.price}
+                                </span>
+                            </div>
+
+                            <button
+                                onClick={() => !outOfStock && onAdd(product)}
+                                disabled={outOfStock}
+                                className={`product-modal__add-btn${isAdded ? ' product-modal__add-btn--added' : ''}`}>
+                                {isAdded ? '✓ Agregado' : outOfStock ? 'Agotado' : '+ Agregar al carrito'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {lightboxOpen && images.length > 0 && (
+                <Lightbox
+                    images={images}
+                    index={activeImg}
+                    onClose={() => setLightboxOpen(false)}
+                    onSelect={setActiveImg}
+                />
+            )}
+        </>
     )
 }

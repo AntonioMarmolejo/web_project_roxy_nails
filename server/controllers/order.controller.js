@@ -23,7 +23,7 @@ export const createOrder = async (req, res, next) => {
                 product: product._id,
                 name: product.name,
                 price: product.price,
-                image: product.image,
+                image: product.images?.[0],
                 qty,
             })
         }

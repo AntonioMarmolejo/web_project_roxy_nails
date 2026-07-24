@@ -1,0 +1,34 @@
+.like-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    transition: transform 0.2s;
+}
+.like-btn:hover {
+    transform: scale(1.1);
+}
+.like-btn__icon {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: #9e7080;
+    stroke-width: 2;
+    transition: fill 0.2s, stroke 0.2s;
+}
+.like-btn--active .like-btn__icon {
+    fill: var(--rn-pink);
+    stroke: var(--rn-pink);
+}

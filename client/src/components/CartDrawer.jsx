@@ -44,8 +44,8 @@ export default function CartDrawer() {
                                 <div key={item._id} className="cart__item">
                                     {/* Imagen */}
                                     <div className="cart__item-image">
-                                        {item.image
-                                            ? <img src={item.image} alt={item.name} />
+                                        {item.images?.[0]
+                                            ? <img src={item.images[0]} alt={item.name} />
                                             : '💅'
                                         }
                                     </div>

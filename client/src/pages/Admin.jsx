@@ -13,7 +13,7 @@ import '../styles/Admin.css'
 const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
 const PROD_CATS = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
 const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false, image: '' }
-const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', image: '' }
+const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', images: ['', '', ''] }
 const EMPTY_WS   = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
 
 const BOOKING_STATUS = {
@@ -178,11 +178,21 @@ export default function Admin() {
 
     // ── CRUD Productos ───────────────────────────────────────────────────────
     const handleProd = (e) => setProdForm(f => ({ ...f, [e.target.name]: e.target.value }))
-    const startEditProd  = (p) => { setEditProd(p._id); setProdForm({ name: p.name, description: p.description || '', price: p.price, stock: p.stock, brand: p.brand || '', category: p.category || 'esmaltes', image: p.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const startEditProd  = (p) => {
+        setEditProd(p._id)
+        const imgs = p.images || []
+        setProdForm({ name: p.name, description: p.description || '', price: p.price, stock: p.stock, brand: p.brand || '', category: p.category || 'esmaltes', images: [imgs[0] || '', imgs[1] || '', imgs[2] || ''] })
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
     const cancelEditProd = () => { setEditProd(null); setProdForm(EMPTY_PROD) }
+    const setProdImage = (i, url) => setProdForm(f => {
+        const images = [...f.images]
+        images[i] = url
+        return { ...f, images }
+    })
     const submitProd = async (e) => {
         e.preventDefault(); setProdLoad(true)
-        const payload = { ...prodForm, price: Number(prodForm.price), stock: Number(prodForm.stock) }
+        const payload = { ...prodForm, price: Number(prodForm.price), stock: Number(prodForm.stock), images: prodForm.images.filter(Boolean) }
         try {
             if (editProd) {
                 const { data } = await updateProduct(editProd, payload)
@@ -542,7 +552,9 @@ export default function Admin() {
                                         <div><label className="admin__label">Marca</label><input name="brand" value={prodForm.brand} onChange={handleProd} className="admin__input" placeholder="OPI" /></div>
                                         <div><label className="admin__label">Categoría</label><select name="category" value={prodForm.category} onChange={handleProd} className="admin__input">{PROD_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
                                     </div>
-                                    <ImageInput label="Imagen" value={prodForm.image} onChange={(url) => setProdForm(f => ({ ...f, image: url }))} />
+                                    <ImageInput label="Foto 1" value={prodForm.images[0]} onChange={(url) => setProdImage(0, url)} />
+                                    <ImageInput label="Foto 2 (opcional)" value={prodForm.images[1]} onChange={(url) => setProdImage(1, url)} />
+                                    <ImageInput label="Foto 3 (opcional)" value={prodForm.images[2]} onChange={(url) => setProdImage(2, url)} />
                                     <div className="admin__form-actions">
                                         <button type="submit" disabled={prodLoad} className="admin__submit-btn">
                                             {prodLoad ? 'Guardando...' : editProd ? 'Guardar cambios' : 'Crear producto'}

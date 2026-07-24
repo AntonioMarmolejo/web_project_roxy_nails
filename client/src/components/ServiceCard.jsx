@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import LikeButton from './LikeButton'
 import '../styles/ServiceCard.css'
 
 const ICONS = {
@@ -50,6 +51,7 @@ export default function ServiceCard({ service, onClick }) {
     return (
         <>
             <div className="service-card" onClick={openModal}>
+                <LikeButton id={service._id} />
                 <div className="service-card__image">
                     {service.image ? <img src={service.image} alt={service.name} /> : icon}
                     {service.featured && (

@@ -81,7 +81,7 @@
 .workshop-card__badge {
     position: absolute;
     top: 10px;
-    right: 10px;
+    left: 10px;
     color: #fff;
     font-size: 10px;
     padding: 4px 10px;
