@@ -50,45 +50,173 @@
     -webkit-backdrop-filter: blur(2px);
     backdrop-filter: blur(2px);
 }
-.service-card__body {
-    padding: 1.3rem 1.25rem 1.4rem;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
 .service-card__name {
     font-family: "Playfair Display", serif;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     color: var(--rn-dark);
-    margin-bottom: 6px;
+    padding: 14px 16px 18px;
 }
-.service-card__desc {
-    font-size: 13px;
-    color: #9e7080;
-    margin-bottom: 14px;
-    line-height: 1.55;
-    flex: 1;
+
+/* Popup de detalle */
+.service-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
-.service-card__footer {
+.service-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(45, 21, 32, 0);
+    transition: background 0.35s ease;
+}
+.service-modal--visible .service-modal__backdrop {
+    background: rgba(45, 21, 32, 0.55);
+}
+.service-modal__panel {
+    position: relative;
+    background: #fff;
+    border-radius: 26px;
+    width: 360px;
+    max-width: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    perspective: 1400px;
+    opacity: 0;
+    transform: rotateY(-100deg) scale(0.92);
+    transition: opacity 0.35s ease, transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.service-modal--visible .service-modal__panel {
+    opacity: 1;
+    transform: rotateY(0deg) scale(1);
+}
+.service-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--rn-muted);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    transition: background 0.2s, color 0.2s;
+}
+.service-modal__close:hover {
+    background: var(--rn-pink-l);
+    color: var(--rn-pink);
+}
+.service-modal__image {
+    flex-shrink: 0;
+    height: 160px;
+    margin: 14px 14px 0;
+    border-radius: 18px;
+    background: linear-gradient(155deg, #fdf0f5, #fce4ee);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    overflow: hidden;
+}
+.service-modal__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.service-modal__body {
+    padding: 1.1rem 1.75rem 1.9rem;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.service-modal__body::-webkit-scrollbar {
+    display: none;
+}
+.service-modal__name {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--rn-dark);
+    margin-bottom: 1rem;
+}
+.service-modal__list {
+    list-style: none;
+    text-align: left;
+    margin-bottom: 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+.service-modal__list li {
+    font-size: 13.5px;
+    color: #6b4050;
+    line-height: 1.5;
+    padding-left: 22px;
+    position: relative;
+}
+.service-modal__list li::before {
+    content: "›";
+    position: absolute;
+    left: 0;
+    top: -2px;
+    color: var(--rn-pink);
+    font-size: 18px;
+    font-weight: 700;
+}
+.service-modal__footer {
     display: flex;
     align-items: baseline;
     justify-content: center;
     gap: 8px;
-    padding-top: 12px;
+    padding: 14px 0;
+    margin-bottom: 1rem;
     border-top: 1px solid #f8e8ee;
+    border-bottom: 1px solid #f8e8ee;
 }
-.service-card__price {
-    font-size: 18px;
+.service-modal__price {
+    font-size: 20px;
     color: var(--rn-pink);
     font-weight: 700;
 }
-.service-card__duration {
-    font-size: 12px;
+.service-modal__duration {
+    font-size: 13px;
     color: #9e7080;
 }
-.service-card__duration::before {
+.service-modal__duration::before {
     content: "·";
     margin-right: 8px;
     color: #d9b3c2;
+}
+.service-modal__book-btn {
+    width: 100%;
+    border: none;
+    border-radius: 24px;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    background: var(--rn-pink);
+    color: #fff;
+    transition: opacity 0.2s;
+}
+.service-modal__book-btn:hover {
+    opacity: 0.88;
 }
