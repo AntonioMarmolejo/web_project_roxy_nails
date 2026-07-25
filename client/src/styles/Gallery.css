@@ -88,6 +88,11 @@
 .gallery__item:hover img {
     transform: scale(1.06);
 }
+.gallery__item-like {
+    top: auto !important;
+    right: 8px !important;
+    bottom: 8px;
+}
 
 @media (max-width: 640px) {
     .gallery__grid {

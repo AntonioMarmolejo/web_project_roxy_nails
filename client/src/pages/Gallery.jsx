@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import Lightbox from '../components/Lightbox'
-import { GALLERY_IMAGES } from '../data/galleryImages'
+import LikeButton from '../components/LikeButton'
+import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Gallery.css'
 
 const CATS = [
@@ -12,11 +13,24 @@ const CATS = [
 ]
 
 export default function Gallery() {
+    const [images, setImages] = useState([])
+    const [loading, setLoading] = useState(true)
     const [cat, setCat] = useState('todas')
     const [lightboxIndex, setLightboxIndex] = useState(null)
 
-    const filtered = cat === 'todas' ? GALLERY_IMAGES : GALLERY_IMAGES.filter(g => g.category === cat)
-    const images = filtered.map(g => g.img)
+    useEffect(() => {
+        fetchGalleryImages()
+            .then(({ data }) => setImages(data))
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [])
+
+    const filtered = cat === 'todas' ? images : images.filter(g => g.category === cat)
+    const lightboxImgs = filtered.map(g => g.image)
+
+    const handleLike = (id, liked) => {
+        likeGalleryImage(id, liked ? 1 : -1).catch(() => {})
+    }
 
     return (
         <>
@@ -44,13 +58,26 @@ export default function Gallery() {
             </div>
 
             <div className="gallery__grid-section">
-                {filtered.length === 0 ? (
-                    <p className="gallery__empty">No hay diseños en esta categoría aún.</p>
+                {loading ? (
+                    <p className="gallery__empty">Cargando diseños...</p>
+                ) : filtered.length === 0 ? (
+                    <p className="gallery__empty">
+                        {images.length === 0
+                            ? 'Aún no hay diseños publicados. ¡Vuelve pronto!'
+                            : 'No hay diseños en esta categoría aún.'}
+                    </p>
                 ) : (
                     <div className="gallery__grid">
                         {filtered.map((item, i) => (
-                            <div key={i} className="gallery__item" onClick={() => setLightboxIndex(i)}>
-                                <img src={item.img} alt="Trabajo de Roxy Nails" loading="lazy" />
+                            <div key={item._id} className="gallery__item" onClick={() => setLightboxIndex(i)}>
+                                <img src={item.image} alt="Trabajo de Roxy Nails" loading="lazy" />
+                                <LikeButton
+                                    id={item._id}
+                                    count={item.likes}
+                                    showCount
+                                    className="gallery__item-like"
+                                    onLike={(liked) => handleLike(item._id, liked)}
+                                />
                             </div>
                         ))}
                     </div>
@@ -59,7 +86,7 @@ export default function Gallery() {
 
             {lightboxIndex !== null && (
                 <Lightbox
-                    images={images}
+                    images={lightboxImgs}
                     index={lightboxIndex}
                     onClose={() => setLightboxIndex(null)}
                     onSelect={setLightboxIndex}

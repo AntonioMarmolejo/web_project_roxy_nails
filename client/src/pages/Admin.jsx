@@ -6,15 +6,18 @@ import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '.
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
+import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage } from '../api/gallery'
 import ImageInput from '../components/ImageInput'
 import '../styles/Admin.css'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
-const SVC_CATS  = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
-const PROD_CATS = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
-const EMPTY_SVC  = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false, image: '' }
-const EMPTY_PROD = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', images: ['', '', ''] }
-const EMPTY_WS   = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
+const SVC_CATS     = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
+const PROD_CATS    = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
+const GALLERY_CATS = ['manicure', 'pedicure', 'nail-art']
+const EMPTY_SVC     = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false, image: '' }
+const EMPTY_PROD    = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', images: ['', '', ''] }
+const EMPTY_WS      = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
+const EMPTY_GALLERY = { image: '', category: 'manicure' }
 
 const BOOKING_STATUS = {
     pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
@@ -84,6 +87,13 @@ export default function Admin() {
     const [enFetching, setEnFetching]     = useState(false)
     const [updatingEnId, setUpdatingEnId] = useState(null)
 
+    // ── Galería ──────────────────────────────────────────────────────────────
+    const [galleryImages, setGalleryImages]     = useState([])
+    const [galleryForm, setGalleryForm]         = useState(EMPTY_GALLERY)
+    const [editGallery, setEditGallery]         = useState(null)
+    const [galleryLoad, setGalleryLoad]         = useState(false)
+    const [galleryFetching, setGalleryFetching] = useState(false)
+
     // ── Toast ────────────────────────────────────────────────────────────────
     const [toast, setToast] = useState('')
     const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
@@ -132,6 +142,13 @@ export default function Admin() {
                 .then(({ data }) => setEnrollments(data))
                 .catch(() => showToast('Error al cargar inscripciones'))
                 .finally(() => setEnFetching(false))
+        }
+        if (tab === 'galeria' && galleryImages.length === 0) {
+            setGalleryFetching(true)
+            fetchAllGalleryImages()
+                .then(({ data }) => setGalleryImages(data))
+                .catch(() => showToast('Error al cargar galería'))
+                .finally(() => setGalleryFetching(false))
         }
     }, [tab])
 
@@ -268,6 +285,34 @@ export default function Admin() {
         finally { setUpdatingEnId(null) }
     }
 
+    // ── CRUD Galería ─────────────────────────────────────────────────────────
+    const startEditGallery  = (g) => { setEditGallery(g._id); setGalleryForm({ image: g.image, category: g.category }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const cancelEditGallery = () => { setEditGallery(null); setGalleryForm(EMPTY_GALLERY) }
+    const submitGallery = async (e) => {
+        e.preventDefault(); setGalleryLoad(true)
+        try {
+            if (editGallery) {
+                const { data } = await updateGalleryImage(editGallery, galleryForm)
+                setGalleryImages(g => g.map(x => x._id === editGallery ? data : x))
+                showToast('Imagen actualizada ✓')
+            } else {
+                const { data } = await createGalleryImage(galleryForm)
+                setGalleryImages(g => [data, ...g])
+                showToast('Imagen agregada ✓')
+            }
+            cancelEditGallery()
+        } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
+        finally { setGalleryLoad(false) }
+    }
+    const handleToggleGallery = async (id, active) => {
+        if (!window.confirm(`¿${active ? 'Ocultar' : 'Mostrar'} esta imagen?`)) return
+        try {
+            const { data } = await toggleGalleryImage(id)
+            setGalleryImages(g => g.map(x => x._id === id ? data : x))
+            showToast(`Imagen ${data.active ? 'visible' : 'oculta'} ✓`)
+        } catch { showToast('Error al cambiar estado') }
+    }
+
     // ── Filtros ──────────────────────────────────────────────────────────────
     const filteredBookings = bFilter === 'all' ? bookings : bookings.filter(b => b.status === bFilter)
     const filteredOrders   = oFilter === 'all' ? orders   : orders.filter(o => o.status === oFilter)
@@ -293,6 +338,11 @@ export default function Admin() {
         active:   workshops.filter(w => w.active).length,
         pendingEn: enrollments.filter(e => e.status === 'pending').length,
         paidEn:    enrollments.filter(e => e.status === 'paid').length,
+    }
+    const galleryStats = {
+        total:  galleryImages.length,
+        active: galleryImages.filter(g => g.active).length,
+        likes:  galleryImages.reduce((s, g) => s + (g.likes || 0), 0),
     }
 
     return (
@@ -327,6 +377,7 @@ export default function Admin() {
                     <button onClick={() => setTab('productos')} className={`admin__tab-btn${tab === 'productos' ? ' admin__tab-btn--active' : ''}`}>🛍️ Productos</button>
                     <button onClick={() => setTab('pedidos')}   className={`admin__tab-btn${tab === 'pedidos' ? ' admin__tab-btn--active' : ''}`}>📦 Pedidos</button>
                     <button onClick={() => setTab('talleres')}  className={`admin__tab-btn${tab === 'talleres' ? ' admin__tab-btn--active' : ''}`}>🎓 Talleres</button>
+                    <button onClick={() => setTab('galeria')}   className={`admin__tab-btn${tab === 'galeria' ? ' admin__tab-btn--active' : ''}`}>🖼️ Galería</button>
                 </div>
 
                 {/* ════════ SERVICIOS ════════ */}
@@ -772,6 +823,87 @@ export default function Admin() {
                                 })}
                             </div>
                         )}
+                    </>
+                )}
+
+                {/* ════════ GALERÍA ════════ */}
+                {tab === 'galeria' && (
+                    <>
+                        <div className="admin__stats-grid--3">
+                            {[
+                                { label: 'Imágenes',      value: galleryStats.total,  color: '#C2185B' },
+                                { label: 'Visibles',      value: galleryStats.active, color: '#2E7D32' },
+                                { label: 'Likes totales', value: galleryStats.likes,  color: '#E65100' },
+                            ].map(st => (
+                                <div key={st.label} className="admin__stat-tile">
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
+                                    <div className="admin__stat-label">{st.label}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="admin__split admin__split--with-margin">
+                            {/* Lista de imágenes */}
+                            <div>
+                                <h2 className="admin__list-title">
+                                    Diseños ({galleryImages.length})
+                                </h2>
+                                {galleryFetching ? (
+                                    <p className="admin__list-loading">Cargando...</p>
+                                ) : galleryImages.length === 0 ? (
+                                    <div className="admin__list-empty">
+                                        No hay imágenes. Sube la primera con el formulario.
+                                    </div>
+                                ) : (
+                                    <div className="admin__gallery-grid">
+                                        {galleryImages.map(g => (
+                                            <div key={g._id} className={`admin__gallery-item${editGallery === g._id ? ' admin__gallery-item--editing' : !g.active ? ' admin__gallery-item--inactive' : ''}`}>
+                                                <div className="admin__gallery-thumb">
+                                                    <img src={g.image} alt="" />
+                                                </div>
+                                                <div className="admin__gallery-info">
+                                                    <span className="admin__item-meta-cap">{g.category}</span>
+                                                    <span>❤️ {g.likes || 0}</span>
+                                                    {!g.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Oculta</span>}
+                                                </div>
+                                                <div className="admin__item-actions">
+                                                    <button onClick={() => startEditGallery(g)} className="admin__btn-edit">Editar</button>
+                                                    <button onClick={() => handleToggleGallery(g._id, g.active)} className="admin__btn-secondary">
+                                                        {g.active ? 'Ocultar' : 'Mostrar'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Form imagen */}
+                            <div className="admin__form-panel">
+                                <h2 className="admin__form-title">
+                                    {editGallery ? 'Editar imagen' : 'Nueva imagen'}
+                                </h2>
+                                <form onSubmit={submitGallery} className="admin__form admin__form--compact">
+                                    <div>
+                                        <label className="admin__label">Categoría *</label>
+                                        <select
+                                            value={galleryForm.category}
+                                            onChange={(e) => setGalleryForm(f => ({ ...f, category: e.target.value }))}
+                                            className="admin__input"
+                                        >
+                                            {GALLERY_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                                        </select>
+                                    </div>
+                                    <ImageInput label="Foto *" value={galleryForm.image} onChange={(url) => setGalleryForm(f => ({ ...f, image: url }))} />
+                                    <div className="admin__form-actions">
+                                        <button type="submit" disabled={galleryLoad || !galleryForm.image} className="admin__submit-btn">
+                                            {galleryLoad ? 'Guardando...' : editGallery ? 'Guardar cambios' : 'Agregar imagen'}
+                                        </button>
+                                        {editGallery && <button type="button" onClick={cancelEditGallery} className="admin__cancel-btn">Cancelar</button>}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                     </>
                 )}
             </div>

@@ -1,0 +1,41 @@
+.page-header {
+    display: grid;
+    grid-template-rows: 1fr;
+    background: #fdf0f5;
+    text-align: center;
+    border-bottom: 1px solid #f0d0dc;
+    transition: grid-template-rows 0.6s ease, border-color 0.5s ease 0.1s;
+}
+.page-header--collapsed {
+    grid-template-rows: 0fr;
+    border-bottom-color: transparent;
+}
+.page-header__inner {
+    overflow: hidden;
+    min-height: 0;
+    padding: 2.5rem 2rem;
+    transition: padding 0.6s ease, opacity 0.4s ease;
+}
+.page-header--collapsed .page-header__inner {
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+}
+.page-header__label {
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c2185b;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+.page-header__title {
+    font-size: 34px;
+    margin-bottom: 8px;
+}
+.page-header__sub {
+    font-size: 15px;
+    color: #9e7080;
+    max-width: 480px;
+    margin: 0 auto;
+}

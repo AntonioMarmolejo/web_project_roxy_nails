@@ -32,3 +32,20 @@
     fill: var(--rn-pink);
     stroke: var(--rn-pink);
 }
+
+.like-btn--with-count {
+    width: auto;
+    border-radius: 20px;
+    padding: 6px 12px 6px 9px;
+    gap: 6px;
+}
+.like-btn__count {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b4050;
+    font-family: "Inter", sans-serif;
+    line-height: 1;
+}
+.like-btn--with-count.like-btn--active .like-btn__count {
+    color: var(--rn-pink);
+}

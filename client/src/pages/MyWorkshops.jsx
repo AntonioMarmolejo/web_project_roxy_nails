@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link }   from 'react-router-dom'
 import { fetchMyEnrollments } from '../api/enrollments'
+import PageHeader from '../components/PageHeader'
 import '../styles/MyWorkshops.css'
 
 const STATUS = {
@@ -28,13 +29,11 @@ export default function MyWorkshops() {
                 <meta name="description" content="Historial de tus inscripciones a talleres en Roxy Nails." />
             </Helmet>
 
-            <div className="myworkshops__header">
-                <p className="myworkshops__header-label">
-                    Mi historial
-                </p>
-                <h1 className="myworkshops__header-title">Mis talleres</h1>
-                <p className="myworkshops__header-sub">Talleres en los que te has inscrito.</p>
-            </div>
+            <PageHeader
+                label="Mi historial"
+                title="Mis talleres"
+                subtitle="Talleres en los que te has inscrito."
+            />
 
             <div className="myworkshops__container">
                 {loading ? (

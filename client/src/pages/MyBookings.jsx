@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
 import { fetchMyBookings, cancelMyBooking } from '../api/bookings'
+import PageHeader from '../components/PageHeader'
 import '../styles/MyBookings.css'
 
 const STATUS = {
@@ -43,13 +44,11 @@ export default function MyBookings() {
                 <meta name="description" content="Historial y gestión de tus citas en Roxy Nails." />
             </Helmet>
 
-            <div className="mybookings__header">
-                <p className="mybookings__header-label">
-                    Mi historial
-                </p>
-                <h1 className="mybookings__header-title">Mis citas</h1>
-                <p className="mybookings__header-sub">Aquí aparecen todas tus reservas.</p>
-            </div>
+            <PageHeader
+                label="Mi historial"
+                title="Mis citas"
+                subtitle="Aquí aparecen todas tus reservas."
+            />
 
             <div className="mybookings__container">
                 {loading ? (

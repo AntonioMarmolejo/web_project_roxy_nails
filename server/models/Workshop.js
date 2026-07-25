@@ -9,6 +9,7 @@ const workshopSchema = new mongoose.Schema({
   price:       { type: Number, required: true },
   spots:       { type: Number, required: true },
   image:       { type: String },
+  likes:       { type: Number, default: 0 },
   active:      { type: Boolean, default: true },
 }, { timestamps: true })
 

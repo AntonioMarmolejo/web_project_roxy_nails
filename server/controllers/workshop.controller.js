@@ -68,3 +68,15 @@ export const toggleWorkshop = async (req, res, next) => {
         res.json(workshop)
     } catch (err) { next(err) }
 }
+
+// PATCH /workshops/:id/like — público: sumar/restar like
+export const likeWorkshop = async (req, res, next) => {
+    try {
+        const workshop = await Workshop.findById(req.params.id)
+        if (!workshop) return res.status(404).json({ message: 'Taller no encontrado' })
+        const delta = req.body?.delta === -1 ? -1 : 1
+        workshop.likes = Math.max(0, workshop.likes + delta)
+        await workshop.save()
+        res.json(workshop)
+    } catch (err) { next(err) }
+}

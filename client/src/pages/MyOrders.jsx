@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link }   from 'react-router-dom'
 import { fetchMyOrders } from '../api/orders'
+import PageHeader from '../components/PageHeader'
 import '../styles/MyOrders.css'
 
 const STATUS = {
@@ -30,13 +31,11 @@ export default function MyOrders() {
                 <meta name="description" content="Historial de tus compras en Roxy Nails." />
             </Helmet>
 
-            <div className="myorders__header">
-                <p className="myorders__header-label">
-                    Mi historial
-                </p>
-                <h1 className="myorders__header-title">Mis pedidos</h1>
-                <p className="myorders__header-sub">Seguimiento y detalle de tus compras.</p>
-            </div>
+            <PageHeader
+                label="Mi historial"
+                title="Mis pedidos"
+                subtitle="Seguimiento y detalle de tus compras."
+            />
 
             <div className="myorders__container">
                 {loading ? (

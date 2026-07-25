@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useLocation } from 'react-router-dom'
+import PageHeader from '../components/PageHeader'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
@@ -63,6 +65,7 @@ function Stepper({ step }) {
 // ─── Main component ───────────────────────────────────────────────
 export default function Booking() {
     const { user } = useAuthStore()
+    const location = useLocation()
 
     const [step, setStep] = useState(1)
     const [services, setServices] = useState([])
@@ -85,6 +88,13 @@ export default function Booking() {
     useEffect(() => {
         fetchServices().then(({ data }) => setServices(data)).catch(() => { })
     }, [])
+
+    useEffect(() => {
+        const id = location.state?.serviceId
+        if (!id || services.length === 0) return
+        const match = services.find(s => s._id === id)
+        if (match) setSelSvc(match)
+    }, [services, location.state])
 
     useEffect(() => {
         if (user) setForm(f => ({
@@ -192,16 +202,11 @@ export default function Booking() {
                 <meta name="description" content="Agenda tu cita de manicure, pedicure o nail art." />
             </Helmet>
 
-            {/* Header */}
-            <div className="booking__header">
-                <p className="booking__header-label">
-                    Tu próxima sesión
-                </p>
-                <h1 className="booking__header-title">Agendar cita</h1>
-                <p className="booking__header-sub">
-                    Elige tu servicio, fecha y hora favorita en minutos.
-                </p>
-            </div>
+            <PageHeader
+                label="Tu próxima sesión"
+                title="Agendar cita"
+                subtitle="Elige tu servicio, fecha y hora favorita en minutos."
+            />
 
             <div className="booking__container">
                 <Stepper step={step} />

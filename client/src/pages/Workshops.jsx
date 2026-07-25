@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { Link } from 'react-router-dom'
-import { fetchWorkshops } from '../api/workshops'
+import { fetchWorkshops, likeWorkshop } from '../api/workshops'
 import LikeButton from '../components/LikeButton'
+import PageHeader from '../components/PageHeader'
 import '../styles/Workshops.css'
 
 const CLOSE_MS = 350
@@ -25,13 +26,11 @@ export default function Workshops() {
                 <meta name="description" content="Aprende técnicas de manicure y nail art en nuestros talleres." />
             </Helmet>
 
-            <div className="workshops__header">
-                <p className="workshops__header-label">
-                    Aprende con nosotras
-                </p>
-                <h1 className="workshops__header-title">Talleres</h1>
-                <p className="workshops__header-sub">Cupos limitados. Inscríbete antes de que se agoten.</p>
-            </div>
+            <PageHeader
+                label="Aprende con nosotras"
+                title="Talleres"
+                subtitle="Cupos limitados. Inscríbete antes de que se agoten."
+            />
 
             <div className="workshops__grid-section">
                 {loading ? (
@@ -92,7 +91,13 @@ function WorkshopCard({ workshop }) {
         <>
             <div className="workshop-card" onClick={openModal}>
                 <div className="workshop-card__image">
-                    <LikeButton id={workshop._id} />
+                    <LikeButton
+                        id={workshop._id}
+                        count={workshop.likes}
+                        showCount
+                        className="workshop-card__like"
+                        onLike={(liked) => likeWorkshop(workshop._id, liked ? 1 : -1).catch(() => {})}
+                    />
                     {workshop.image
                         ? <img src={workshop.image} alt={workshop.title} />
                         : '🎓'

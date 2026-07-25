@@ -11,6 +11,7 @@ import orderRoutes      from './routes/order.routes.js'
 import workshopRoutes   from './routes/workshop.routes.js'
 import enrollmentRoutes from './routes/enrollment.routes.js'
 import uploadRoutes     from './routes/upload.routes.js'
+import galleryRoutes    from './routes/gallery.routes.js'
 
 dotenv.config()
 
@@ -31,6 +32,7 @@ app.use('/api/v1/orders',      orderRoutes)
 app.use('/api/v1/workshops',   workshopRoutes)
 app.use('/api/v1/enrollments', enrollmentRoutes)
 app.use('/api/v1/upload',      uploadRoutes)
+app.use('/api/v1/gallery',     galleryRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: 'Roxy Nails API' }))

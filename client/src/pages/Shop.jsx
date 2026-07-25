@@ -4,6 +4,7 @@ import { fetchProducts } from '../api/products'
 import { useCartStore } from '../store/useCartStore'
 import LikeButton from '../components/LikeButton'
 import Lightbox from '../components/Lightbox'
+import PageHeader from '../components/PageHeader'
 import '../styles/Shop.css'
 
 const CATS = ['todo', 'esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
@@ -40,14 +41,11 @@ export default function Shop() {
                 <meta name="description" content="Esmaltes, herramientas y todo para el cuidado de tus uñas." />
             </Helmet>
 
-            {/* Header */}
-            <div className="shop__header">
-                <p className="shop__header-label">
-                    Nuestros productos
-                </p>
-                <h1 className="shop__header-title">Tienda</h1>
-                <p className="shop__header-sub">Esmaltes, herramientas y todo para el cuidado de tus uñas.</p>
-            </div>
+            <PageHeader
+                label="Nuestros productos"
+                title="Tienda"
+                subtitle="Esmaltes, herramientas y todo para el cuidado de tus uñas."
+            />
 
             {/* Filtros */}
             <div className="shop__filters">

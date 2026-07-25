@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import ServiceCard from '../components/ServiceCard'
+import PageHeader from '../components/PageHeader'
 import { fetchServices } from '../api/services'
 import '../styles/Services.css'
 
@@ -45,16 +46,11 @@ export default function Services() {
                 <meta name="description" content="Catálogo completo de servicios: manicure gel, pedicure spa, nail art, extensiones y más." />
             </Helmet>
 
-            {/* Header */}
-            <div className="services__header">
-                <p className="services__header-label">
-                    Lo que hacemos
-                </p>
-                <h1 className="services__header-title">Nuestros servicios</h1>
-                <p className="services__header-sub">
-                    Cada servicio incluye limpieza, hidratación y el acabado que elijas.
-                </p>
-            </div>
+            <PageHeader
+                label="Lo que hacemos"
+                title="Nuestros servicios"
+                subtitle="Cada servicio incluye limpieza, hidratación y el acabado que elijas."
+            />
 
             {/* Filtros */}
             <div className="services__filters">

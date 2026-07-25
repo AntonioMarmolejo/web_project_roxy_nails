@@ -73,6 +73,11 @@
 .home__gallery-item:hover img {
     transform: scale(1.06);
 }
+.home__gallery-item-like {
+    top: auto !important;
+    right: 8px !important;
+    bottom: 8px;
+}
 
 .home__cta-section {
     background: #fdf0f5;
@@ -122,6 +127,18 @@
     font-size: 13px;
     color: #907070;
     margin-bottom: 8px;
+}
+.home__footer-link--btn {
+    background: none;
+    border: none;
+    padding: 0;
+    text-align: left;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+.home__footer-link--btn:hover {
+    color: #f8c8dc;
 }
 .home__footer-text {
     font-size: 13px;

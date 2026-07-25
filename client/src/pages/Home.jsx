@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import HeroSlider from '../components/HeroSlider'
 import ServiceCard from '../components/ServiceCard'
 import Lightbox from '../components/Lightbox'
+import LikeButton from '../components/LikeButton'
 import { fetchServices } from '../api/services'
-import { GALLERY_IMAGES } from '../data/galleryImages'
+import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Home.css'
 
 const FALLBACK_SERVICES = [
@@ -23,15 +24,24 @@ const SectionLabel = ({ children }) => (
 )
 
 export default function Home() {
+    const navigate = useNavigate()
     const [services, setServices] = useState(FALLBACK_SERVICES)
+    const [galleryImages, setGalleryImages] = useState([])
     const [lightboxIndex, setLightboxIndex] = useState(null)
-    const galleryImgs = GALLERY_IMAGES.map(g => g.img)
+    const galleryImgs = galleryImages.map(g => g.image)
 
     useEffect(() => {
         fetchServices()
             .then(({ data }) => { if (data?.length) setServices(data) })
             .catch(() => { })
+        fetchGalleryImages()
+            .then(({ data }) => setGalleryImages(data))
+            .catch(() => { })
     }, [])
+
+    const handleLike = (id, liked) => {
+        likeGalleryImage(id, liked ? 1 : -1).catch(() => {})
+    }
 
     const featured = services.filter(s => s.featured).slice(0, 5)
     const display = featured.length ? featured : services.slice(0, 5)
@@ -76,14 +86,21 @@ export default function Home() {
                 <SectionLabel>Nuestro trabajo</SectionLabel>
                 <h2 className="home__gallery-title">Galería</h2>
                 <div className="home__gallery-grid">
-                    {GALLERY_IMAGES.map((item, i) => (
+                    {galleryImages.map((item, i) => (
                         <div
-                            key={i}
+                            key={item._id}
                             className="home__gallery-item"
-                            style={{ '--gallery-row-span': item.tall ? 'span 2' : 'span 1' }}
+                            style={{ '--gallery-row-span': i === 0 || i === 6 ? 'span 2' : 'span 1' }}
                             onClick={() => setLightboxIndex(i)}
                         >
-                            <img src={item.img} alt="Trabajo de Roxy Nails" loading="lazy" />
+                            <img src={item.image} alt="Trabajo de Roxy Nails" loading="lazy" />
+                            <LikeButton
+                                id={item._id}
+                                count={item.likes}
+                                showCount
+                                className="home__gallery-item-like"
+                                onLike={(liked) => handleLike(item._id, liked)}
+                            />
                         </div>
                     ))}
                 </div>
@@ -129,13 +146,19 @@ export default function Home() {
                     </div>
                     <div>
                         <h4 className="home__footer-heading">Servicios</h4>
-                        {['Manicure Gel', 'Pedicure Spa', 'Nail Art', 'Extensiones'].map(s => (
-                            <Link key={s} to="/servicios" className="home__footer-link">{s}</Link>
+                        {services.slice(0, 4).map(svc => (
+                            <button
+                                key={svc._id}
+                                onClick={() => navigate('/agendar', { state: { serviceId: svc._id } })}
+                                className="home__footer-link home__footer-link--btn"
+                            >
+                                {svc.name}
+                            </button>
                         ))}
                     </div>
                     <div>
                         <h4 className="home__footer-heading">Contacto</h4>
-                        {['📍 Tu dirección aquí', '📱 WhatsApp', '📸 Instagram', '🕐 Lun–Sáb 8–19h'].map(c => (
+                        {['📍 Tu dirección aquí', '🕐 Lun–Sáb 8–19h'].map(c => (
                             <p key={c} className="home__footer-text">{c}</p>
                         ))}
                     </div>
