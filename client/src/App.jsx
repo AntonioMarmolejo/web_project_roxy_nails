@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import { useAuthStore } from './store/useAuthStore'
 
 import Home           from './pages/Home'
+import Gallery        from './pages/Gallery'
 import Services       from './pages/Services'
 import Booking        from './pages/Booking'
 import MyBookings     from './pages/MyBookings'
@@ -33,6 +34,7 @@ function App() {
             <WhatsAppButton />
             <Routes>
                 <Route path="/"            element={<Home />} />
+                <Route path="/galeria"     element={<Gallery />} />
                 <Route path="/servicios"   element={<Services />} />
                 <Route path="/agendar"     element={<Booking />} />
                 <Route path="/tienda"      element={<Shop />} />
