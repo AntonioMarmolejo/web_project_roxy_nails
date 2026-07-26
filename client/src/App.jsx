@@ -15,6 +15,8 @@ import WorkshopCheckout from './pages/WorkshopCheckout'
 import MyWorkshops      from './pages/MyWorkshops'
 import Admin          from './pages/Admin'
 import Login          from './pages/Login'
+import Privacidad     from './pages/Privacidad'
+import Terminos       from './pages/Terminos'
 import NotFound       from './pages/NotFound'
 import Navbar         from './components/Navbar'
 import CartDrawer     from './components/CartDrawer'
@@ -44,6 +46,8 @@ function App() {
                 <Route path="/talleres"    element={<Workshops />} />
                 <Route path="/talleres/:id/inscripcion" element={<WorkshopCheckout />} />
                 <Route path="/login"       element={<Login />} />
+                <Route path="/privacidad"  element={<Privacidad />} />
+                <Route path="/terminos"    element={<Terminos />} />
                 <Route path="/mis-citas"   element={
                     <ProtectedRoute>
                         <MyBookings />
