@@ -1,5 +1,6 @@
 import Order from '../models/Order.js'
 import Product from '../models/Product.js'
+import { sendOrderConfirmation, mailEnabled } from '../utils/mailer.js'
 
 // POST /orders
 export const createOrder = async (req, res, next) => {
@@ -42,6 +43,15 @@ export const createOrder = async (req, res, next) => {
             notes,
             createdBy: req.user?._id,
         })
+
+        if (order.client.email && mailEnabled()) {
+            sendOrderConfirmation({
+                to: order.client.email,
+                name: order.client.name,
+                items: orderItems,
+                total: order.total,
+            }).catch(err => console.warn('Email no enviado:', err.message))
+        }
 
         res.status(201).json(order)
     } catch (err) { next(err) }

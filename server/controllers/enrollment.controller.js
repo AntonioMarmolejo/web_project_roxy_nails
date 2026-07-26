@@ -1,5 +1,6 @@
 import WorkshopEnrollment from '../models/WorkshopEnrollment.js'
 import Workshop from '../models/Workshop.js'
+import { sendEnrollmentConfirmation, mailEnabled } from '../utils/mailer.js'
 
 // POST /enrollments — inscribirse a un taller (guest OK)
 export const createEnrollment = async (req, res, next) => {
@@ -29,6 +30,16 @@ export const createEnrollment = async (req, res, next) => {
             paymentMethod: paymentMethod || 'cod',
             createdBy: req.user?._id,
         })
+
+        if (enrollment.client.email && mailEnabled()) {
+            sendEnrollmentConfirmation({
+                to: enrollment.client.email,
+                name: enrollment.client.name,
+                title: enrollment.title,
+                date: enrollment.date,
+                price: enrollment.price,
+            }).catch(err => console.warn('Email no enviado:', err.message))
+        }
 
         res.status(201).json(enrollment)
     } catch (err) { next(err) }

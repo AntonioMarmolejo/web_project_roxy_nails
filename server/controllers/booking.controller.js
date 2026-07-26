@@ -1,8 +1,5 @@
 import Booking from '../models/Booking.js'
-import { sendBookingConfirmation } from '../utils/mailer.js'
-
-const mailEnabled = () =>
-  process.env.MAIL_USER && !process.env.MAIL_USER.includes('tu_correo')
+import { sendBookingConfirmation, mailEnabled } from '../utils/mailer.js'
 
 export const getBookings = async (req, res, next) => {
   try {
