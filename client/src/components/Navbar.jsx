@@ -37,6 +37,9 @@ export default function Navbar() {
                 {user && (
                     <NavLink to="/mis-talleres" onClick={close} className={navLinkClass}>Mis talleres</NavLink>
                 )}
+                {user && (
+                    <NavLink to="/perfil" onClick={close} className={navLinkClass}>Mi perfil</NavLink>
+                )}
                 <NavLink to="/tienda" onClick={close} className={navLinkClass}>Tienda</NavLink>
                 <NavLink to="/talleres" onClick={close} className={navLinkClass}>Talleres</NavLink>
                 {user?.role === 'admin' && (

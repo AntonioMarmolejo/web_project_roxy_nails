@@ -15,6 +15,9 @@ import WorkshopCheckout from './pages/WorkshopCheckout'
 import MyWorkshops      from './pages/MyWorkshops'
 import Admin          from './pages/Admin'
 import Login          from './pages/Login'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword  from './pages/ResetPassword'
+import Profile        from './pages/Profile'
 import Privacidad     from './pages/Privacidad'
 import Terminos       from './pages/Terminos'
 import NotFound       from './pages/NotFound'
@@ -46,8 +49,15 @@ function App() {
                 <Route path="/talleres"    element={<Workshops />} />
                 <Route path="/talleres/:id/inscripcion" element={<WorkshopCheckout />} />
                 <Route path="/login"       element={<Login />} />
+                <Route path="/olvide-contrasena" element={<ForgotPassword />} />
+                <Route path="/restablecer-contrasena/:token" element={<ResetPassword />} />
                 <Route path="/privacidad"  element={<Privacidad />} />
                 <Route path="/terminos"    element={<Terminos />} />
+                <Route path="/perfil" element={
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                } />
                 <Route path="/mis-citas"   element={
                     <ProtectedRoute>
                         <MyBookings />

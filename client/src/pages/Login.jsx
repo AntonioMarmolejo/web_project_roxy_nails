@@ -86,6 +86,12 @@ export default function Login() {
                             className="login__input" placeholder="••••••••" required minLength={6} />
                     </div>
 
+                    {mode === 'login' && (
+                        <Link to="/olvide-contrasena" className="login__forgot-link">
+                            ¿Olvidaste tu contraseña?
+                        </Link>
+                    )}
+
                     {error && (
                         <p className="login__error">{error}</p>
                     )}
