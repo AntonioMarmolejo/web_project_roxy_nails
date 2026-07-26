@@ -1,0 +1,25 @@
+.not-found {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    background: #fdf0f5;
+}
+.not-found__icon {
+    font-size: 56px;
+    margin-bottom: 1rem;
+}
+.not-found__title {
+    font-family: "Playfair Display", serif;
+    font-size: 64px;
+    color: #c2185b;
+    margin-bottom: 8px;
+}
+.not-found__sub {
+    font-size: 15px;
+    color: #9e7080;
+    margin-bottom: 2rem;
+}

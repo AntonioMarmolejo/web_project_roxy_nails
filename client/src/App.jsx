@@ -15,9 +15,11 @@ import WorkshopCheckout from './pages/WorkshopCheckout'
 import MyWorkshops      from './pages/MyWorkshops'
 import Admin          from './pages/Admin'
 import Login          from './pages/Login'
+import NotFound       from './pages/NotFound'
 import Navbar         from './components/Navbar'
 import CartDrawer     from './components/CartDrawer'
 import WhatsAppButton from './components/WhatsAppButton'
+import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -62,7 +64,9 @@ function App() {
                         <Admin />
                     </ProtectedRoute>
                 } />
+                <Route path="*" element={<NotFound />} />
             </Routes>
+            <Footer />
         </BrowserRouter>
     )
 }
