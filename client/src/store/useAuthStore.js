@@ -45,4 +45,25 @@ export const useAuthStore = create((set) => ({
             set({ user: null, token: null, authReady: true })
         }
     },
+
+    updateProfile: async (name, phone) => {
+        const { data } = await api.put('/auth/profile', { name, phone })
+        set({ user: data.user })
+        return data.user
+    },
+
+    changePassword: async (currentPassword, newPassword) => {
+        const { data } = await api.put('/auth/change-password', { currentPassword, newPassword })
+        return data
+    },
+
+    forgotPassword: async (email) => {
+        const { data } = await api.post('/auth/forgot-password', { email })
+        return data
+    },
+
+    resetPassword: async (token, password) => {
+        const { data } = await api.post(`/auth/reset-password/${token}`, { password })
+        return data
+    },
 }))
