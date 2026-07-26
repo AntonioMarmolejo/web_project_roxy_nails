@@ -106,6 +106,7 @@ export default function Checkout() {
         <>
             <Helmet>
                 <title>Checkout — Roxy Nails</title>
+                <meta name="description" content="Finaliza tu compra de productos en Roxy Nails." />
             </Helmet>
 
             <div className="checkout__page-header">

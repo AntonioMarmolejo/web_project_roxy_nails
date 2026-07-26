@@ -113,6 +113,7 @@ export default function WorkshopCheckout() {
         <>
             <Helmet>
                 <title>Inscripción — {workshop.title} — Roxy Nails</title>
+                <meta name="description" content={`Inscríbete al taller "${workshop.title}" en Roxy Nails.`} />
             </Helmet>
 
             <div className="checkout__page-header">

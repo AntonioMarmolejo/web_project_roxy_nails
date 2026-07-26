@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices, createService, updateService, deleteService } from '../api/services'
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
@@ -347,6 +348,10 @@ export default function Admin() {
 
     return (
         <div className="admin__page">
+            <Helmet>
+                <title>Panel de administración — Roxy Nails</title>
+                <meta name="robots" content="noindex, nofollow" />
+            </Helmet>
 
             {/* Toast */}
             {toast && (

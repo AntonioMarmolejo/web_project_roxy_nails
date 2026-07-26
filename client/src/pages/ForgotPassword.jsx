@@ -29,6 +29,7 @@ export default function ForgotPassword() {
         <main className="login">
             <Helmet>
                 <title>Recuperar contraseña — Roxy Nails</title>
+                <meta name="description" content="Recupera el acceso a tu cuenta de Roxy Nails." />
             </Helmet>
 
             <div className="login__card">

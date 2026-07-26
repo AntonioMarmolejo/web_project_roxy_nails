@@ -37,6 +37,7 @@ export default function ResetPassword() {
         <main className="login">
             <Helmet>
                 <title>Restablecer contraseña — Roxy Nails</title>
+                <meta name="description" content="Crea una nueva contraseña para tu cuenta de Roxy Nails." />
             </Helmet>
 
             <div className="login__card">

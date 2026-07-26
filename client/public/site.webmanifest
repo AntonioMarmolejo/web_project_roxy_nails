@@ -1,0 +1,12 @@
+{
+    "name": "Roxy Nails",
+    "short_name": "Roxy Nails",
+    "description": "Estudio de manicure y pedicure profesional. Agenda tu cita online.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#fdf0f5",
+    "theme_color": "#c2185b",
+    "icons": [
+        { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    ]
+}

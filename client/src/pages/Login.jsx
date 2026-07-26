@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import '../styles/Login.css'
 
@@ -37,6 +38,11 @@ export default function Login() {
 
     return (
         <main className="login">
+            <Helmet>
+                <title>{mode === 'login' ? 'Ingresar' : 'Crear cuenta'} — Roxy Nails</title>
+                <meta name="description" content="Ingresa o crea tu cuenta en Roxy Nails para agendar citas, comprar productos e inscribirte a talleres." />
+            </Helmet>
+
             <div className="login__card">
                 {/* Logo */}
                 <div className="login__header">
