@@ -1,0 +1,113 @@
+.account-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+}
+.account-drawer__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+}
+.account-drawer--visible .account-drawer__backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+.account-drawer__panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 300px;
+    max-width: 85vw;
+    background: #fff;
+    z-index: 211;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 0 32px rgba(0, 0, 0, 0.13);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
+}
+.account-drawer--visible .account-drawer__panel {
+    transform: translateX(0);
+}
+
+.account-drawer__profile {
+    padding: 2rem 1.5rem 1.25rem;
+    text-align: center;
+    border-bottom: 1px solid #f0d0dc;
+}
+.account-drawer__avatar {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 0.75rem;
+    border-radius: 50%;
+    background: var(--rn-pink);
+    color: #fff;
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.account-drawer__name {
+    font-family: "Playfair Display", serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2d1520;
+}
+.account-drawer__email {
+    font-size: 12px;
+    color: #9e7080;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-drawer__logout-btn {
+    margin: 1.1rem 1.5rem 0.5rem;
+    background: transparent;
+    border: 1px solid #f0d0dc;
+    color: #c2185b;
+    border-radius: 20px;
+    padding: 9px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+    transition: background 0.2s;
+}
+.account-drawer__logout-btn:hover {
+    background: #fdf0f5;
+}
+
+.account-drawer__nav {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 0.75rem 1.5rem;
+    gap: 2px;
+}
+.account-drawer__link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #4a2030;
+    transition: background 0.2s, color 0.2s;
+}
+.account-drawer__link:hover {
+    background: #fdf0f5;
+}
+.account-drawer__link--active {
+    background: #fdf0f5;
+    color: #c2185b;
+    font-weight: 600;
+}
+.account-drawer__link-icon {
+    font-size: 17px;
+    width: 20px;
+    text-align: center;
+}

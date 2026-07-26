@@ -23,6 +23,7 @@ import Terminos       from './pages/Terminos'
 import NotFound       from './pages/NotFound'
 import Navbar         from './components/Navbar'
 import CartDrawer     from './components/CartDrawer'
+import AccountDrawer  from './components/AccountDrawer'
 import WhatsAppButton from './components/WhatsAppButton'
 import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -38,6 +39,7 @@ function App() {
         <BrowserRouter>
             <Navbar />
             <CartDrawer />
+            <AccountDrawer />
             <WhatsAppButton />
             <Routes>
                 <Route path="/"            element={<Home />} />
