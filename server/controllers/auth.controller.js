@@ -6,19 +6,32 @@ import { sendPasswordReset, mailEnabled } from '../utils/mailer.js'
 const signToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN })
 
+const isStr = (v) => typeof v === 'string' && v.trim().length > 0
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export const register = async (req, res, next) => {
   try {
     const { name, email, phone, password } = req.body
+    if (!isStr(name) || !isStr(email) || !isStr(password))
+      return res.status(400).json({ message: 'Nombre, correo y contraseña son requeridos.' })
+    if (!EMAIL_RE.test(email))
+      return res.status(400).json({ message: 'El correo no tiene un formato válido.' })
+    if (password.length < 6)
+      return res.status(400).json({ message: 'La contraseña debe tener al menos 6 caracteres.' })
+
     const user = await User.create({ name, email, phone, password })
     const token = signToken(user._id)
     res.status(201).json({ token, user: { id: user._id, name, email, role: user.role } })
-  } catch (err) { next(err) }
+  } catch (err) {
+    if (err.code === 11000) return res.status(409).json({ message: 'Ya existe una cuenta con ese correo.' })
+    next(err)
+  }
 }
 
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body
-    if (!email || !password) return res.status(400).json({ message: 'Correo y contraseña requeridos' })
+    if (!isStr(email) || !isStr(password)) return res.status(400).json({ message: 'Correo y contraseña requeridos' })
 
     const user = await User.findOne({ email }).select('+password')
     if (!user || !(await user.comparePassword(password)))
@@ -37,6 +50,10 @@ export const getMe = async (req, res) => {
 export const updateProfile = async (req, res, next) => {
   try {
     const { name, phone } = req.body
+    if (!isStr(name)) return res.status(400).json({ message: 'El nombre es requerido.' })
+    if (phone !== undefined && typeof phone !== 'string')
+      return res.status(400).json({ message: 'Teléfono inválido.' })
+
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { name, phone },
@@ -50,7 +67,8 @@ export const updateProfile = async (req, res, next) => {
 export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body
-    if (!newPassword || newPassword.length < 6)
+    if (!isStr(currentPassword)) return res.status(400).json({ message: 'Contraseña actual requerida.' })
+    if (!isStr(newPassword) || newPassword.length < 6)
       return res.status(400).json({ message: 'La nueva contraseña debe tener al menos 6 caracteres.' })
 
     const user = await User.findById(req.user._id).select('+password')
@@ -67,6 +85,7 @@ export const changePassword = async (req, res, next) => {
 export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body
+    if (!isStr(email)) return res.status(400).json({ message: 'Correo requerido.' })
     const user = await User.findOne({ email })
 
     // Misma respuesta exista o no el correo, para no filtrar qué cuentas existen
@@ -95,7 +114,7 @@ export const resetPassword = async (req, res, next) => {
   try {
     const { token } = req.params
     const { password } = req.body
-    if (!password || password.length < 6)
+    if (!isStr(password) || password.length < 6)
       return res.status(400).json({ message: 'La contraseña debe tener al menos 6 caracteres.' })
 
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex')
