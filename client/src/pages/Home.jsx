@@ -42,8 +42,8 @@ export default function Home() {
         likeGalleryImage(id, liked ? 1 : -1).catch(() => {})
     }
 
-    const featured = services.filter(s => s.featured).slice(0, 5)
-    const display = featured.length ? featured : services.slice(0, 5)
+    const featured = services.filter(s => s.featured).slice(0, 9)
+    const display = featured.length ? featured : services.slice(0, 9)
 
     return (
         <>
