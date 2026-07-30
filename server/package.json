@@ -4,6 +4,9 @@
   "description": "API REST para Roxy Nails",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
