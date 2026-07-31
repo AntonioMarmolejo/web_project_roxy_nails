@@ -4,7 +4,20 @@ import { useNavigate } from 'react-router-dom'
 import { useCartStore }  from '../store/useCartStore'
 import { useAuthStore }  from '../store/useAuthStore'
 import { createOrder }   from '../api/orders'
+import qrDeuna from '../assets/qrdeunaantonio.png'
 import '../styles/Checkout.css'
+
+const PAYMENT_METHODS = [
+    { value: 'cod',       icon: '💵', label: 'Pago al retirar / en tienda' },
+    { value: 'qr_deuna',  icon: '📱', label: 'Pago con QR — De Una (Banco Pichincha)' },
+    { value: 'stripe',    icon: '💳', label: 'Tarjeta', badge: 'Próximamente', disabled: true },
+]
+
+const PAYMENT_LABELS = {
+    cod:      'En tienda / al retirar',
+    qr_deuna: 'QR — De Una (Banco Pichincha)',
+    stripe:   'Tarjeta',
+}
 
 export default function Checkout() {
     const { items, total, clearCart } = useCartStore()
@@ -18,6 +31,7 @@ export default function Checkout() {
         address: '',
         notes:   '',
     })
+    const [paymentMethod, setPaymentMethod] = useState('cod')
     const [submitting, setSubmitting] = useState(false)
     const [error, setError]           = useState('')
     const [success, setSuccess]       = useState(null)
@@ -38,7 +52,7 @@ export default function Checkout() {
                     address: form.address,
                 },
                 notes:         form.notes,
-                paymentMethod: 'cod',
+                paymentMethod,
             }
             const { data } = await createOrder(payload)
             clearCart()
@@ -84,7 +98,7 @@ export default function Checkout() {
                             <strong>Total:</strong>{' '}
                             <span className="checkout__success-total">${success.total.toFixed(2)}</span>
                         </span>
-                        <span><strong>Pago:</strong> En tienda / al retirar</span>
+                        <span><strong>Pago:</strong> {PAYMENT_LABELS[success.paymentMethod] || 'En tienda / al retirar'}</span>
                     </div>
                 </div>
 
@@ -153,10 +167,30 @@ export default function Checkout() {
                     {/* Método de pago */}
                     <div className="checkout__payment-box">
                         <p className="checkout__payment-title">Método de pago</p>
-                        <div className="checkout__payment-row">
-                            <span style={{ fontSize: 18 }}>💵</span>
-                            Pago al retirar / en tienda
+                        <div className="checkout__payment-options">
+                            {PAYMENT_METHODS.map(m => (
+                                <button
+                                    type="button"
+                                    key={m.value}
+                                    disabled={m.disabled}
+                                    onClick={() => setPaymentMethod(m.value)}
+                                    className={`checkout__payment-option${paymentMethod === m.value ? ' checkout__payment-option--active' : ''}${m.disabled ? ' checkout__payment-option--disabled' : ''}`}
+                                >
+                                    <span className="checkout__payment-option-icon">{m.icon}</span>
+                                    <span className="checkout__payment-option-label">{m.label}</span>
+                                    {m.badge && <span className="checkout__payment-option-badge">{m.badge}</span>}
+                                </button>
+                            ))}
                         </div>
+
+                        {paymentMethod === 'qr_deuna' && (
+                            <div className="checkout__qr-box">
+                                <img src={qrDeuna} alt="Código QR De Una — Banco Pichincha" className="checkout__qr-img" />
+                                <p className="checkout__qr-note">
+                                    Escanea este código con la app <strong>De Una</strong>, ingresa el monto de tu pedido (${total.toFixed(2)}) y confirma el pago. Luego dale click en "Confirmar pedido".
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {error && (

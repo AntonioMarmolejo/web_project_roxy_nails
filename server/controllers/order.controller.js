@@ -5,7 +5,7 @@ import { sendOrderConfirmation, mailEnabled } from '../utils/mailer.js'
 // POST /orders
 export const createOrder = async (req, res, next) => {
     try {
-        const { items, client, notes } = req.body
+        const { items, client, notes, paymentMethod } = req.body
 
         if (!items?.length) return res.status(400).json({ message: 'El pedido no tiene productos.' })
 
@@ -41,6 +41,7 @@ export const createOrder = async (req, res, next) => {
             total: Math.round(total * 100) / 100,
             client,
             notes,
+            paymentMethod,
             createdBy: req.user?._id,
         })
 

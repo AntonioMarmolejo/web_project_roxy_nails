@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema({
         enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'],
         default: 'pending',
     },
-    paymentMethod: { type: String, enum: ['cod', 'stripe'], default: 'cod' },
+    paymentMethod: { type: String, enum: ['cod', 'qr_deuna', 'stripe'], default: 'cod' },
     notes: { type: String },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 }, { timestamps: true })
