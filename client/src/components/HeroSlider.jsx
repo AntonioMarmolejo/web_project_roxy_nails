@@ -13,7 +13,7 @@ const SLIDES = [
         bg: 'linear-gradient(135deg, #FDF0F5 55%, #F8C8DC 100%)',
         btnPrimary: { label: 'Ver precios', to: '/servicios', color: '#C2185B' },
         btnGhost: { label: 'Agendar ahora', to: '/agendar', color: '#C2185B' },
-        nails: ['#E91E8C', '#F06292', '#C2185B', '#F8BBD9', '#EC407A', '#AD1457'],
+        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258154/roxy-nails/fo64nw2o6szi9a2m2moo.jpg',
     },
     {
         tag: '🌸 Relajación total',
@@ -25,7 +25,7 @@ const SLIDES = [
         bg: 'linear-gradient(135deg, #FFF5F0 55%, #FFD4C2 100%)',
         btnPrimary: { label: 'Reservar', to: '/agendar', color: '#D85A30' },
         btnGhost: { label: 'Ver detalles', to: '/servicios', color: '#D85A30' },
-        nails: ['#FF8A65', '#FF7043', '#E64A19', '#FFCCBC', '#FF5722', '#BF360C'],
+        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258204/roxy-nails/kn1ddmkumimcfxboibof.jpg',
     },
     {
         tag: '🎓 Próximo taller',
@@ -37,9 +37,11 @@ const SLIDES = [
         bg: 'linear-gradient(135deg, #F5F0FF 55%, #E0CEFF 100%)',
         btnPrimary: { label: 'Ver talleres', to: '/talleres', color: '#7F77DD' },
         btnGhost: { label: 'Más info', to: '/talleres', color: '#7F77DD' },
-        nails: ['#9575CD', '#7E57C2', '#5E35B1', '#D1C4E9', '#7C4DFF', '#4527A0'],
+        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258243/roxy-nails/im714bfargexaa9lagjp.jpg',
     },
 ]
+
+const AUTOPLAY_MS = 6500
 
 export default function HeroSlider() {
     const [cur, setCur] = useState(0)
@@ -48,17 +50,17 @@ export default function HeroSlider() {
     const go = useCallback((n) => setCur((n + SLIDES.length) % SLIDES.length), [])
 
     useEffect(() => {
-        const t = setInterval(() => go(cur + 1), 4500)
+        const t = setInterval(() => go(cur + 1), AUTOPLAY_MS)
         return () => clearInterval(t)
     }, [cur, go])
 
     const s = SLIDES[cur]
 
     return (
-        <div className="hero" style={{ '--hero-bg': s.bg }}>
+        <div className="hero" style={{ '--hero-bg': s.bg, '--btn-color': s.btnPrimary.color }}>
             <div className="hero__inner">
                 {/* Contenido */}
-                <div className="hero__content">
+                <div className="hero__content" key={`content-${cur}`}>
                     <span className="hero__tag" style={{ '--tag-bg': s.tagBg, '--tag-color': s.tagColor }}>{s.tag}</span>
 
                     <h1 className="hero__title">
@@ -87,23 +89,18 @@ export default function HeroSlider() {
                     </div>
                 </div>
 
-                {/* Decoración de uñas */}
-                <div className="hero__nails">
-                    {[0, 1].map(col => (
-                        <div key={col} className="hero__nails-col" style={{ marginTop: col * 28 }}>
-                            {s.nails.slice(col * 3, col * 3 + 3).map((color, i) => (
-                                <div key={i} className="hero__nail" style={{ '--nail-color': color }} />
-                            ))}
-                        </div>
-                    ))}
+                {/* Imagen */}
+                <div className="hero__media">
+                    <img src={s.image} alt={s.title.join('')} key={`media-${cur}`} />
                 </div>
             </div>
 
             {/* Flechas */}
-            {['←', '→'].map((arrow, i) => (
+            {['‹', '›'].map((arrow, i) => (
                 <button
                     key={arrow}
                     onClick={() => go(cur + (i === 0 ? -1 : 1))}
+                    aria-label={i === 0 ? 'Anterior' : 'Siguiente'}
                     className={`hero__arrow ${i === 0 ? 'hero__arrow--left' : 'hero__arrow--right'}`}
                 >{arrow}</button>
             ))}

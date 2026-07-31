@@ -676,6 +676,7 @@ export default function Admin() {
                                                         {o.client?.email && <span>✉️ {o.client.email}</span>}
                                                         <span className="admin__record-total">Total: ${o.total.toFixed(2)}</span>
                                                     </div>
+                                                    {o.client?.address && <p className="admin__record-address">📍 {o.client.address}</p>}
                                                     {o.notes && <p className="admin__record-notes">"{o.notes}"</p>}
                                                 </div>
                                                 <div className="admin__record-actions">

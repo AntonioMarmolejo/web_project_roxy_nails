@@ -125,7 +125,7 @@ a {
 
 /* Hero */
 .hero {
-    height: 520px;
+    height: 560px;
 }
 
 /* Grids */
@@ -258,7 +258,7 @@ a {
         min-height: 320px;
         padding: 2.5rem 0 3.25rem;
     }
-    .hero__nails {
+    .hero__media {
         display: none !important;
     }
     .hero__arrow {
