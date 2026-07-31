@@ -254,10 +254,15 @@ a {
 
     /* --- Hero --- */
     .hero {
-        height: 320px !important;
+        height: auto !important;
+        min-height: 320px;
+        padding: 2.5rem 0 3.25rem;
     }
     .hero__nails {
         display: none !important;
+    }
+    .hero__arrow {
+        display: none;
     }
     .hero__content {
         max-width: 100% !important;
@@ -268,6 +273,12 @@ a {
     .hero__buttons {
         justify-content: center !important;
         flex-wrap: wrap;
+    }
+    .hero__dots {
+        position: static;
+        transform: none;
+        justify-content: center;
+        margin-top: 1.5rem;
     }
 
     /* --- Grids --- */

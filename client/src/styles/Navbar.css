@@ -37,10 +37,10 @@
 }
 .navbar__account-hamburger span {
     display: block;
-    width: 22px;
-    height: 2px;
+    width: 4px;
+    height: 4px;
     background: #c2185b;
-    border-radius: 2px;
+    border-radius: 50%;
 }
 
 .navbar__cart-btn {
