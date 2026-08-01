@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
+import PasswordInput from '../components/PasswordInput'
 import '../styles/Login.css'
 
 export default function ResetPassword() {
@@ -56,15 +57,15 @@ export default function ResetPassword() {
                     <form onSubmit={submit} className="login__form">
                         <div>
                             <label className="login__label">Nueva contraseña</label>
-                            <input
-                                type="password" value={password} onChange={(e) => setPassword(e.target.value)}
+                            <PasswordInput
+                                value={password} onChange={(e) => setPassword(e.target.value)}
                                 className="login__input" placeholder="••••••••" required minLength={6}
                             />
                         </div>
                         <div>
                             <label className="login__label">Confirmar contraseña</label>
-                            <input
-                                type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
+                            <PasswordInput
+                                value={confirm} onChange={(e) => setConfirm(e.target.value)}
                                 className="login__input" placeholder="••••••••" required minLength={6}
                             />
                         </div>

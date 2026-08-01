@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import PageHeader from '../components/PageHeader'
+import PasswordInput from '../components/PasswordInput'
 import '../styles/Profile.css'
 
 export default function Profile() {
@@ -100,24 +101,24 @@ export default function Profile() {
 
                     <div>
                         <label className="profile__label">Contraseña actual</label>
-                        <input
-                            type="password" value={pwForm.currentPassword}
+                        <PasswordInput
+                            value={pwForm.currentPassword}
                             onChange={(e) => setPwForm(f => ({ ...f, currentPassword: e.target.value }))}
                             className="profile__input" required
                         />
                     </div>
                     <div>
                         <label className="profile__label">Nueva contraseña</label>
-                        <input
-                            type="password" value={pwForm.newPassword}
+                        <PasswordInput
+                            value={pwForm.newPassword}
                             onChange={(e) => setPwForm(f => ({ ...f, newPassword: e.target.value }))}
                             className="profile__input" required minLength={6}
                         />
                     </div>
                     <div>
                         <label className="profile__label">Confirmar nueva contraseña</label>
-                        <input
-                            type="password" value={pwForm.confirm}
+                        <PasswordInput
+                            value={pwForm.confirm}
                             onChange={(e) => setPwForm(f => ({ ...f, confirm: e.target.value }))}
                             className="profile__input" required minLength={6}
                         />

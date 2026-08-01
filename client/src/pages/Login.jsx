@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
+import PasswordInput from '../components/PasswordInput'
 import '../styles/Login.css'
 
 const EMPTY_FORM = { name: '', email: '', phone: '', password: '' }
@@ -88,7 +89,7 @@ export default function Login() {
 
                     <div>
                         <label className="login__label">Contraseña</label>
-                        <input name="password" type="password" value={form.password} onChange={handle}
+                        <PasswordInput name="password" value={form.password} onChange={handle}
                             className="login__input" placeholder="••••••••" required minLength={6} />
                     </div>
 
