@@ -12,8 +12,16 @@ api.interceptors.request.use((config) => {
 })
 
 // Redirige al login si el token expira
+// También rechaza respuestas HTML (p. ej. el rewrite SPA de Vercel devolviendo index.html
+// cuando la API no está disponible), para que no lleguen strings donde se esperan arrays
 api.interceptors.response.use(
-    (res) => res,
+    (res) => {
+        const type = res.headers?.['content-type'] || ''
+        if (res.status !== 204 && !type.includes('application/json')) {
+            return Promise.reject(new Error(`Respuesta no JSON de ${res.config?.url}`))
+        }
+        return res
+    },
     (err) => {
         if (err.response?.status === 401) {
             localStorage.removeItem('rn_token')
