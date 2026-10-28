@@ -5,6 +5,7 @@ import { useAuthStore }    from '../store/useAuthStore'
 import { fetchWorkshop }   from '../api/workshops'
 import { createEnrollment } from '../api/enrollments'
 import '../styles/Checkout.css'
+import { brand } from '../config/brand'
 
 export default function WorkshopCheckout() {
     const { id } = useParams()
@@ -112,8 +113,8 @@ export default function WorkshopCheckout() {
     return (
         <>
             <Helmet>
-                <title>Inscripción — {workshop.title} — Roxy Nails</title>
-                <meta name="description" content={`Inscríbete al taller "${workshop.title}" en Roxy Nails.`} />
+                <title>{`Inscripción — ${workshop.title} — ${brand.fullName}`}</title>
+                <meta name="description" content={`Inscríbete al taller "${workshop.title}" en ${brand.fullName}.`} />
             </Helmet>
 
             <div className="checkout__page-header">

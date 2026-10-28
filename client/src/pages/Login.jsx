@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import PasswordInput from '../components/PasswordInput'
 import '../styles/Login.css'
+import { brand } from '../config/brand'
 
 const EMPTY_FORM = { name: '', email: '', phone: '', password: '' }
 
@@ -40,15 +41,15 @@ export default function Login() {
     return (
         <main className="login">
             <Helmet>
-                <title>{mode === 'login' ? 'Ingresar' : 'Crear cuenta'} — Roxy Nails</title>
-                <meta name="description" content="Ingresa o crea tu cuenta en Roxy Nails para agendar citas, comprar productos e inscribirte a talleres." />
+                <title>{`${mode === 'login' ? 'Ingresar' : 'Crear cuenta'} — ${brand.fullName}`}</title>
+                <meta name="description" content={`Ingresa o crea tu cuenta en ${brand.fullName} para agendar citas, comprar productos e inscribirte a talleres.`} />
             </Helmet>
 
             <div className="login__card">
                 {/* Logo */}
                 <div className="login__header">
                     <Link to="/" className="login__logo">
-                        Roxy <em>Nails</em>
+                        {brand.logo.main} <em>{brand.logo.accent}</em>
                     </Link>
                     <p className="login__subtitle">
                         {mode === 'login' ? 'Ingresa a tu cuenta' : 'Crea tu cuenta'}

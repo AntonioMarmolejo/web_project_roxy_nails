@@ -12,6 +12,7 @@ import workshopRoutes   from './routes/workshop.routes.js'
 import enrollmentRoutes from './routes/enrollment.routes.js'
 import uploadRoutes     from './routes/upload.routes.js'
 import galleryRoutes    from './routes/gallery.routes.js'
+import { brand }        from './config/brand.js'
 
 dotenv.config()
 
@@ -40,7 +41,7 @@ app.use('/api/v1/upload',      uploadRoutes)
 app.use('/api/v1/gallery',     galleryRoutes)
 
 // Health check
-app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: 'Roxy Nails API' }))
+app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: `${brand.name} API` }))
 
 // Manejador de errores global
 app.use((err, _req, res, _next) => {

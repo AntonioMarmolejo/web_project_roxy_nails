@@ -6,6 +6,7 @@ import LikeButton from '../components/LikeButton'
 import Lightbox from '../components/Lightbox'
 import PageHeader from '../components/PageHeader'
 import '../styles/Shop.css'
+import { brand } from '../config/brand'
 
 const CATS = ['todo', 'esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
 const CLOSE_MS = 350
@@ -37,7 +38,7 @@ export default function Shop() {
     return (
         <>
             <Helmet>
-                <title>Tienda — Roxy Nails</title>
+                <title>{`Tienda — ${brand.fullName}`}</title>
                 <meta name="description" content="Esmaltes, herramientas y todo para el cuidado de tus uñas." />
             </Helmet>
 

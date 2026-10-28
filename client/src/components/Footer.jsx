@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { fetchServices } from '../api/services'
 import '../styles/Footer.css'
+import { brand } from '../config/brand'
 
 export default function Footer() {
     const navigate = useNavigate()
@@ -16,10 +17,10 @@ export default function Footer() {
             <div className="footer__inner">
                 <div>
                     <div className="footer__brand">
-                        Roxy Nails
+                        {brand.fullName}
                     </div>
                     <p className="footer__desc">
-                        Tu estudio de manicure y pedicure de confianza. Cuidamos cada detalle para que brilles.
+                        {brand.tagline}. {brand.serviceNote}.
                     </p>
                 </div>
                 <div>
@@ -36,14 +37,14 @@ export default function Footer() {
                 </div>
                 <div>
                     <h4 className="footer__heading">Contacto</h4>
-                    {['📍 Tu dirección aquí', '🕐 Lun–Sáb 8–19h'].map(c => (
+                    {['📍 Tu dirección aquí', `📞 ${brand.phone}`, '🕐 Lun–Sáb 8–19h'].map(c => (
                         <p key={c} className="footer__text">{c}</p>
                     ))}
                 </div>
                 <div>
                     <h4 className="footer__heading">Redes sociales</h4>
                     <div className="footer__social-links">
-                        <a href="https://wa.me/593967141740" target="_blank" rel="noopener noreferrer"
+                        <a href={brand.whatsappUrl} target="_blank" rel="noopener noreferrer"
                             className="footer__social-link footer__social-link--whatsapp" aria-label="WhatsApp">
                             <svg viewBox="0 0 32 32"><path d="M16.004 3C9.377 3 4 8.377 4 15.004c0 2.373.66 4.59 1.804 6.484L3 29l7.71-2.767a11.94 11.94 0 0 0 5.294 1.24h.005c6.627 0 12.004-5.377 12.004-12.004C28.013 8.377 22.631 3 16.004 3zm0 21.86h-.004a9.9 9.9 0 0 1-5.045-1.383l-.362-.215-4.575 1.642 1.222-4.457-.236-.457a9.86 9.86 0 0 1-1.512-5.293c0-5.462 4.446-9.908 9.917-9.908 2.648 0 5.135 1.034 7.007 2.909a9.845 9.845 0 0 1 2.9 7.006c0 5.462-4.447 9.907-9.912 9.907zm5.437-7.42c-.298-.149-1.76-.868-2.033-.967-.273-.099-.472-.149-.67.15-.199.297-.769.966-.943 1.164-.174.199-.348.224-.646.075-.298-.15-1.257-.463-2.394-1.475-.885-.789-1.482-1.763-1.656-2.061-.174-.298-.019-.459.13-.607.134-.133.298-.348.447-.522.15-.174.199-.298.298-.497.1-.199.05-.373-.025-.522-.075-.149-.67-1.612-.918-2.208-.242-.58-.487-.502-.67-.511l-.57-.01c-.199 0-.522.075-.795.373-.273.298-1.04 1.017-1.04 2.48s1.065 2.876 1.213 3.075c.15.199 2.096 3.2 5.077 4.487.709.306 1.262.489 1.693.626.711.226 1.359.194 1.87.118.57-.085 1.76-.719 2.008-1.414.248-.694.248-1.29.174-1.414-.075-.124-.273-.199-.571-.348z"/></svg>
                         </a>
@@ -63,7 +64,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="footer__bottom">
-                <span>© {new Date().getFullYear()} Roxy Nails — Todos los derechos reservados</span>
+                <span>© {new Date().getFullYear()} {brand.fullName} — Todos los derechos reservados</span>
                 <div className="footer__legal-links">
                     <Link to="/privacidad">Privacidad</Link>
                     <Link to="/terminos">Términos y condiciones</Link>

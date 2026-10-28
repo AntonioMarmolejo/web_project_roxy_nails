@@ -1,13 +1,14 @@
 import { Helmet } from 'react-helmet-async'
 import PageHeader from '../components/PageHeader'
 import '../styles/LegalPage.css'
+import { brand } from '../config/brand'
 
 export default function Terminos() {
     return (
         <>
             <Helmet>
-                <title>Términos y Condiciones — Roxy Nails</title>
-                <meta name="description" content="Términos y condiciones de uso de los servicios de Roxy Nails." />
+                <title>{`Términos y Condiciones — ${brand.fullName}`}</title>
+                <meta name="description" content={`Términos y condiciones de uso de los servicios de ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader label="Legal" title="Términos y Condiciones" />
@@ -41,7 +42,7 @@ export default function Terminos() {
 
                 <h2>5. Propiedad del contenido</h2>
                 <p>
-                    Las imágenes y diseños publicados en la galería son propiedad de Roxy Nails y no pueden
+                    Las imágenes y diseños publicados en la galería son propiedad de {brand.fullName} y no pueden
                     reproducirse sin autorización.
                 </p>
 

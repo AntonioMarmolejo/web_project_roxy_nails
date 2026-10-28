@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import '../styles/Login.css'
+import { brand } from '../config/brand'
 
 export default function ForgotPassword() {
     const { forgotPassword } = useAuthStore()
@@ -28,14 +29,14 @@ export default function ForgotPassword() {
     return (
         <main className="login">
             <Helmet>
-                <title>Recuperar contraseña — Roxy Nails</title>
-                <meta name="description" content="Recupera el acceso a tu cuenta de Roxy Nails." />
+                <title>{`Recuperar contraseña — ${brand.fullName}`}</title>
+                <meta name="description" content={`Recupera el acceso a tu cuenta de ${brand.fullName}.`} />
             </Helmet>
 
             <div className="login__card">
                 <div className="login__header">
                     <Link to="/" className="login__logo">
-                        Roxy <em>Nails</em>
+                        {brand.logo.main} <em>{brand.logo.accent}</em>
                     </Link>
                     <p className="login__subtitle">Recupera tu contraseña</p>
                 </div>

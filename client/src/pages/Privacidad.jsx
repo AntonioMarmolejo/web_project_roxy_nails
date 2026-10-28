@@ -1,13 +1,14 @@
 import { Helmet } from 'react-helmet-async'
 import PageHeader from '../components/PageHeader'
 import '../styles/LegalPage.css'
+import { brand } from '../config/brand'
 
 export default function Privacidad() {
     return (
         <>
             <Helmet>
-                <title>Política de Privacidad — Roxy Nails</title>
-                <meta name="description" content="Cómo Roxy Nails recopila, usa y protege tus datos personales." />
+                <title>{`Política de Privacidad — ${brand.fullName}`}</title>
+                <meta name="description" content={`Cómo ${brand.fullName} recopila, usa y protege tus datos personales.`} />
             </Helmet>
 
             <PageHeader label="Legal" title="Política de Privacidad" />
@@ -32,7 +33,7 @@ export default function Privacidad() {
                 <h2>3. Cómo protegemos tu información</h2>
                 <p>
                     Tu contraseña se almacena cifrada y nunca en texto plano. El acceso a los datos de clientes está
-                    restringido al personal administrativo de Roxy Nails.
+                    restringido al personal administrativo de {brand.fullName}.
                 </p>
 
                 <h2>4. Tus derechos</h2>

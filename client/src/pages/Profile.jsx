@@ -4,6 +4,7 @@ import { useAuthStore } from '../store/useAuthStore'
 import PageHeader from '../components/PageHeader'
 import PasswordInput from '../components/PasswordInput'
 import '../styles/Profile.css'
+import { brand } from '../config/brand'
 
 export default function Profile() {
     const { user, updateProfile, changePassword } = useAuthStore()
@@ -53,8 +54,8 @@ export default function Profile() {
     return (
         <>
             <Helmet>
-                <title>Mi perfil — Roxy Nails</title>
-                <meta name="description" content="Edita tus datos y contraseña en Roxy Nails." />
+                <title>{`Mi perfil — ${brand.fullName}`}</title>
+                <meta name="description" content={`Edita tus datos y contraseña en ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader

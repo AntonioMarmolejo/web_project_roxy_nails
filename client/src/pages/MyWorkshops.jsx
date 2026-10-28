@@ -4,6 +4,7 @@ import { Link }   from 'react-router-dom'
 import { fetchMyEnrollments } from '../api/enrollments'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyWorkshops.css'
+import { brand } from '../config/brand'
 
 const STATUS = {
     pending:   { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -25,8 +26,8 @@ export default function MyWorkshops() {
     return (
         <>
             <Helmet>
-                <title>Mis talleres — Roxy Nails</title>
-                <meta name="description" content="Historial de tus inscripciones a talleres en Roxy Nails." />
+                <title>{`Mis talleres — ${brand.fullName}`}</title>
+                <meta name="description" content={`Historial de tus inscripciones a talleres en ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader

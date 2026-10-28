@@ -10,6 +10,7 @@ import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
 import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage, deleteGalleryImage } from '../api/gallery'
 import ImageInput from '../components/ImageInput'
 import '../styles/Admin.css'
+import { brand } from '../config/brand'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const SVC_CATS     = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
@@ -385,7 +386,7 @@ export default function Admin() {
     return (
         <div className="admin__page">
             <Helmet>
-                <title>Panel de administración — Roxy Nails</title>
+                <title>{`Panel de administración — ${brand.fullName}`}</title>
                 <meta name="robots" content="noindex, nofollow" />
             </Helmet>
 

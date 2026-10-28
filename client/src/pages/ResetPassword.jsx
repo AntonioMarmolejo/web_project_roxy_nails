@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import PasswordInput from '../components/PasswordInput'
 import '../styles/Login.css'
+import { brand } from '../config/brand'
 
 export default function ResetPassword() {
     const { token } = useParams()
@@ -37,14 +38,14 @@ export default function ResetPassword() {
     return (
         <main className="login">
             <Helmet>
-                <title>Restablecer contraseña — Roxy Nails</title>
-                <meta name="description" content="Crea una nueva contraseña para tu cuenta de Roxy Nails." />
+                <title>{`Restablecer contraseña — ${brand.fullName}`}</title>
+                <meta name="description" content={`Crea una nueva contraseña para tu cuenta de ${brand.fullName}.`} />
             </Helmet>
 
             <div className="login__card">
                 <div className="login__header">
                     <Link to="/" className="login__logo">
-                        Roxy <em>Nails</em>
+                        {brand.logo.main} <em>{brand.logo.accent}</em>
                     </Link>
                     <p className="login__subtitle">Crea tu nueva contraseña</p>
                 </div>

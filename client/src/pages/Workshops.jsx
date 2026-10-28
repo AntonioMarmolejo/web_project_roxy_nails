@@ -5,6 +5,7 @@ import { fetchWorkshops, likeWorkshop } from '../api/workshops'
 import LikeButton from '../components/LikeButton'
 import PageHeader from '../components/PageHeader'
 import '../styles/Workshops.css'
+import { brand } from '../config/brand'
 
 const CLOSE_MS = 350
 
@@ -22,8 +23,8 @@ export default function Workshops() {
     return (
         <>
             <Helmet>
-                <title>Talleres — Roxy Nails</title>
-                <meta name="description" content="Aprende técnicas de manicure y nail art en nuestros talleres." />
+                <title>{`Talleres — ${brand.fullName}`}</title>
+                <meta name="description" content={`Aprende nuevas técnicas en los talleres de ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader

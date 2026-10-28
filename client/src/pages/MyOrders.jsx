@@ -4,6 +4,7 @@ import { Link }   from 'react-router-dom'
 import { fetchMyOrders } from '../api/orders'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyOrders.css'
+import { brand } from '../config/brand'
 
 const STATUS = {
     pending:   { label: 'Pendiente',   bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -27,8 +28,8 @@ export default function MyOrders() {
     return (
         <>
             <Helmet>
-                <title>Mis pedidos — Roxy Nails</title>
-                <meta name="description" content="Historial de tus compras en Roxy Nails." />
+                <title>{`Mis pedidos — ${brand.fullName}`}</title>
+                <meta name="description" content={`Historial de tus compras en ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader

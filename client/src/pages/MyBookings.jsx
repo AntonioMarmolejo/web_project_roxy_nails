@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { fetchMyBookings, cancelMyBooking } from '../api/bookings'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyBookings.css'
+import { brand } from '../config/brand'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -40,8 +41,8 @@ export default function MyBookings() {
     return (
         <>
             <Helmet>
-                <title>Mis citas — Roxy Nails</title>
-                <meta name="description" content="Historial y gestión de tus citas en Roxy Nails." />
+                <title>{`Mis citas — ${brand.fullName}`}</title>
+                <meta name="description" content={`Historial y gestión de tus citas en ${brand.fullName}.`} />
             </Helmet>
 
             <PageHeader

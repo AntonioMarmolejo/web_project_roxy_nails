@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import '../styles/NotFound.css'
+import { brand } from '../config/brand'
 
 export default function NotFound() {
     return (
         <>
             <Helmet>
-                <title>Página no encontrada — Roxy Nails</title>
+                <title>{`Página no encontrada — ${brand.fullName}`}</title>
                 <meta name="description" content="La página que buscas no existe." />
             </Helmet>
 

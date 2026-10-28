@@ -1,10 +1,8 @@
 import '../styles/WhatsAppButton.css'
-
-const PHONE = '593967141740'
-const MESSAGE = 'Hola, quisiera más información sobre Roxy Nails.'
+import { brand } from '../config/brand'
 
 export default function WhatsAppButton() {
-    const href = `https://wa.me/${PHONE}?text=${encodeURIComponent(MESSAGE)}`
+    const href = `${brand.whatsappUrl}?text=${encodeURIComponent(brand.whatsappMessage)}`
 
     return (
         <a

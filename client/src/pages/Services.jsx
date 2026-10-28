@@ -4,6 +4,7 @@ import ServiceCard from '../components/ServiceCard'
 import PageHeader from '../components/PageHeader'
 import { fetchServices } from '../api/services'
 import '../styles/Services.css'
+import { brand } from '../config/brand'
 
 const FALLBACK = [
     { _id: '1', name: 'Manicure Gel', category: 'manicure', price: 25, duration: 60, featured: true, description: 'Acabado brillante que dura semanas.' },
@@ -42,8 +43,8 @@ export default function Services() {
     return (
         <>
             <Helmet>
-                <title>Servicios — Roxy Nails</title>
-                <meta name="description" content="Catálogo completo de servicios: manicure gel, pedicure spa, nail art, extensiones y más." />
+                <title>{`Servicios — ${brand.fullName}`}</title>
+                <meta name="description" content="Catálogo completo de servicios: tratamientos capilares, uñas, cejas y pestañas." />
             </Helmet>
 
             <PageHeader

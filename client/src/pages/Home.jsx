@@ -8,6 +8,7 @@ import LikeButton from '../components/LikeButton'
 import { fetchServices } from '../api/services'
 import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Home.css'
+import { brand } from '../config/brand'
 
 const FALLBACK_SERVICES = [
     { _id: '1', name: 'Manicure Gel', category: 'manicure', price: 25, duration: 60, featured: true, description: 'Acabado brillante que dura semanas.' },
@@ -48,8 +49,8 @@ export default function Home() {
     return (
         <>
             <Helmet>
-                <title>Roxy Nails — Manicure y Pedicure Profesional</title>
-                <meta name="description" content="Estudio de manicure y pedicure profesional. Gel, nail art, extensiones y más. Agenda tu cita online." />
+                <title>{`${brand.fullName} — ${brand.tagline}`}</title>
+                <meta name="description" content={`${brand.tagline}. Tratamientos capilares, uñas, cejas y pestañas. ${brand.serviceNote}.`} />
             </Helmet>
 
             {/* Promo bar */}
@@ -92,7 +93,7 @@ export default function Home() {
                             style={{ '--gallery-row-span': i === 0 || i === 6 ? 'span 2' : 'span 1' }}
                             onClick={() => setLightboxIndex(i)}
                         >
-                            <img src={item.image} alt="Trabajo de Roxy Nails" loading="lazy" />
+                            <img src={item.image} alt={`Trabajo de ${brand.name}`} loading="lazy" />
                             <LikeButton
                                 id={item._id}
                                 count={item.likes}

@@ -6,6 +6,7 @@ import { useAuthStore } from '../store/useAuthStore'
 import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
 import '../styles/Booking.css'
+import { brand } from '../config/brand'
 
 // ─── Calendar helpers ────────────────────────────────────────────
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
@@ -167,7 +168,7 @@ export default function Booking() {
                         ¡Cita agendada!
                     </h2>
                     <p className="booking__success-sub">
-                        Te esperamos con muchas ganas. 🌸
+                        Te esperamos con muchas ganas.
                     </p>
                     <div className="booking__summary-box">
                         {[
@@ -198,8 +199,8 @@ export default function Booking() {
     return (
         <>
             <Helmet>
-                <title>Agendar cita — Roxy Nails</title>
-                <meta name="description" content="Agenda tu cita de manicure, pedicure o nail art." />
+                <title>{`Agendar cita — ${brand.fullName}`}</title>
+                <meta name="description" content={`Agenda tu cita en ${brand.fullName}: tratamientos capilares, uñas, cejas y pestañas.`} />
             </Helmet>
 
             <PageHeader
@@ -282,7 +283,7 @@ export default function Booking() {
                                 })}
                             </div>
                             <p className="booking__calendar-note">
-                                Abrimos Lunes–Sábado. Los domingos estamos cerradas. 🌸
+                                Abrimos Lunes–Sábado. Los domingos estamos cerrados.
                             </p>
                         </div>
                         <div className="booking__nav-row booking__nav-row--with-margin">

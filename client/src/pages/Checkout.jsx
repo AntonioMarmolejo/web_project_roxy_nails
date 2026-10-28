@@ -6,6 +6,7 @@ import { useAuthStore }  from '../store/useAuthStore'
 import { createOrder }   from '../api/orders'
 import qrDeuna from '../assets/qrdeunaantonio.png'
 import '../styles/Checkout.css'
+import { brand } from '../config/brand'
 
 const PAYMENT_METHODS = [
     { value: 'cod',       icon: '💵', label: 'Pago al retirar / en tienda' },
@@ -119,8 +120,8 @@ export default function Checkout() {
     return (
         <>
             <Helmet>
-                <title>Checkout — Roxy Nails</title>
-                <meta name="description" content="Finaliza tu compra de productos en Roxy Nails." />
+                <title>{`Checkout — ${brand.fullName}`}</title>
+                <meta name="description" content={`Finaliza tu compra de productos en ${brand.fullName}.`} />
             </Helmet>
 
             <div className="checkout__page-header">

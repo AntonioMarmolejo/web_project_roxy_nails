@@ -4,6 +4,7 @@ import Lightbox from '../components/Lightbox'
 import LikeButton from '../components/LikeButton'
 import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Gallery.css'
+import { brand } from '../config/brand'
 
 const CATS = [
     { key: 'todas', label: 'Todas' },
@@ -35,8 +36,8 @@ export default function Gallery() {
     return (
         <>
             <Helmet>
-                <title>Galería — Roxy Nails</title>
-                <meta name="description" content="Explora todos los diseños de manicure, pedicure y nail art que hemos creado." />
+                <title>{`Galería — ${brand.fullName}`}</title>
+                <meta name="description" content="Explora los trabajos de tratamientos capilares, uñas, cejas y pestañas que hemos realizado." />
             </Helmet>
 
             <div className="gallery__header">
@@ -70,7 +71,7 @@ export default function Gallery() {
                     <div className="gallery__grid">
                         {filtered.map((item, i) => (
                             <div key={item._id} className="gallery__item" onClick={() => setLightboxIndex(i)}>
-                                <img src={item.image} alt="Trabajo de Roxy Nails" loading="lazy" />
+                                <img src={item.image} alt={`Trabajo de ${brand.name}`} loading="lazy" />
                                 <LikeButton
                                     id={item._id}
                                     count={item.likes}

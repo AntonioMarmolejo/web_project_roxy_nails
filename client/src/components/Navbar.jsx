@@ -4,6 +4,7 @@ import { useCartStore } from '../store/useCartStore'
 import { useAuthStore } from '../store/useAuthStore'
 import { useAccountDrawerStore } from '../store/useAccountDrawerStore'
 import '../styles/Navbar.css'
+import { brand } from '../config/brand'
 
 const navLinkClass = ({ isActive }) => `navbar__link${isActive ? ' navbar__link--active' : ''}`
 
@@ -25,7 +26,7 @@ export default function Navbar() {
                 )}
 
                 <Link to="/" onClick={close} className="navbar__logo">
-                    Roxy <em>Nails</em>
+                    {brand.logo.main} <em>{brand.logo.accent}</em>
                 </Link>
             </div>
 
