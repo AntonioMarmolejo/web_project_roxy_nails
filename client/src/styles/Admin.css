@@ -1,6 +1,6 @@
 .admin__page {
     min-height: 100vh;
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
 }
 
 .admin__toast {
@@ -8,8 +8,8 @@
     top: 20px;
     right: 20px;
     z-index: 1000;
-    background: #1d9e75;
-    color: #fff;
+    background: var(--color-success-alt);
+    color: var(--color-white);
     padding: 10px 20px;
     border-radius: 10px;
     font-size: 13px;
@@ -18,8 +18,8 @@
 }
 
 .admin__header {
-    background: #fff;
-    border-bottom: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
@@ -28,25 +28,25 @@
     gap: 10px;
 }
 .admin__header-title {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-heading);
     font-size: 22px;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 600;
 }
 .admin__header-sub {
     font-size: 12px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-top: 2px;
 }
 .admin__logout-btn {
     background: transparent;
-    border: 1px solid #f0d0dc;
-    color: #c2185b;
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
     border-radius: 20px;
     padding: 8px 18px;
     font-size: 13px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 
 .admin__body {
@@ -74,16 +74,16 @@
     font-size: 13px;
     border: 1px solid;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     transition: all 0.2s;
-    border-color: #f0d0dc;
-    background: #fff;
-    color: #6b4050;
+    border-color: var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
 }
 .admin__tab-btn--active {
-    border-color: #c2185b;
-    background: #c2185b;
-    color: #fff;
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
 /* Stat tile grids */
@@ -101,14 +101,14 @@
 }
 .admin__order-items-list {
     font-size: 12px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-bottom: 6px;
 }
 
 /* Stat tiles */
 .admin__stat-tile {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 1.1rem;
     text-align: center;
@@ -119,14 +119,14 @@
 .admin__stat-value {
     font-size: 26px;
     font-weight: 700;
-    color: var(--stat-color, #c2185b);
+    color: var(--stat-color, var(--color-primary));
 }
 .admin__stat-tile--padded .admin__stat-value {
     font-size: 28px;
 }
 .admin__stat-label {
     font-size: 12px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-top: 4px;
 }
 
@@ -144,20 +144,20 @@
 .admin__list-title {
     font-size: 15px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 1rem;
 }
 .admin__list-loading {
-    color: #6b4050;
+    color: var(--color-text-secondary);
     font-size: 13px;
 }
 .admin__list-empty {
-    background: #fff;
-    border: 1px dashed #f0d0dc;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
     border-radius: 12px;
     padding: 2rem;
     text-align: center;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     font-size: 13px;
 }
 .admin__list {
@@ -167,8 +167,8 @@
 }
 
 .admin__list-item {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     padding: 1rem 1.25rem;
     display: flex;
@@ -178,11 +178,11 @@
     gap: 10px;
 }
 .admin__list-item--editing {
-    background: #fff0f5;
-    border-color: #c2185b;
+    background: var(--color-surface-tint-alt);
+    border-color: var(--color-primary);
 }
 .admin__list-item--inactive {
-    background: #fafafa;
+    background: var(--color-surface-muted);
     opacity: 0.6;
 }
 .admin__item-header {
@@ -195,7 +195,7 @@
 .admin__item-name {
     font-size: 14px;
     font-weight: 500;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .admin__item-badge {
     font-size: 10px;
@@ -208,11 +208,11 @@
     display: flex;
     gap: 12px;
     font-size: 12px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     flex-wrap: wrap;
 }
 .admin__item-meta-price {
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
 }
 .admin__item-meta-cap {
@@ -224,30 +224,30 @@
     gap: 8px;
 }
 .admin__btn-edit {
-    background: #fdf0f5;
-    border: 1px solid #f0d0dc;
-    color: #c2185b;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    color: var(--color-primary);
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 12px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 .admin__btn-secondary {
     background: transparent;
-    border: 1px solid #f0d0dc;
-    color: #999;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-subtle);
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 12px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 
 /* Form panel */
 .admin__form-panel {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     padding: 1.5rem;
     position: sticky;
@@ -256,7 +256,7 @@
 .admin__form-title {
     font-size: 15px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 1.25rem;
 }
 .admin__form {
@@ -274,20 +274,20 @@
 }
 .admin__label {
     font-size: 12px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-bottom: 4px;
     display: block;
 }
 .admin__input {
     width: 100%;
     padding: 9px 12px;
-    border: 1px solid #f0d0dc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 13px;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     outline: none;
-    background: #fff;
-    color: #2d1520;
+    background: var(--color-surface);
+    color: var(--color-text);
     box-sizing: border-box;
 }
 .admin__checkbox-label {
@@ -295,11 +295,11 @@
     align-items: center;
     gap: 8px;
     font-size: 13px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     cursor: pointer;
 }
 .admin__checkbox-label input {
-    accent-color: #c2185b;
+    accent-color: var(--color-primary);
     width: 16px;
     height: 16px;
 }
@@ -310,35 +310,35 @@
 }
 .admin__submit-btn {
     flex: 1;
-    background: #c2185b;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
     border: none;
     border-radius: 24px;
     padding: 11px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 .admin__submit-btn:disabled {
-    background: #e88aaa;
+    background: var(--color-primary-disabled);
     cursor: not-allowed;
 }
 .admin__cancel-btn {
     background: transparent;
-    border: 1px solid #f0d0dc;
-    color: #6b4050;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary);
     border-radius: 24px;
     padding: 11px 16px;
     font-size: 13px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 
 /* Record cards: citas / pedidos / talleres / inscripciones */
 .admin__record-card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 14px;
     padding: 1rem 1.25rem;
 }
@@ -362,7 +362,7 @@
 .admin__record-name {
     font-size: 14px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .admin__record-badge {
     font-size: 11px;
@@ -374,40 +374,40 @@
 }
 .admin__record-date {
     font-size: 12px;
-    color: #9e7080;
+    color: var(--color-text-muted);
 }
 .admin__record-meta {
     font-size: 13px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
     margin-bottom: 4px;
 }
 .admin__record-meta-price {
-    color: #c2185b;
+    color: var(--color-primary);
 }
 .admin__record-contact {
     font-size: 12px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     display: flex;
     gap: 14px;
     flex-wrap: wrap;
     margin-bottom: 6px;
 }
 .admin__record-total {
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 600;
 }
 .admin__record-notes {
     font-size: 12px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-top: 6px;
     font-style: italic;
 }
 .admin__record-address {
     font-size: 12.5px;
-    color: #2d1520;
+    color: var(--color-text);
     font-weight: 500;
     margin-top: 6px;
 }
@@ -418,14 +418,14 @@
     flex-wrap: wrap;
 }
 .admin__action-btn {
-    border: 1px solid var(--btn-border, #f0d0dc);
+    border: 1px solid var(--btn-border, var(--color-border));
     background: var(--btn-bg, transparent);
-    color: var(--btn-color, #999);
+    color: var(--btn-color, var(--color-text-subtle));
     border-radius: 8px;
     padding: 6px 12px;
     font-size: 12px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 
 /* Galería */
@@ -435,20 +435,20 @@
     gap: 12px;
 }
 .admin__gallery-item {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 12px;
     overflow: hidden;
 }
 .admin__gallery-item--editing {
-    border-color: #c2185b;
+    border-color: var(--color-primary);
 }
 .admin__gallery-item--inactive {
     opacity: 0.55;
 }
 .admin__gallery-thumb {
     aspect-ratio: 1 / 1;
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
 }
 .admin__gallery-thumb img {
     width: 100%;
@@ -463,21 +463,21 @@
     gap: 6px;
     padding: 8px 10px 4px;
     font-size: 11px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
 }
 .admin__gallery-item .admin__item-actions {
     padding: 4px 10px 10px;
     gap: 6px;
 }
 .admin__btn-danger {
-    background: #ffebee;
-    border: 1px solid #ef9a9a;
-    color: #c62828;
+    background: var(--color-danger-bg);
+    border: 1px solid var(--color-danger-border);
+    color: var(--color-danger);
     border-radius: 8px;
     padding: 6px 14px;
     font-size: 12px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 .admin__gallery-item .admin__btn-edit,
 .admin__gallery-item .admin__btn-secondary,

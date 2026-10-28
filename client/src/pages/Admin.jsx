@@ -21,28 +21,28 @@ const EMPTY_WS      = { title: '', description: '', date: '', duration: '', moda
 const EMPTY_GALLERY = { image: '', category: 'manicure' }
 
 const BOOKING_STATUS = {
-    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
-    confirmed: { label: 'Confirmada', bg: '#E8F5E9', color: '#2E7D32' },
-    completed: { label: 'Completada', bg: '#E3F2FD', color: '#1565C0' },
-    cancelled: { label: 'Cancelada',  bg: '#F5F5F5', color: '#757575' },
+    pending:   { label: 'Pendiente',  bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    confirmed: { label: 'Confirmada', bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    completed: { label: 'Completada', bg: 'var(--color-info-bg)', color: 'var(--color-info)' },
+    cancelled: { label: 'Cancelada',  bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 const ORDER_STATUS = {
-    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
-    paid:      { label: 'Pagado',     bg: '#E8F5E9', color: '#2E7D32' },
-    shipped:   { label: 'En camino',  bg: '#E3F2FD', color: '#1565C0' },
-    delivered: { label: 'Entregado',  bg: '#F3E5F5', color: '#6A1B9A' },
-    cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
+    pending:   { label: 'Pendiente',  bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    paid:      { label: 'Pagado',     bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    shipped:   { label: 'En camino',  bg: 'var(--color-info-bg)', color: 'var(--color-info)' },
+    delivered: { label: 'Entregado',  bg: 'var(--color-purple-bg)', color: 'var(--color-purple)' },
+    cancelled: { label: 'Cancelado',  bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 const ENROLLMENT_STATUS = {
-    pending:   { label: 'Pendiente',  bg: '#FFF8E1', color: '#E65100' },
-    paid:      { label: 'Pagado',     bg: '#E8F5E9', color: '#2E7D32' },
-    cancelled: { label: 'Cancelado',  bg: '#F5F5F5', color: '#757575' },
+    pending:   { label: 'Pendiente',  bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    paid:      { label: 'Pagado',     bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    cancelled: { label: 'Cancelado',  bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 
 // ─── Colores de acciones (botones de estado) ─────────────────────────────────
-const ACTION_GREEN  = { '--btn-bg': '#E8F5E9', '--btn-border': '#A5D6A7', '--btn-color': '#2E7D32' }
-const ACTION_BLUE   = { '--btn-bg': '#E3F2FD', '--btn-border': '#90CAF9', '--btn-color': '#1565C0' }
-const ACTION_PURPLE = { '--btn-bg': '#F3E5F5', '--btn-border': '#CE93D8', '--btn-color': '#6A1B9A' }
+const ACTION_GREEN  = { '--btn-bg': 'var(--color-success-bg)', '--btn-border': 'var(--color-success-border)', '--btn-color': 'var(--color-success)' }
+const ACTION_BLUE   = { '--btn-bg': 'var(--color-info-bg)', '--btn-border': 'var(--color-info-border)', '--btn-color': 'var(--color-info)' }
+const ACTION_PURPLE = { '--btn-bg': 'var(--color-purple-bg)', '--btn-border': 'var(--color-purple-border)', '--btn-color': 'var(--color-purple)' }
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Admin() {
@@ -456,7 +456,7 @@ export default function Admin() {
                                                 <div>
                                                     <div className="admin__item-header">
                                                         <span className="admin__item-name">{svc.name}</span>
-                                                        {svc.featured && <span className="admin__item-badge" style={{ '--badge-bg': '#F8C8DC', '--badge-color': '#88134A' }}>Destacado</span>}
+                                                        {svc.featured && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-primary-light)', '--badge-color': 'var(--color-primary-dark)' }}>Destacado</span>}
                                                     </div>
                                                     <div className="admin__item-meta">
                                                         <span className="admin__item-meta-price">${svc.price}</span>
@@ -510,10 +510,10 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--4">
                             {[
-                                { label: 'Total citas',  value: bStats.total,     color: '#C2185B' },
-                                { label: 'Pendientes',   value: bStats.pending,   color: '#E65100' },
-                                { label: 'Confirmadas',  value: bStats.confirmed, color: '#2E7D32' },
-                                { label: 'Hoy',          value: bStats.today,     color: '#1565C0' },
+                                { label: 'Total citas',  value: bStats.total,     color: 'var(--color-primary)' },
+                                { label: 'Pendientes',   value: bStats.pending,   color: 'var(--color-warning)' },
+                                { label: 'Confirmadas',  value: bStats.confirmed, color: 'var(--color-success)' },
+                                { label: 'Hoy',          value: bStats.today,     color: 'var(--color-info)' },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile">
                                     <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
@@ -582,7 +582,7 @@ export default function Admin() {
                                 { label: 'Stock bajo (<5)', value: products.filter(p => p.stock < 5 && p.active).length, warn: true },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile admin__stat-tile--padded">
-                                    <div className="admin__stat-value" style={{ '--stat-color': st.warn ? '#E65100' : '#C2185B' }}>{st.value}</div>
+                                    <div className="admin__stat-value" style={{ '--stat-color': st.warn ? 'var(--color-warning)' : 'var(--color-primary)' }}>{st.value}</div>
                                     <div className="admin__stat-label">{st.label}</div>
                                 </div>
                             ))}
@@ -607,8 +607,8 @@ export default function Admin() {
                                                 <div>
                                                     <div className="admin__item-header">
                                                         <span className="admin__item-name">{p.name}</span>
-                                                        {!p.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
-                                                        {p.stock < 5 && p.active && <span className="admin__item-badge" style={{ '--badge-bg': '#FFF3E0', '--badge-color': '#E65100' }}>Stock: {p.stock}</span>}
+                                                        {!p.active && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-neutral-bg)', '--badge-color': 'var(--color-text-muted)' }}>Inactivo</span>}
+                                                        {p.stock < 5 && p.active && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-warning-bg-alt)', '--badge-color': 'var(--color-warning)' }}>Stock: {p.stock}</span>}
                                                     </div>
                                                     <div className="admin__item-meta">
                                                         <span className="admin__item-meta-price">${p.price}</span>
@@ -666,10 +666,10 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--4">
                             {[
-                                { label: 'Total pedidos', value: oStats.total,   color: '#C2185B' },
-                                { label: 'Pendientes',    value: oStats.pending, color: '#E65100' },
-                                { label: 'Pagados',       value: oStats.paid,    color: '#2E7D32' },
-                                { label: 'En camino',     value: oStats.shipped, color: '#1565C0' },
+                                { label: 'Total pedidos', value: oStats.total,   color: 'var(--color-primary)' },
+                                { label: 'Pendientes',    value: oStats.pending, color: 'var(--color-warning)' },
+                                { label: 'Pagados',       value: oStats.paid,    color: 'var(--color-success)' },
+                                { label: 'En camino',     value: oStats.shipped, color: 'var(--color-info)' },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile">
                                     <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
@@ -737,10 +737,10 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--4">
                             {[
-                                { label: 'Talleres',              value: wsStats.total,     color: '#C2185B' },
-                                { label: 'Activos',               value: wsStats.active,    color: '#2E7D32' },
-                                { label: 'Inscripciones pend.',    value: wsStats.pendingEn, color: '#E65100' },
-                                { label: 'Inscripciones pagadas',  value: wsStats.paidEn,    color: '#1565C0' },
+                                { label: 'Talleres',              value: wsStats.total,     color: 'var(--color-primary)' },
+                                { label: 'Activos',               value: wsStats.active,    color: 'var(--color-success)' },
+                                { label: 'Inscripciones pend.',    value: wsStats.pendingEn, color: 'var(--color-warning)' },
+                                { label: 'Inscripciones pagadas',  value: wsStats.paidEn,    color: 'var(--color-info)' },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile">
                                     <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
@@ -768,7 +768,7 @@ export default function Admin() {
                                                 <div>
                                                     <div className="admin__item-header">
                                                         <span className="admin__item-name">{w.title}</span>
-                                                        {!w.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Inactivo</span>}
+                                                        {!w.active && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-neutral-bg)', '--badge-color': 'var(--color-text-muted)' }}>Inactivo</span>}
                                                     </div>
                                                     <div className="admin__item-meta">
                                                         <span className="admin__item-meta-price">${w.price}</span>
@@ -876,9 +876,9 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--3">
                             {[
-                                { label: 'Imágenes',      value: galleryStats.total,  color: '#C2185B' },
-                                { label: 'Visibles',      value: galleryStats.active, color: '#2E7D32' },
-                                { label: 'Likes totales', value: galleryStats.likes,  color: '#E65100' },
+                                { label: 'Imágenes',      value: galleryStats.total,  color: 'var(--color-primary)' },
+                                { label: 'Visibles',      value: galleryStats.active, color: 'var(--color-success)' },
+                                { label: 'Likes totales', value: galleryStats.likes,  color: 'var(--color-warning)' },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile">
                                     <div className="admin__stat-value" style={{ '--stat-color': st.color }}>{st.value}</div>
@@ -909,7 +909,7 @@ export default function Admin() {
                                                 <div className="admin__gallery-info">
                                                     <span className="admin__item-meta-cap">{g.category}</span>
                                                     <span>❤️ {g.likes || 0}</span>
-                                                    {!g.active && <span className="admin__item-badge" style={{ '--badge-bg': '#F5F5F5', '--badge-color': '#9E7080' }}>Oculta</span>}
+                                                    {!g.active && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-neutral-bg)', '--badge-color': 'var(--color-text-muted)' }}>Oculta</span>}
                                                 </div>
                                                 <div className="admin__item-actions">
                                                     <button onClick={() => startEditGallery(g)} className="admin__btn-edit">Editar</button>

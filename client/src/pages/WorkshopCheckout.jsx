@@ -124,7 +124,7 @@ export default function WorkshopCheckout() {
 
             <div className="checkout__grid">
                 {full ? (
-                    <div className="checkout__form" style={{ textAlign: 'center', color: '#9E7080' }}>
+                    <div className="checkout__form" style={{ textAlign: 'center', color: 'var(--color-text-muted)' }}>
                         <p style={{ fontSize: 15, marginBottom: '1rem' }}>Este taller ya no tiene cupos disponibles.</p>
                         <Link to="/talleres"><button className="btn btn--ghost">Ver otros talleres</button></Link>
                     </div>

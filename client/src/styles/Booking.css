@@ -1,14 +1,14 @@
 .booking__header {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     padding: 2.5rem 2rem;
     text-align: center;
-    border-bottom: 1px solid #f0d0dc;
+    border-bottom: 1px solid var(--color-border);
 }
 .booking__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
     margin-bottom: 8px;
 }
@@ -18,7 +18,7 @@
 }
 .booking__header-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     max-width: 420px;
     margin: 0 auto;
 }
@@ -47,8 +47,8 @@
 }
 .booking-stepper__circle {
     border-radius: 50%;
-    background: #f0d0dc;
-    color: #9e7080;
+    background: var(--color-border);
+    color: var(--color-text-muted);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,28 +57,28 @@
     transition: all 0.25s;
 }
 .booking-stepper__circle--filled {
-    background: #c2185b;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 .booking-stepper__circle--active {
-    box-shadow: 0 0 0 4px rgba(194, 24, 91, 0.2);
+    box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb), 0.2);
 }
 .booking-stepper__label {
-    color: #9e7080;
+    color: var(--color-text-muted);
     font-weight: 400;
 }
 .booking-stepper__label--active {
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 600;
 }
 .booking-stepper__line {
     height: 2px;
     margin-bottom: 22px;
-    background: #f0d0dc;
+    background: var(--color-border);
     transition: background 0.3s;
 }
 .booking-stepper__line--done {
-    background: #c2185b;
+    background: var(--color-primary);
 }
 
 /* Success screen */
@@ -88,35 +88,35 @@
     align-items: center;
     justify-content: center;
     padding: 3rem 1.5rem;
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
 }
 .booking__success-card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 22px;
     padding: 3rem 2.5rem;
     text-align: center;
     max-width: 460px;
     width: 100%;
-    box-shadow: 0 12px 40px rgba(194, 24, 91, 0.12);
+    box-shadow: 0 12px 40px rgba(var(--color-primary-rgb), 0.12);
 }
 .booking__success-icon {
     font-size: 56px;
     margin-bottom: 1.25rem;
 }
 .booking__success-title {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-heading);
     font-size: 30px;
-    color: #c2185b;
+    color: var(--color-primary);
     margin-bottom: 10px;
 }
 .booking__success-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 2rem;
 }
 .booking__summary-box {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     border-radius: 14px;
     padding: 1.25rem 1.5rem;
     text-align: left;
@@ -132,15 +132,15 @@
     margin-bottom: 0;
 }
 .booking__summary-key {
-    color: #9e7080;
+    color: var(--color-text-muted);
 }
 .booking__summary-value {
-    color: #2d1520;
+    color: var(--color-text);
     font-weight: 500;
 }
 .booking__success-email-note {
     font-size: 13px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 1.5rem;
 }
 
@@ -148,7 +148,7 @@
 .booking__step-title {
     font-size: 19px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 1.5rem;
 }
 .booking__services-grid {
@@ -159,28 +159,28 @@
 }
 .booking__service-option {
     position: relative;
-    background: #fff;
-    border: 1px solid #f4dbe4;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-card);
     border-radius: 18px;
     overflow: hidden;
     cursor: pointer;
     text-align: center;
-    box-shadow: 0 2px 10px rgba(194, 24, 91, 0.05);
+    box-shadow: 0 2px 10px rgba(var(--color-primary-rgb), 0.05);
     transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 .booking__service-option:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(194, 24, 91, 0.14);
+    box-shadow: 0 12px 24px rgba(var(--color-primary-rgb), 0.14);
 }
 .booking__service-option--selected {
-    border-color: #c2185b;
-    box-shadow: 0 0 0 2px rgba(194, 24, 91, 0.25);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.25);
 }
 .booking__service-image {
     aspect-ratio: 1 / 1;
     margin: 10px 10px 0;
     border-radius: 12px;
-    background: linear-gradient(155deg, #fdf0f5, #fce4ee);
+    background: linear-gradient(155deg, var(--color-surface-soft), var(--color-surface-chip));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -196,10 +196,10 @@
     padding: 10px 10px 12px;
 }
 .booking__service-name {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-heading);
     font-size: 13.5px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 6px;
     line-height: 1.3;
 }
@@ -209,21 +209,21 @@
     justify-content: center;
     gap: 6px;
     padding-top: 6px;
-    border-top: 1px solid #f8e8ee;
+    border-top: 1px solid var(--color-border-soft);
 }
 .booking__service-price {
     font-size: 13px;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 700;
 }
 .booking__service-duration {
     font-size: 10.5px;
-    color: #9e7080;
+    color: var(--color-text-muted);
 }
 .booking__service-duration::before {
     content: "·";
     margin-right: 6px;
-    color: #d9b3c2;
+    color: var(--color-text-faint);
 }
 .booking__btn-next {
     margin-left: auto;
@@ -233,8 +233,8 @@
 
 /* Step 2: calendario */
 .booking__calendar-card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 18px;
     padding: 1.75rem;
 }
@@ -249,14 +249,14 @@
     border: none;
     cursor: pointer;
     font-size: 22px;
-    color: #c2185b;
+    color: var(--color-primary);
     line-height: 1;
     padding: 4px 10px;
 }
 .booking__calendar-month-label {
     font-size: 16px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .booking__calendar-days-header {
     display: grid;
@@ -267,7 +267,7 @@
 .booking__calendar-day-label {
     text-align: center;
     font-size: 11px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     font-weight: 600;
     padding: 4px 0;
 }
@@ -281,27 +281,27 @@
     border-radius: 8px;
     border: none;
     background: transparent;
-    color: #2d1520;
+    color: var(--color-text);
     cursor: pointer;
     font-size: 13px;
     font-weight: 400;
     transition: background 0.15s;
 }
 .booking__calendar-day:not(:disabled):not(.booking__calendar-day--selected):hover {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
 }
 .booking__calendar-day--selected {
-    background: #c2185b;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
     font-weight: 600;
 }
 .booking__calendar-day:disabled {
-    color: #dfc8d0;
+    color: var(--color-text-faint-alt);
     cursor: not-allowed;
 }
 .booking__calendar-note {
     font-size: 12px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-top: 1.25rem;
     text-align: center;
 }
@@ -326,12 +326,12 @@
 /* Step 3: horario */
 .booking__step-sub {
     font-size: 14px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 1.75rem;
 }
 .booking__loading-note {
     text-align: center;
-    color: #9e7080;
+    color: var(--color-text-muted);
     padding: 2rem 0;
     font-size: 14px;
 }
@@ -346,31 +346,31 @@
     border-radius: 12px;
     font-size: 15px;
     font-weight: 500;
-    border: 2px solid #f0d0dc;
-    background: #fff;
-    color: #2d1520;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text);
     cursor: pointer;
     transition: all 0.15s;
 }
 .booking__slot-btn--selected {
-    border-color: #c2185b;
-    background: #c2185b;
-    color: #fff;
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 .booking__slot-btn--unavailable {
-    border-color: #f5eaef;
-    background: #fafafa;
-    color: #ccaabb;
+    border-color: var(--color-border-faint);
+    background: var(--color-surface-muted);
+    color: var(--color-text-disabled);
     cursor: not-allowed;
 }
 .booking__slot-unavailable-label {
     font-size: 10px;
-    color: #ccaabb;
+    color: var(--color-text-disabled);
     margin-top: 3px;
 }
 .booking__slots-empty-note {
     text-align: center;
-    color: #9e7080;
+    color: var(--color-text-muted);
     font-size: 14px;
     margin-bottom: 1.5rem;
 }
@@ -383,25 +383,25 @@
 }
 .booking__field-label {
     font-size: 13px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-bottom: 6px;
     display: block;
 }
 .booking__input {
     width: 100%;
     padding: 12px 14px;
-    border: 1px solid #f0d0dc;
+    border: 1px solid var(--color-border);
     border-radius: 10px;
     font-size: 14px;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     outline: none;
-    color: #2d1520;
-    background: #fff;
+    color: var(--color-text);
+    background: var(--color-surface);
 }
 .booking__error-box {
-    color: #c2185b;
+    color: var(--color-primary);
     font-size: 13px;
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     border-radius: 10px;
     padding: 10px 14px;
 }

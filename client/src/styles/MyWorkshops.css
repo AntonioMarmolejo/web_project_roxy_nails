@@ -1,14 +1,14 @@
 .myworkshops__header {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     padding: 2.5rem 2rem;
     text-align: center;
-    border-bottom: 1px solid #f0d0dc;
+    border-bottom: 1px solid var(--color-border);
 }
 .myworkshops__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
     margin-bottom: 8px;
 }
@@ -18,7 +18,7 @@
 }
 .myworkshops__header-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
 }
 
 .myworkshops__container {
@@ -28,7 +28,7 @@
 }
 .myworkshops__loading {
     text-align: center;
-    color: #9e7080;
+    color: var(--color-text-muted);
     padding: 3rem 0;
     font-size: 15px;
 }
@@ -42,12 +42,12 @@
 }
 .myworkshops__empty-title {
     font-size: 22px;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 10px;
 }
 .myworkshops__empty-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 2rem;
 }
 
@@ -57,8 +57,8 @@
     gap: 16px;
 }
 .myworkshops__card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
 }
@@ -73,7 +73,7 @@
 .myworkshops__title {
     font-size: 14px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .myworkshops__status-badge {
     font-size: 11px;
@@ -85,11 +85,11 @@
 }
 .myworkshops__date {
     font-size: 13px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 10px;
 }
 .myworkshops__total-row {
-    border-top: 1px solid #f0d0dc;
+    border-top: 1px solid var(--color-border);
     padding-top: 10px;
     display: flex;
     justify-content: space-between;
@@ -97,12 +97,12 @@
 }
 .myworkshops__total-label {
     font-size: 13px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
 }
 .myworkshops__total-value {
     font-size: 17px;
     font-weight: 700;
-    color: #c2185b;
+    color: var(--color-primary);
 }
 
 .myworkshops__cta {

@@ -1,14 +1,14 @@
 .mybookings__header {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     padding: 2.5rem 2rem;
     text-align: center;
-    border-bottom: 1px solid #f0d0dc;
+    border-bottom: 1px solid var(--color-border);
 }
 .mybookings__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
     margin-bottom: 8px;
 }
@@ -18,7 +18,7 @@
 }
 .mybookings__header-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
 }
 
 .mybookings__container {
@@ -28,7 +28,7 @@
 }
 .mybookings__loading {
     text-align: center;
-    color: #9e7080;
+    color: var(--color-text-muted);
     padding: 3rem 0;
     font-size: 15px;
 }
@@ -42,12 +42,12 @@
 }
 .mybookings__empty-title {
     font-size: 22px;
-    color: #2d1520;
+    color: var(--color-text);
     margin-bottom: 10px;
 }
 .mybookings__empty-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 2rem;
 }
 
@@ -57,8 +57,8 @@
     gap: 14px;
 }
 .mybookings__card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;
     display: flex;
@@ -79,7 +79,7 @@
 .mybookings__service-name {
     font-size: 15px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .mybookings__status-badge {
     font-size: 11px;
@@ -93,28 +93,28 @@
     display: flex;
     gap: 14px;
     font-size: 13px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     flex-wrap: wrap;
 }
 .mybookings__meta-price {
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
 }
 .mybookings__notes {
     font-size: 12px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-top: 8px;
     font-style: italic;
 }
 .mybookings__cancel-btn {
     background: transparent;
-    border: 1px solid #f0d0dc;
-    color: #9e7080;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted);
     border-radius: 8px;
     padding: 7px 16px;
     font-size: 12px;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     flex-shrink: 0;
 }
 

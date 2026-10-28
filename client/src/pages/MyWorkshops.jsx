@@ -6,9 +6,9 @@ import PageHeader from '../components/PageHeader'
 import '../styles/MyWorkshops.css'
 
 const STATUS = {
-    pending:   { label: 'Pendiente', bg: '#FFF8E1', color: '#E65100' },
-    paid:      { label: 'Pagado',    bg: '#E8F5E9', color: '#2E7D32' },
-    cancelled: { label: 'Cancelado', bg: '#F5F5F5', color: '#757575' },
+    pending:   { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    paid:      { label: 'Pagado',    bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    cancelled: { label: 'Cancelado', bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 
 export default function MyWorkshops() {

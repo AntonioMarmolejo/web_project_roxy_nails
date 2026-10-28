@@ -1,0 +1,86 @@
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500&display=swap");
+
+/* ================================================================
+   TOKENS DE DISEÑO — única fuente de colores y fuentes del sitio.
+   Para cambiar la marca, edita solo este archivo.
+   ================================================================ */
+
+:root {
+    /* --- Base (nombres del plan de marca) --- */
+    --color-bg: #fff;
+    --color-surface: #fff;
+    --color-primary: #c2185b;
+    --color-primary-light: #f8c8dc;
+    --color-primary-dark: #88134a;
+    --color-text: #2d1520;
+    --color-text-muted: #9e7080;
+    --color-border: #f0d0dc;
+
+    --font-heading: "Playfair Display", serif;
+    --font-body: "Inter", sans-serif;
+
+    /* Canales RGB para usar con transparencias: rgba(var(--color-primary-rgb), 0.2) */
+    --color-primary-rgb: 194, 24, 91;
+    --color-text-rgb: 45, 21, 32;
+    --color-surface-rgb: 255, 255, 255;
+
+    /* --- Marca: variantes --- */
+    --color-on-primary: #fff;          /* texto/iconos sobre --color-primary */
+    --color-primary-bright: #e91e8c;   /* acento del logo */
+    --color-primary-disabled: #e88aaa; /* botones primarios deshabilitados */
+
+    /* --- Texto: variantes --- */
+    --color-text-alt: #4a2030;
+    --color-text-secondary: #6b4050;
+    --color-text-subtle: #999;
+    --color-text-faint: #d9b3c2;
+    --color-text-faint-alt: #dfc8d0;
+    --color-text-disabled: #ccaabb;
+
+    /* --- Superficies: variantes --- */
+    --color-surface-soft: #fdf0f5;
+    --color-surface-muted: #fafafa;
+    --color-surface-tint: #fff5f8;
+    --color-surface-tint-alt: #fff0f5;
+    --color-surface-chip: #fce4ee;     /* fondo de etiquetas */
+
+    /* --- Bordes: variantes --- */
+    --color-border-card: #f4dbe4;
+    --color-border-soft: #f8e8ee;
+    --color-border-softer: #fde8f0;
+    --color-border-faint: #f5eaef;
+    --color-border-strong: #e9a0bc;
+
+    /* --- Constantes (no cambian con la marca) --- */
+    --color-white: #fff;               /* sobre fotos, capas oscuras y colores de estado */
+    --color-overlay: rgba(20, 8, 14, 0.92);
+    --color-lightbox-thumb-bg: #222;
+
+    /* --- Footer --- */
+    --color-footer-bg: #1a0d12;
+    --color-footer-text: #907070;
+    --color-footer-text-dim: #604040;
+
+    /* --- Estados (citas, pedidos, inscripciones, mensajes) --- */
+    --color-success: #2e7d32;
+    --color-success-alt: #1d9e75;
+    --color-success-bg: #e8f5e9;
+    --color-success-border: #a5d6a7;
+    --color-info: #1565c0;
+    --color-info-bg: #e3f2fd;
+    --color-info-border: #90caf9;
+    --color-warning: #e65100;
+    --color-warning-bg: #fff8e1;
+    --color-warning-bg-alt: #fff3e0;
+    --color-purple: #6a1b9a;
+    --color-purple-bg: #f3e5f5;
+    --color-purple-border: #ce93d8;
+    --color-danger: #c62828;
+    --color-danger-alt: #d32f2f;
+    --color-danger-bg: #ffebee;
+    --color-danger-border: #ef9a9a;
+    --color-neutral: #757575;
+    --color-neutral-bg: #f5f5f5;
+
+    --radius: 12px;
+}

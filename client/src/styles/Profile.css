@@ -7,8 +7,8 @@
     gap: 1.75rem;
 }
 .profile__card {
-    background: #fff;
-    border: 1px solid #f0d0dc;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 16px;
     padding: 1.5rem;
     display: flex;
@@ -18,58 +18,58 @@
 .profile__card-title {
     font-size: 17px;
     font-weight: 600;
-    color: #2d1520;
+    color: var(--color-text);
 }
 .profile__label {
     font-size: 13px;
-    color: #6b4050;
+    color: var(--color-text-secondary);
     margin-bottom: 4px;
     display: block;
 }
 .profile__input {
     width: 100%;
     padding: 10px 12px;
-    border: 1px solid #f0d0dc;
+    border: 1px solid var(--color-border);
     border-radius: 8px;
     font-size: 13px;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     outline: none;
-    background: #fff;
-    color: #2d1520;
+    background: var(--color-surface);
+    color: var(--color-text);
     box-sizing: border-box;
 }
 .profile__input--disabled {
-    background: #fafafa;
-    color: #9e7080;
+    background: var(--color-surface-muted);
+    color: var(--color-text-muted);
     cursor: not-allowed;
 }
 .profile__success {
     font-size: 12px;
-    color: #1d9e75;
-    background: #e8f5e9;
+    color: var(--color-success-alt);
+    background: var(--color-success-bg);
     padding: 8px 12px;
     border-radius: 8px;
 }
 .profile__error {
     font-size: 12px;
-    color: #c2185b;
-    background: #fdf0f5;
+    color: var(--color-primary);
+    background: var(--color-surface-soft);
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid #f8c8dc;
+    border: 1px solid var(--color-primary-light);
 }
 .profile__submit-btn {
-    background: #c2185b;
-    color: #fff;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
     border: none;
     border-radius: 24px;
     padding: 11px;
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
 }
 .profile__submit-btn:disabled {
-    background: #e88aaa;
+    background: var(--color-primary-disabled);
     cursor: not-allowed;
 }

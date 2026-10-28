@@ -1,14 +1,14 @@
 .services__header {
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
     padding: 3rem 2rem;
     text-align: center;
-    border-bottom: 1px solid #f0d0dc;
+    border-bottom: 1px solid var(--color-border);
 }
 .services__header-label {
     font-size: 13px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #c2185b;
+    color: var(--color-primary);
     font-weight: 500;
     margin-bottom: 10px;
 }
@@ -18,7 +18,7 @@
 }
 .services__header-sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     max-width: 460px;
     margin: 0 auto;
 }
@@ -29,8 +29,8 @@
     flex-wrap: wrap;
     justify-content: center;
     padding: 1.5rem 2rem;
-    border-bottom: 1px solid #f0d0dc;
-    background: #fff;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
     position: sticky;
     top: 64px;
     z-index: 5;
@@ -41,16 +41,16 @@
     font-size: 14px;
     border: 1px solid;
     cursor: pointer;
-    font-family: "Inter", sans-serif;
+    font-family: var(--font-body);
     transition: all 0.2s;
-    border-color: #f0d0dc;
-    background: #fff;
-    color: #6b4050;
+    border-color: var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
 }
 .services__filter-btn--active {
-    border-color: #c2185b;
-    background: #c2185b;
-    color: #fff;
+    border-color: var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-on-primary);
 }
 
 .services__grid-section {
@@ -60,6 +60,6 @@
 }
 .services__empty {
     text-align: center;
-    color: #9e7080;
+    color: var(--color-text-muted);
     font-size: 15px;
 }

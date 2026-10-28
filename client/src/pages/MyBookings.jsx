@@ -6,10 +6,10 @@ import PageHeader from '../components/PageHeader'
 import '../styles/MyBookings.css'
 
 const STATUS = {
-    pending: { label: 'Pendiente', bg: '#FFF8E1', color: '#E65100' },
-    confirmed: { label: 'Confirmada', bg: '#E8F5E9', color: '#2E7D32' },
-    completed: { label: 'Completada', bg: '#E3F2FD', color: '#1565C0' },
-    cancelled: { label: 'Cancelada', bg: '#F5F5F5', color: '#757575' },
+    pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    confirmed: { label: 'Confirmada', bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    completed: { label: 'Completada', bg: 'var(--color-info-bg)', color: 'var(--color-info)' },
+    cancelled: { label: 'Cancelada', bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 
 export default function MyBookings() {

@@ -6,20 +6,20 @@
     justify-content: center;
     text-align: center;
     padding: 3rem 1.5rem;
-    background: #fdf0f5;
+    background: var(--color-surface-soft);
 }
 .not-found__icon {
     font-size: 56px;
     margin-bottom: 1rem;
 }
 .not-found__title {
-    font-family: "Playfair Display", serif;
+    font-family: var(--font-heading);
     font-size: 64px;
-    color: #c2185b;
+    color: var(--color-primary);
     margin-bottom: 8px;
 }
 .not-found__sub {
     font-size: 15px;
-    color: #9e7080;
+    color: var(--color-text-muted);
     margin-bottom: 2rem;
 }

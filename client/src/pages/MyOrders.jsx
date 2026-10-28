@@ -6,11 +6,11 @@ import PageHeader from '../components/PageHeader'
 import '../styles/MyOrders.css'
 
 const STATUS = {
-    pending:   { label: 'Pendiente',   bg: '#FFF8E1', color: '#E65100' },
-    paid:      { label: 'Pagado',      bg: '#E8F5E9', color: '#2E7D32' },
-    shipped:   { label: 'En camino',   bg: '#E3F2FD', color: '#1565C0' },
-    delivered: { label: 'Entregado',   bg: '#F3E5F5', color: '#6A1B9A' },
-    cancelled: { label: 'Cancelado',   bg: '#F5F5F5', color: '#757575' },
+    pending:   { label: 'Pendiente',   bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+    paid:      { label: 'Pagado',      bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+    shipped:   { label: 'En camino',   bg: 'var(--color-info-bg)', color: 'var(--color-info)' },
+    delivered: { label: 'Entregado',   bg: 'var(--color-purple-bg)', color: 'var(--color-purple)' },
+    cancelled: { label: 'Cancelado',   bg: 'var(--color-neutral-bg)', color: 'var(--color-neutral)' },
 }
 
 export default function MyOrders() {

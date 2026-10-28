@@ -9,7 +9,7 @@
 .lightbox__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(20, 8, 14, 0.92);
+    background: var(--color-overlay);
 }
 .lightbox__close {
     position: absolute;
@@ -21,7 +21,7 @@
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    color: var(--color-white);
     font-size: 16px;
     cursor: pointer;
     display: flex;
@@ -37,7 +37,7 @@
     top: 24px;
     left: 24px;
     z-index: 2;
-    color: #fff;
+    color: var(--color-white);
     font-size: 13px;
     background: rgba(255, 255, 255, 0.12);
     padding: 5px 14px;
@@ -71,7 +71,7 @@
     border-radius: 50%;
     border: none;
     background: rgba(255, 255, 255, 0.12);
-    color: #fff;
+    color: var(--color-white);
     font-size: 26px;
     line-height: 1;
     cursor: pointer;
@@ -110,12 +110,12 @@
     border: 2px solid transparent;
     opacity: 0.55;
     cursor: pointer;
-    background: #222;
+    background: var(--color-lightbox-thumb-bg);
     transition: opacity 0.2s, border-color 0.2s;
 }
 .lightbox__thumb--active {
     opacity: 1;
-    border-color: #fff;
+    border-color: var(--color-white);
 }
 .lightbox__thumb img {
     width: 100%;
