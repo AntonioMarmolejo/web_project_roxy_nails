@@ -495,3 +495,8 @@
     font-size: 11px;
     color: var(--color-text-muted);
 }
+.admin__banner-preview {
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+}

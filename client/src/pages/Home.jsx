@@ -7,6 +7,8 @@ import Lightbox from '../components/Lightbox'
 import LikeButton from '../components/LikeButton'
 import { fetchServices } from '../api/services'
 import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
+import { fetchBanner } from '../api/banner'
+import PromoBanner from '../components/PromoBanner'
 import '../styles/Home.css'
 import { brand } from '../config/brand'
 
@@ -30,9 +32,13 @@ export default function Home() {
     const [services, setServices] = useState(FALLBACK_SERVICES)
     const [galleryImages, setGalleryImages] = useState([])
     const [lightboxIndex, setLightboxIndex] = useState(null)
+    const [banner, setBanner] = useState(null)
     const galleryImgs = galleryImages.map(g => g.image)
 
     useEffect(() => {
+        fetchBanner()
+            .then(({ data }) => setBanner(data?.visible ? data : null))
+            .catch(() => { })
         fetchServices()
             .then(({ data }) => { if (data?.length) setServices(data) })
             .catch(() => { })
@@ -55,13 +61,8 @@ export default function Home() {
                 <meta name="description" content={`${brand.tagline}. Tratamientos capilares, uñas, cejas y pestañas. ${brand.serviceNote}.`} />
             </Helmet>
 
-            {/* Promo bar */}
-            <div className="home__promo-bar">
-                🎉 <strong>Julio: 20% OFF</strong> en manicure gel + pedicure spa —{' '}
-                <Link to="/agendar">
-                    Agenda tu cita hoy
-                </Link>
-            </div>
+            {/* Promo bar — se configura en Admin → Banner */}
+            <PromoBanner banner={banner} />
 
             {/* Hero slider */}
             <HeroSlider />
