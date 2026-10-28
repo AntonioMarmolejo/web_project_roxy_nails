@@ -17,6 +17,30 @@ h1,
 h2,
 h3 {
     font-family: var(--font-heading);
+    letter-spacing: 0.02em;
+}
+
+/* Campos de formulario: sin esto el navegador usa texto negro sobre el fondo oscuro */
+input,
+select,
+textarea {
+    color: var(--color-text);
+    font-family: inherit;
+}
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-faint);
+    opacity: 1;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 1px;
+}
+select option {
+    background: var(--color-surface);
+    color: var(--color-text);
 }
 
 a {

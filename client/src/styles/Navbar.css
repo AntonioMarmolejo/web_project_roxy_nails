@@ -89,3 +89,16 @@
     cursor: pointer;
     font-family: var(--font-body);
 }
+
+/* Cinzel es más ancha: en móvil el logo debe caber en una línea */
+@media (max-width: 640px) {
+    .navbar__logo {
+        font-size: 22px;
+        white-space: nowrap;
+    }
+}
+@media (max-width: 360px) {
+    .navbar__logo {
+        font-size: 19px;
+    }
+}

@@ -403,7 +403,7 @@ export default function Admin() {
                     <h1 className="admin__header-title">
                         Panel de administración
                     </h1>
-                    <p className="admin__header-sub">Bienvenida, {user?.name}</p>
+                    <p className="admin__header-sub">Hola, {user?.name}</p>
                 </div>
                 <button onClick={logout} className="admin__logout-btn">
                     Cerrar sesión

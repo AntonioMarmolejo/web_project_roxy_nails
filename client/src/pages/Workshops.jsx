@@ -28,7 +28,7 @@ export default function Workshops() {
             </Helmet>
 
             <PageHeader
-                label="Aprende con nosotras"
+                label="Aprende con nosotros"
                 title="Talleres"
                 subtitle="Cupos limitados. Inscríbete antes de que se agoten."
             />

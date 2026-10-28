@@ -147,11 +147,11 @@
 .product-modal__backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(var(--color-text-rgb), 0);
+    background: rgba(var(--color-shadow-rgb), 0);
     transition: background 0.35s ease;
 }
 .product-modal--visible .product-modal__backdrop {
-    background: rgba(var(--color-text-rgb), 0.55);
+    background: rgba(var(--color-shadow-rgb), 0.55);
 }
 .product-modal__panel {
     position: relative;
@@ -197,7 +197,7 @@
 }
 .product-modal__close:hover {
     background: var(--color-primary-light);
-    color: var(--color-primary);
+    color: var(--color-on-primary);
 }
 .product-modal__image {
     flex-shrink: 0;

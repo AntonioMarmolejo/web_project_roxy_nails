@@ -5,12 +5,12 @@ export const brand = {
   fullName: "Captain's Barbería Studio Unisex",
   // Paleta de los correos (los clientes de correo no soportan variables CSS)
   email: {
-    primary: '#C2185B',
+    primary: '#8C6A2B',      // dorado oscuro: legible sobre blanco (5.0:1)
     onPrimary: '#FFFFFF',
-    surface: '#FDF0F5',
-    border: '#F0D0DC',
-    muted: '#9E7080',
-    fontBody: 'Inter,sans-serif',
-    fontHeading: 'Georgia,serif',
+    surface: '#F7F1E3',      // crema claro (los fondos negros fallan en muchos clientes de correo)
+    border: '#E3D4AE',
+    muted: '#6F6553',
+    fontBody: "Montserrat,Arial,sans-serif",
+    fontHeading: "Cinzel,Georgia,serif",
   },
 }

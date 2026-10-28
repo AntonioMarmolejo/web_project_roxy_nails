@@ -1,86 +1,89 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,400&family=Inter:wght@300;400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap");
 
 /* ================================================================
    TOKENS DE DISEÑO — única fuente de colores y fuentes del sitio.
    Para cambiar la marca, edita solo este archivo.
+   Marca actual: Captain's Barbería Studio Unisex (negro y dorado, art déco)
    ================================================================ */
 
 :root {
-    /* --- Base (nombres del plan de marca) --- */
-    --color-bg: #fff;
-    --color-surface: #fff;
-    --color-primary: #c2185b;
-    --color-primary-light: #f8c8dc;
-    --color-primary-dark: #88134a;
-    --color-text: #2d1520;
-    --color-text-muted: #9e7080;
-    --color-border: #f0d0dc;
+    color-scheme: dark; /* controles nativos (fechas, selects, scrollbars) en modo oscuro */
 
-    --font-heading: "Playfair Display", serif;
-    --font-body: "Inter", sans-serif;
+    /* --- Base (nombres del plan de marca) --- */
+    --color-bg: #0B0B0B;
+    --color-surface: #161412;
+    --color-primary: #C9A24B;          /* dorado principal */
+    --color-primary-light: #E8CB82;
+    --color-primary-dark: #8C6A2B;
+    --color-text: #F5EFE3;             /* crema */
+    --color-text-muted: #B8AE9C;
+    --color-border: #3A3226;
+
+    --font-heading: "Cinzel", serif;
+    --font-body: "Montserrat", sans-serif;
 
     /* Canales RGB para usar con transparencias: rgba(var(--color-primary-rgb), 0.2) */
-    --color-primary-rgb: 194, 24, 91;
-    --color-text-rgb: 45, 21, 32;
-    --color-surface-rgb: 255, 255, 255;
+    --color-primary-rgb: 201, 162, 75;
+    --color-shadow-rgb: 0, 0, 0;       /* sombras y velos oscuros sobre fotos */
+    --color-surface-rgb: 22, 20, 18;   /* cristal sobre fotos */
 
     /* --- Marca: variantes --- */
-    --color-on-primary: #fff;          /* texto/iconos sobre --color-primary */
-    --color-primary-bright: #e91e8c;   /* acento del logo */
-    --color-primary-disabled: #e88aaa; /* botones primarios deshabilitados */
+    --color-on-primary: #0B0B0B;       /* texto oscuro sobre dorado, nunca blanco */
+    --color-primary-bright: #E8CB82;   /* acento del logo */
+    --color-primary-disabled: #6E5A30; /* botones primarios deshabilitados */
 
     /* --- Texto: variantes --- */
-    --color-text-alt: #4a2030;
-    --color-text-secondary: #6b4050;
-    --color-text-subtle: #999;
-    --color-text-faint: #d9b3c2;
-    --color-text-faint-alt: #dfc8d0;
-    --color-text-disabled: #ccaabb;
+    --color-text-alt: #EDE4D3;
+    --color-text-secondary: #D6CCBA;
+    --color-text-subtle: #9A9080;
+    --color-text-faint: #918774;
+    --color-text-faint-alt: #6F6656;
+    --color-text-disabled: #5E5648;
 
     /* --- Superficies: variantes --- */
-    --color-surface-soft: #fdf0f5;
-    --color-surface-muted: #fafafa;
-    --color-surface-tint: #fff5f8;
-    --color-surface-tint-alt: #fff0f5;
-    --color-surface-chip: #fce4ee;     /* fondo de etiquetas */
+    --color-surface-soft: #1E1A15;
+    --color-surface-muted: #1A1714;
+    --color-surface-tint: #201B14;
+    --color-surface-tint-alt: #221C14;
+    --color-surface-chip: #2A2318;     /* fondo de etiquetas */
 
     /* --- Bordes: variantes --- */
-    --color-border-card: #f4dbe4;
-    --color-border-soft: #f8e8ee;
-    --color-border-softer: #fde8f0;
-    --color-border-faint: #f5eaef;
-    --color-border-strong: #e9a0bc;
+    --color-border-card: #2E281F;
+    --color-border-soft: #2A251D;
+    --color-border-softer: #2A251D;
+    --color-border-faint: #262119;
+    --color-border-strong: #8C6A2B;
 
     /* --- Constantes (no cambian con la marca) --- */
     --color-white: #fff;               /* sobre fotos, capas oscuras y colores de estado */
-    --color-overlay: rgba(20, 8, 14, 0.92);
+    --color-overlay: rgba(0, 0, 0, 0.92);
     --color-lightbox-thumb-bg: #222;
 
     /* --- Footer --- */
-    --color-footer-bg: #1a0d12;
-    --color-footer-text: #907070;
-    --color-footer-text-dim: #604040;
+    --color-footer-bg: #070707;
+    --color-footer-text: #B8AE9C;
+    --color-footer-text-dim: #948B7A;
 
-    /* --- Estados (citas, pedidos, inscripciones, mensajes) --- */
-    --color-success: #2e7d32;
-    --color-success-alt: #1d9e75;
-    --color-success-bg: #e8f5e9;
-    --color-success-border: #a5d6a7;
-    --color-info: #1565c0;
-    --color-info-bg: #e3f2fd;
-    --color-info-border: #90caf9;
-    --color-warning: #e65100;
-    --color-warning-bg: #fff8e1;
-    --color-warning-bg-alt: #fff3e0;
-    --color-purple: #6a1b9a;
-    --color-purple-bg: #f3e5f5;
-    --color-purple-border: #ce93d8;
-    --color-danger: #c62828;
-    --color-danger-alt: #d32f2f;
-    --color-danger-bg: #ffebee;
-    --color-danger-border: #ef9a9a;
-    --color-neutral: #757575;
-    --color-neutral-bg: #f5f5f5;
+    /* --- Estados (citas, pedidos, inscripciones, mensajes) — versiones para fondo oscuro --- */
+    --color-success: #81C784;
+    --color-success-alt: #157A5B;
+    --color-success-bg: #16241A;
+    --color-success-border: #2E5A35;
+    --color-info: #90CAF9;
+    --color-info-bg: #14202C;
+    --color-info-border: #2B4A66;
+    --color-warning: #FFB74D;
+    --color-warning-bg: #2A2112;
+    --color-warning-bg-alt: #2A1E10;
+    --color-purple: #CE93D8;
+    --color-purple-bg: #241A28;
+    --color-purple-border: #4E3558;
+    --color-danger: #EF9A9A;
+    --color-danger-alt: #E57373;
+    --color-danger-bg: #2A1515;
+    --color-danger-border: #6B2B2B;
+    --color-neutral: #ABABAB;
+    --color-neutral-bg: #222222;
 
     --radius: 12px;
 }
