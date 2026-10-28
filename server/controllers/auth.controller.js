@@ -95,7 +95,7 @@ export const forgotPassword = async (req, res, next) => {
       user.resetPasswordExpires = Date.now() + 60 * 60 * 1000 // 1 hora
       await user.save({ validateBeforeSave: false })
 
-      const resetUrl = `${process.env.CLIENT_URL}/restablecer-contrasena/${rawToken}`
+      const resetUrl = `${(process.env.CLIENT_URL || '').split(',')[0].trim().replace(/\/$/, '')}/restablecer-contrasena/${rawToken}`
 
       if (mailEnabled()) {
         sendPasswordReset({ to: user.email, name: user.name, resetUrl })

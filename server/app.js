@@ -17,8 +17,13 @@ dotenv.config()
 
 const app = express()
 
+// Detrás del proxy de Vercel/Railway: usa la IP real del cliente (necesario para el rate limit)
+app.set('trust proxy', 1)
+
 // Middlewares globales
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }))
+// CLIENT_URL admite varios orígenes separados por comas (p. ej. dominio con y sin www)
+const allowedOrigins = (process.env.CLIENT_URL || '').split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean)
+app.use(cors({ origin: allowedOrigins, credentials: true }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(mongoSanitize()) // evita inyección de operadores Mongo ($gt, $ne...) desde body/query/params
