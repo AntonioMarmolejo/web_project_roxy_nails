@@ -9,6 +9,9 @@ import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop, dele
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
 import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage, deleteGalleryImage } from '../api/gallery'
 import ImageInput from '../components/ImageInput'
+import VideoInput from '../components/VideoInput'
+import GalleryMedia from '../components/GalleryMedia'
+import '../styles/ImageInput.css'
 import '../styles/Admin.css'
 import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
@@ -19,7 +22,7 @@ const PROD_CATS    = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'acceso
 const EMPTY_SVC     = { name: '', description: '', price: '', duration: '', category: 'unas', featured: false, active: true, image: '' }
 const EMPTY_PROD    = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', images: ['', '', ''] }
 const EMPTY_WS      = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
-const EMPTY_GALLERY = { image: '', category: 'unas' }
+const EMPTY_GALLERY = { image: '', category: 'unas', mediaType: 'image' }
 
 const BOOKING_STATUS = {
     pending:   { label: 'Pendiente',  bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -321,7 +324,7 @@ export default function Admin() {
     }
 
     // ── CRUD Galería ─────────────────────────────────────────────────────────
-    const startEditGallery  = (g) => { setEditGallery(g._id); setGalleryForm({ image: g.image, category: g.category }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const startEditGallery  = (g) => { setEditGallery(g._id); setGalleryForm({ image: g.image, category: g.category, mediaType: g.mediaType || 'image' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
     const cancelEditGallery = () => { setEditGallery(null); setGalleryForm(EMPTY_GALLERY) }
     const submitGallery = async (e) => {
         e.preventDefault(); setGalleryLoad(true)
@@ -329,11 +332,11 @@ export default function Admin() {
             if (editGallery) {
                 const { data } = await updateGalleryImage(editGallery, galleryForm)
                 setGalleryImages(g => g.map(x => x._id === editGallery ? data : x))
-                showToast('Imagen actualizada ✓')
+                showToast(galleryForm.mediaType === 'video' ? 'Video actualizado ✓' : 'Foto actualizada ✓')
             } else {
                 const { data } = await createGalleryImage(galleryForm)
                 setGalleryImages(g => [data, ...g])
-                showToast('Imagen agregada ✓')
+                showToast(galleryForm.mediaType === 'video' ? 'Video agregado ✓' : 'Foto agregada ✓')
             }
             cancelEditGallery()
         } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
@@ -892,7 +895,7 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--3">
                             {[
-                                { label: 'Imágenes',      value: galleryStats.total,  color: 'var(--color-primary)' },
+                                { label: 'Fotos y videos', value: galleryStats.total,  color: 'var(--color-primary)' },
                                 { label: 'Visibles',      value: galleryStats.active, color: 'var(--color-success)' },
                                 { label: 'Likes totales', value: galleryStats.likes,  color: 'var(--color-warning)' },
                             ].map(st => (
@@ -907,20 +910,20 @@ export default function Admin() {
                             {/* Lista de imágenes */}
                             <div>
                                 <h2 className="admin__list-title">
-                                    Diseños ({galleryImages.length})
+                                    Fotos y videos ({galleryImages.length})
                                 </h2>
                                 {galleryFetching ? (
                                     <p className="admin__list-loading">Cargando...</p>
                                 ) : galleryImages.length === 0 ? (
                                     <div className="admin__list-empty">
-                                        No hay imágenes. Sube la primera con el formulario.
+                                        Aún no hay fotos ni videos. Sube el primero con el formulario.
                                     </div>
                                 ) : (
                                     <div className="admin__gallery-grid">
                                         {galleryImages.map(g => (
                                             <div key={g._id} className={`admin__gallery-item${editGallery === g._id ? ' admin__gallery-item--editing' : !g.active ? ' admin__gallery-item--inactive' : ''}`}>
                                                 <div className="admin__gallery-thumb">
-                                                    <img src={g.image} alt="" />
+                                                    <GalleryMedia item={g} />
                                                 </div>
                                                 <div className="admin__gallery-info">
                                                     <span className="admin__item-meta-cap">{categoryLabel(g.category)}</span>
@@ -943,7 +946,7 @@ export default function Admin() {
                             {/* Form imagen */}
                             <div className="admin__form-panel">
                                 <h2 className="admin__form-title">
-                                    {editGallery ? 'Editar imagen' : 'Nueva imagen'}
+                                    {editGallery ? (galleryForm.mediaType === 'video' ? 'Editar video' : 'Editar foto') : 'Nueva foto o video'}
                                 </h2>
                                 <form onSubmit={submitGallery} className="admin__form admin__form--compact">
                                     <div>
@@ -956,10 +959,22 @@ export default function Admin() {
                                             {SERVICE_CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}{galleryForm.category && !SERVICE_CATEGORIES.some(c => c.key === galleryForm.category) && <option value={galleryForm.category}>{galleryForm.category} (anterior)</option>}
                                         </select>
                                     </div>
-                                    <ImageInput label="Foto *" value={galleryForm.image} onChange={(url) => setGalleryForm(f => ({ ...f, image: url }))} />
+                                    <div>
+                                        <label className="admin__label">Tipo *</label>
+                                        <div className="image-input__tabs">
+                                            {[['image', '📷 Foto'], ['video', '🎬 Video']].map(([type, lbl]) => (
+                                                <button key={type} type="button"
+                                                    onClick={() => setGalleryForm(f => f.mediaType === type ? f : { ...f, mediaType: type, image: '' })}
+                                                    className={`image-input__tab-btn${galleryForm.mediaType === type ? ' image-input__tab-btn--active' : ''}`}>{lbl}</button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    {galleryForm.mediaType === 'video'
+                                        ? <VideoInput label="Video *" value={galleryForm.image} onChange={(url) => setGalleryForm(f => ({ ...f, image: url }))} />
+                                        : <ImageInput label="Foto *" value={galleryForm.image} onChange={(url) => setGalleryForm(f => ({ ...f, image: url }))} />}
                                     <div className="admin__form-actions">
                                         <button type="submit" disabled={galleryLoad || !galleryForm.image} className="admin__submit-btn">
-                                            {galleryLoad ? 'Guardando...' : editGallery ? 'Guardar cambios' : 'Agregar imagen'}
+                                            {galleryLoad ? 'Guardando...' : editGallery ? 'Guardar cambios' : galleryForm.mediaType === 'video' ? 'Agregar video' : 'Agregar foto'}
                                         </button>
                                         {editGallery && <button type="button" onClick={cancelEditGallery} className="admin__cancel-btn">Cancelar</button>}
                                     </div>

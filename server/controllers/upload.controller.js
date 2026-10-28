@@ -1,4 +1,4 @@
-import getCloudinary from '../config/cloudinary.js'
+import getCloudinary, { UPLOAD_FOLDER } from '../config/cloudinary.js'
 
 export const uploadImage = async (req, res, next) => {
   try {
@@ -7,7 +7,7 @@ export const uploadImage = async (req, res, next) => {
     const cloudinary = getCloudinary()
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'roxy-nails', resource_type: 'image' },
+        { folder: UPLOAD_FOLDER, resource_type: 'image' },
         (err, result) => err ? reject(err) : resolve(result)
       )
       stream.end(req.file.buffer)

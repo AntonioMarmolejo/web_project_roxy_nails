@@ -1,12 +1,13 @@
 import { useState, useRef } from 'react'
-import { uploadImage } from '../api/upload'
+import { uploadToCloudinary } from '../api/upload'
+import { IMAGE_MAX_BYTES } from '../utils/media'
 import '../styles/ImageInput.css'
 
-const MAX_SIZE = 5 * 1024 * 1024 // 5MB
 
 export default function ImageInput({ label = 'Imagen', value, onChange }) {
     const [mode, setMode]         = useState('url')
     const [uploading, setUploading] = useState(false)
+    const [progress, setProgress] = useState(0)
     const [error, setError]       = useState('')
     const fileInputRef = useRef(null)
 
@@ -19,17 +20,18 @@ export default function ImageInput({ label = 'Imagen', value, onChange }) {
             setError('El archivo debe ser una imagen')
             return
         }
-        if (file.size > MAX_SIZE) {
-            setError('La imagen no puede superar 5MB')
+        if (file.size > IMAGE_MAX_BYTES) {
+            setError('La imagen no puede superar 10 MB')
             return
         }
 
-        setUploading(true)
+        setUploading(true); setProgress(0)
         try {
-            const { data } = await uploadImage(file)
-            onChange(data.url)
+            // Subida directa a Cloudinary: no pasa por la API (evita el límite de 4,5 MB de Vercel)
+            const { url } = await uploadToCloudinary(file, { resourceType: 'image', onProgress: setProgress })
+            onChange(url)
         } catch (err) {
-            setError(err.response?.data?.message || 'Error al subir la imagen')
+            setError(err.response?.data?.message || err.message || 'Error al subir la imagen')
         } finally {
             setUploading(false)
             if (fileInputRef.current) fileInputRef.current.value = ''
@@ -59,7 +61,7 @@ export default function ImageInput({ label = 'Imagen', value, onChange }) {
             ) : (
                 <div className="image-input__file-row">
                     <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFile} disabled={uploading} className="image-input__file-input" />
-                    {uploading && <span className="image-input__uploading">Subiendo...</span>}
+                    {uploading && <span className="image-input__uploading">Subiendo... {progress}%</span>}
                 </div>
             )}
 

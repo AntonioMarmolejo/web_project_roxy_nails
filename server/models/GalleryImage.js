@@ -5,7 +5,9 @@ import { SERVICE_CATEGORIES } from './Service.js'
 const LEGACY_CATEGORIES = ['manicure', 'pedicure', 'nail-art']
 
 const galleryImageSchema = new mongoose.Schema({
-  image:    { type: String, required: true },
+  image:     { type: String, required: true },                                // URL de la foto o del video
+  mediaType: { type: String, enum: ['image', 'video'], default: 'image' },
+  duration:  { type: Number, default: null },                                // segundos (solo videos)
   category: { type: String, enum: [...SERVICE_CATEGORIES, ...LEGACY_CATEGORIES], required: true },
   likes:    { type: Number, default: 0 },
   active:   { type: Boolean, default: true },

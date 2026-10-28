@@ -51,6 +51,13 @@ app.use((err, _req, res, _next) => {
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: 'La imagen supera el tamaño máximo permitido (5MB)' })
   }
+  // Datos inválidos (validación o tipos de Mongoose): 400 con un mensaje legible
+  if (err.name === 'ValidationError') {
+    const first = Object.values(err.errors)[0]
+    const msg = first?.kind === 'user defined' || first?.kind === 'maxlength' || first?.kind === 'min' ? first.message : 'Datos no válidos. Revisa el formulario.'
+    return res.status(400).json({ message: msg })
+  }
+  if (err.name === 'CastError') return res.status(400).json({ message: 'Datos no válidos. Revisa el formulario.' })
   res.status(err.status || 500).json({ message: err.message || 'Error interno del servidor' })
 })
 

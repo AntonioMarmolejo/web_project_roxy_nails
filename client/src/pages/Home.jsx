@@ -11,6 +11,7 @@ import { fetchBanner } from '../api/banner'
 import PromoBanner from '../components/PromoBanner'
 import '../styles/Home.css'
 import { brand } from '../config/brand'
+import GalleryMedia from '../components/GalleryMedia'
 
 // Respaldo si la API no responde (muestra del catálogo real)
 const FALLBACK_SERVICES = [
@@ -33,7 +34,7 @@ export default function Home() {
     const [galleryImages, setGalleryImages] = useState([])
     const [lightboxIndex, setLightboxIndex] = useState(null)
     const [banner, setBanner] = useState(null)
-    const galleryImgs = galleryImages.map(g => g.image)
+    const galleryImgs = galleryImages
 
     useEffect(() => {
         fetchBanner()
@@ -96,7 +97,7 @@ export default function Home() {
                             style={{ '--gallery-row-span': i === 0 || i === 6 ? 'span 2' : 'span 1' }}
                             onClick={() => setLightboxIndex(i)}
                         >
-                            <img src={item.image} alt={`Trabajo de ${brand.name}`} loading="lazy" />
+                            <GalleryMedia item={item} alt={`Trabajo de ${brand.name}`} />
                             <LikeButton
                                 id={item._id}
                                 count={item.likes}

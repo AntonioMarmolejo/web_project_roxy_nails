@@ -1,0 +1,31 @@
+/* Icono ▶ y duración sobre la miniatura de un video (el contenedor ya es position: relative) */
+.gallery-media__play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 4px;
+    font-size: 20px;
+    color: var(--color-on-primary);
+    background: rgba(var(--color-primary-rgb), 0.9);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    pointer-events: none;
+}
+.gallery-media__duration {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-white);
+    background: rgba(0, 0, 0, 0.65);
+    pointer-events: none;
+}

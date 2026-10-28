@@ -5,6 +5,7 @@ import LikeButton from '../components/LikeButton'
 import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Gallery.css'
 import { brand } from '../config/brand'
+import GalleryMedia from '../components/GalleryMedia'
 import { SERVICE_CATEGORIES } from '../config/services'
 
 const CATS = [{ key: 'todas', label: 'Todas' }, ...SERVICE_CATEGORIES]
@@ -23,7 +24,7 @@ export default function Gallery() {
     }, [])
 
     const filtered = cat === 'todas' ? images : images.filter(g => g.category === cat)
-    const lightboxImgs = filtered.map(g => g.image)
+    const lightboxImgs = filtered
 
     const handleLike = (id, liked) => {
         likeGalleryImage(id, liked ? 1 : -1).catch(() => {})
@@ -42,7 +43,7 @@ export default function Gallery() {
                 </p>
                 <h1 className="gallery__header-title">Galería</h1>
                 <p className="gallery__header-sub">
-                    Todos los diseños que hemos creado, organizados por categoría.
+                    Fotos y videos de nuestros trabajos, organizados por categoría.
                 </p>
             </div>
 
@@ -67,7 +68,7 @@ export default function Gallery() {
                     <div className="gallery__grid">
                         {filtered.map((item, i) => (
                             <div key={item._id} className="gallery__item" onClick={() => setLightboxIndex(i)}>
-                                <img src={item.image} alt={`Trabajo de ${brand.name}`} loading="lazy" />
+                                <GalleryMedia item={item} alt={`Trabajo de ${brand.name}`} />
                                 <LikeButton
                                     id={item._id}
                                     count={item.likes}

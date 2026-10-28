@@ -14,13 +14,26 @@ export default function getCloudinary() {
   return cloudinary
 }
 
-// Borra de Cloudinary las imágenes indicadas por URL (ignora las que no son de Cloudinary).
+// Carpeta donde se guardan los archivos subidos (se conserva el nombre original para no romper URLs)
+export const UPLOAD_FOLDER = 'roxy-nails'
+
+// Límites de los videos de la galería
+export const VIDEO_LIMITS = { maxSeconds: 60, maxBytes: 50 * 1024 * 1024 }
+
+// Extrae tipo de recurso y public_id de una URL de nuestro Cloudinary, o null si no lo es
+export function parseCloudinaryUrl(url) {
+  const m = String(url || '').match(/res\.cloudinary\.com\/([^/]+)\/(image|video)\/upload\/(?:[^/]*,[^/]*\/)*(?:v\d+\/)?(.+)\.\w+$/)
+  if (!m || m[1] !== process.env.CLOUDINARY_CLOUD_NAME) return null
+  return { resourceType: m[2], publicId: m[3] }
+}
+
+// Borra de Cloudinary las imágenes o videos indicados por URL (ignora los que no son de nuestro Cloudinary).
 // Un fallo solo se registra: no debe impedir el borrado del documento.
 export async function destroyImages(...urls) {
   for (const url of urls.flat().filter(Boolean)) {
-    const publicId = url.match(/res\.cloudinary\.com\/[^/]+\/image\/upload\/(?:v\d+\/)?(.+)\.\w+$/)?.[1]
-    if (!publicId) continue
-    try { await getCloudinary().uploader.destroy(publicId) }
+    const parsed = parseCloudinaryUrl(url)
+    if (!parsed) continue
+    try { await getCloudinary().uploader.destroy(parsed.publicId, { resource_type: parsed.resourceType }) }
     catch (err) { console.error('No se pudo borrar de Cloudinary:', err.message) }
   }
 }
