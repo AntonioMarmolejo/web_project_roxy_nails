@@ -6,4 +6,5 @@ export const fetchAllWorkshops = ()         => api.get('/workshops/all')   // ad
 export const createWorkshop    = (data)     => api.post('/workshops', data)
 export const updateWorkshop    = (id, data) => api.put(`/workshops/${id}`, data)
 export const toggleWorkshop    = (id)       => api.delete(`/workshops/${id}`) // soft-delete
+export const deleteWorkshop    = (id)       => api.delete(`/workshops/${id}/permanent`)
 export const likeWorkshop      = (id, delta) => api.patch(`/workshops/${id}/like`, { delta })

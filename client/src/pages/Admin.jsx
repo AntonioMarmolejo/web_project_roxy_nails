@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
-import { fetchServices, createService, updateService, deleteService } from '../api/services'
+import { fetchServices, createService, updateService, deleteService, removeService } from '../api/services'
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
-import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '../api/products'
+import { fetchAllProducts, createProduct, updateProduct, toggleProduct, deleteProduct } from '../api/products'
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
-import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
+import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop, deleteWorkshop } from '../api/workshops'
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
 import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage, deleteGalleryImage } from '../api/gallery'
 import ImageInput from '../components/ImageInput'
@@ -182,6 +182,15 @@ export default function Admin() {
         try { await deleteService(id); setServices(s => s.filter(x => x._id !== id)); showToast('Servicio desactivado ✓') }
         catch { showToast('Error al eliminar') }
     }
+    const handleRemoveSvc = async (id, name) => {
+        if (!window.confirm(`¿Eliminar "${name}" definitivamente? Esta acción no se puede deshacer.`)) return
+        try {
+            await removeService(id)
+            setServices(s => s.filter(x => x._id !== id))
+            if (editing === id) cancelEditSvc()
+            showToast('Servicio eliminado ✓')
+        } catch (err) { showToast(err.response?.data?.message || 'Error al eliminar') }
+    }
 
     // ── Acciones Citas ───────────────────────────────────────────────────────
     const changeBookingStatus = async (id, status) => {
@@ -233,6 +242,15 @@ export default function Admin() {
             showToast(`Producto ${data.active ? 'activado' : 'desactivado'} ✓`)
         } catch { showToast('Error al cambiar estado') }
     }
+    const handleDeleteProd = async (id, name) => {
+        if (!window.confirm(`¿Eliminar "${name}" definitivamente? Esta acción no se puede deshacer.`)) return
+        try {
+            await deleteProduct(id)
+            setProducts(p => p.filter(x => x._id !== id))
+            if (editProd === id) cancelEditProd()
+            showToast('Producto eliminado ✓')
+        } catch (err) { showToast(err.response?.data?.message || 'Error al eliminar') }
+    }
 
     // ── Acciones Pedidos ─────────────────────────────────────────────────────
     const changeOrderStatus = async (id, status) => {
@@ -273,6 +291,15 @@ export default function Admin() {
             setWorkshops(w => w.map(x => x._id === id ? { ...x, active: data.active } : x))
             showToast(`Taller ${data.active ? 'activado' : 'desactivado'} ✓`)
         } catch { showToast('Error al cambiar estado') }
+    }
+    const handleDeleteWs = async (id, title) => {
+        if (!window.confirm(`¿Eliminar "${title}" definitivamente? Esta acción no se puede deshacer.`)) return
+        try {
+            await deleteWorkshop(id)
+            setWorkshops(w => w.filter(x => x._id !== id))
+            if (editWs === id) cancelEditWs()
+            showToast('Taller eliminado ✓')
+        } catch (err) { showToast(err.response?.data?.message || 'Error al eliminar') }
     }
 
     // ── Acciones Inscripciones ───────────────────────────────────────────────
@@ -440,6 +467,7 @@ export default function Admin() {
                                                 <div className="admin__item-actions">
                                                     <button onClick={() => startEditSvc(svc)} className="admin__btn-edit">Editar</button>
                                                     <button onClick={() => handleDeleteSvc(svc._id, svc.name)} className="admin__btn-secondary">Desactivar</button>
+                                                    <button onClick={() => handleRemoveSvc(svc._id, svc.name)} className="admin__btn-danger">Eliminar</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -594,6 +622,7 @@ export default function Admin() {
                                                     <button onClick={() => handleToggleProd(p._id, p.name, p.active)} className="admin__btn-secondary">
                                                         {p.active ? 'Desactivar' : 'Activar'}
                                                     </button>
+                                                    <button onClick={() => handleDeleteProd(p._id, p.name)} className="admin__btn-danger">Eliminar</button>
                                                 </div>
                                             </div>
                                         ))}
@@ -753,6 +782,7 @@ export default function Admin() {
                                                     <button onClick={() => handleToggleWs(w._id, w.title, w.active)} className="admin__btn-secondary">
                                                         {w.active ? 'Desactivar' : 'Activar'}
                                                     </button>
+                                                    <button onClick={() => handleDeleteWs(w._id, w.title)} className="admin__btn-danger">Eliminar</button>
                                                 </div>
                                             </div>
                                         ))}

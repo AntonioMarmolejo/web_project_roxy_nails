@@ -1,5 +1,6 @@
 import Workshop from '../models/Workshop.js'
 import WorkshopEnrollment from '../models/WorkshopEnrollment.js'
+import { destroyImages } from '../config/cloudinary.js'
 
 // Adjunta spotsLeft a cada taller contando inscripciones activas (no canceladas)
 const withSpotsLeft = async (workshops) => {
@@ -66,6 +67,21 @@ export const toggleWorkshop = async (req, res, next) => {
         workshop.active = !workshop.active
         await workshop.save()
         res.json(workshop)
+    } catch (err) { next(err) }
+}
+
+// DELETE /workshops/:id/permanent — admin: borrado definitivo
+// Se bloquea si hay inscripciones vigentes; las canceladas conservan su copia del título y precio
+export const deleteWorkshopPermanent = async (req, res, next) => {
+    try {
+        const active = await WorkshopEnrollment.countDocuments({ workshop: req.params.id, status: { $in: ['pending', 'paid'] } })
+        if (active) {
+            return res.status(409).json({ message: `Este taller tiene ${active} inscripción(es) pendiente(s) o pagada(s). Cancélalas antes de eliminarlo, o desactívalo.` })
+        }
+        const workshop = await Workshop.findByIdAndDelete(req.params.id)
+        if (!workshop) return res.status(404).json({ message: 'Taller no encontrado' })
+        await destroyImages(workshop.image)
+        res.json({ message: 'Taller eliminado' })
     } catch (err) { next(err) }
 }
 

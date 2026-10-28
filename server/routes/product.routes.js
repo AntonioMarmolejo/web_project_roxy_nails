@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import Product from '../models/Product.js'
+import { destroyImages } from '../config/cloudinary.js'
 import { protect, adminOnly } from '../middleware/auth.middleware.js'
 
 const router = Router()
@@ -45,6 +46,16 @@ router.delete('/:id', protect, adminOnly, async (req, res, next) => {
     product.active = !product.active
     await product.save()
     res.json(product)
+  } catch (err) { next(err) }
+})
+
+// DELETE /products/:id/permanent — admin: borrado definitivo (los pedidos guardan copia de nombre/precio/imagen)
+router.delete('/:id/permanent', protect, adminOnly, async (req, res, next) => {
+  try {
+    const product = await Product.findByIdAndDelete(req.params.id)
+    if (!product) return res.status(404).json({ message: 'Producto no encontrado.' })
+    await destroyImages(product.images)
+    res.json({ message: 'Producto eliminado.' })
   } catch (err) { next(err) }
 })
 

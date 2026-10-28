@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import {
     getWorkshops, getAllWorkshops, getWorkshop,
-    createWorkshop, updateWorkshop, toggleWorkshop, likeWorkshop,
+    createWorkshop, updateWorkshop, toggleWorkshop, deleteWorkshopPermanent, likeWorkshop,
 } from '../controllers/workshop.controller.js'
 import { protect, adminOnly } from '../middleware/auth.middleware.js'
 
@@ -13,6 +13,7 @@ router.get('/:id',    getWorkshop)                          // público: detalle
 router.post('/',      protect, adminOnly, createWorkshop)
 router.put('/:id',    protect, adminOnly, updateWorkshop)
 router.delete('/:id', protect, adminOnly, toggleWorkshop)
+router.delete('/:id/permanent', protect, adminOnly, deleteWorkshopPermanent)
 router.patch('/:id/like', likeWorkshop) // público: dar/quitar like
 
 export default router

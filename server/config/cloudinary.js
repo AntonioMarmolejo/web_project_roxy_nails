@@ -13,3 +13,14 @@ export default function getCloudinary() {
   }
   return cloudinary
 }
+
+// Borra de Cloudinary las imágenes indicadas por URL (ignora las que no son de Cloudinary).
+// Un fallo solo se registra: no debe impedir el borrado del documento.
+export async function destroyImages(...urls) {
+  for (const url of urls.flat().filter(Boolean)) {
+    const publicId = url.match(/res\.cloudinary\.com\/[^/]+\/image\/upload\/(?:v\d+\/)?(.+)\.\w+$/)?.[1]
+    if (!publicId) continue
+    try { await getCloudinary().uploader.destroy(publicId) }
+    catch (err) { console.error('No se pudo borrar de Cloudinary:', err.message) }
+  }
+}
