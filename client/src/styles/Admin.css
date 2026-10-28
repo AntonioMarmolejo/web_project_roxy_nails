@@ -468,8 +468,19 @@
     padding: 4px 10px 10px;
     gap: 6px;
 }
+.admin__btn-danger {
+    background: #ffebee;
+    border: 1px solid #ef9a9a;
+    color: #c62828;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    cursor: pointer;
+    font-family: "Inter", sans-serif;
+}
 .admin__gallery-item .admin__btn-edit,
-.admin__gallery-item .admin__btn-secondary {
+.admin__gallery-item .admin__btn-secondary,
+.admin__gallery-item .admin__btn-danger {
     flex: 1;
     text-align: center;
     padding: 6px 8px;

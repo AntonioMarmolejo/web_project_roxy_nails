@@ -7,7 +7,7 @@ import { fetchAllProducts, createProduct, updateProduct, toggleProduct } from '.
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop } from '../api/workshops'
 import { fetchAllEnrollments, updateEnrollmentStatus } from '../api/enrollments'
-import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage } from '../api/gallery'
+import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGalleryImage, deleteGalleryImage } from '../api/gallery'
 import ImageInput from '../components/ImageInput'
 import '../styles/Admin.css'
 
@@ -312,6 +312,15 @@ export default function Admin() {
             setGalleryImages(g => g.map(x => x._id === id ? data : x))
             showToast(`Imagen ${data.active ? 'visible' : 'oculta'} ✓`)
         } catch { showToast('Error al cambiar estado') }
+    }
+    const handleDeleteGallery = async (id) => {
+        if (!window.confirm('¿Eliminar esta imagen definitivamente? Esta acción no se puede deshacer.')) return
+        try {
+            await deleteGalleryImage(id)
+            setGalleryImages(g => g.filter(x => x._id !== id))
+            if (editGallery === id) cancelEditGallery()
+            showToast('Imagen eliminada ✓')
+        } catch (err) { showToast(err.response?.data?.message || 'Error al eliminar') }
     }
 
     // ── Filtros ──────────────────────────────────────────────────────────────
@@ -877,6 +886,7 @@ export default function Admin() {
                                                     <button onClick={() => handleToggleGallery(g._id, g.active)} className="admin__btn-secondary">
                                                         {g.active ? 'Ocultar' : 'Mostrar'}
                                                     </button>
+                                                    <button onClick={() => handleDeleteGallery(g._id)} className="admin__btn-danger">Eliminar</button>
                                                 </div>
                                             </div>
                                         ))}

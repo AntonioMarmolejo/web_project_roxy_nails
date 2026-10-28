@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import GalleryImage from '../models/GalleryImage.js'
+import getCloudinary from '../config/cloudinary.js'
 import { protect, adminOnly } from '../middleware/auth.middleware.js'
 
 const router = Router()
@@ -45,6 +46,23 @@ router.delete('/:id', protect, adminOnly, async (req, res, next) => {
     image.active = !image.active
     await image.save()
     res.json(image)
+  } catch (err) { next(err) }
+})
+
+// DELETE /gallery/:id/permanent — admin: borrado definitivo (BD + Cloudinary)
+router.delete('/:id/permanent', protect, adminOnly, async (req, res, next) => {
+  try {
+    const image = await GalleryImage.findByIdAndDelete(req.params.id)
+    if (!image) return res.status(404).json({ message: 'Imagen no encontrada.' })
+
+    // Si la imagen está en Cloudinary, se borra también; un fallo aquí no revierte el borrado
+    const publicId = image.image.match(/res\.cloudinary\.com\/[^/]+\/image\/upload\/(?:v\d+\/)?(.+)\.\w+$/)?.[1]
+    if (publicId) {
+      try { await getCloudinary().uploader.destroy(publicId) }
+      catch (err) { console.error('No se pudo borrar de Cloudinary:', err.message) }
+    }
+
+    res.json({ message: 'Imagen eliminada.' })
   } catch (err) { next(err) }
 })
 
