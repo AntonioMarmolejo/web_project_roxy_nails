@@ -1,12 +1,13 @@
 {
-    "name": "Roxy Nails",
-    "short_name": "Roxy Nails",
-    "description": "Estudio de manicure y pedicure profesional. Agenda tu cita online.",
+    "name": "Captain's Barbería Studio Unisex",
+    "short_name": "Captain's",
+    "description": "Belleza, cuidado y estilo para todos. Tratamientos capilares, uñas, cejas y pestañas. Agenda tu cita online.",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#fdf0f5",
-    "theme_color": "#c2185b",
+    "background_color": "#0B0B0B",
+    "theme_color": "#0B0B0B",
     "icons": [
-        { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+        { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" },
+        { "src": "/og-image.png", "sizes": "1200x630", "type": "image/png" }
     ]
 }

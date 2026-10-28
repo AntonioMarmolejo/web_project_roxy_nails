@@ -1,7 +1,7 @@
 {
-  "name": "roxy-nails-server",
+  "name": "captains-api",
   "version": "1.0.0",
-  "description": "API REST para Roxy Nails",
+  "description": "API REST para Captain's Barbería Studio Unisex",
   "main": "server.js",
   "type": "module",
   "engines": {

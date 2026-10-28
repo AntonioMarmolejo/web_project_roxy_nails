@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <circle cx="32" cy="32" r="32" fill="#c2185b"/>
-  <text x="32" y="45" font-family="Georgia, 'Playfair Display', serif" font-size="36" font-weight="700" fill="#ffffff" text-anchor="middle">R</text>
+  <!-- Placeholder temporal hasta tener el logo de Captain's: "C" dorada sobre negro con marco art déco -->
+  <rect width="64" height="64" rx="12" fill="#0B0B0B"/>
+  <rect x="4.5" y="4.5" width="55" height="55" rx="9" fill="none" stroke="#C9A24B" stroke-width="1.5"/>
+  <text x="32" y="44" font-family="Cinzel, Georgia, 'Times New Roman', serif" font-size="34" font-weight="700" fill="#C9A24B" text-anchor="middle">C</text>
 </svg>
