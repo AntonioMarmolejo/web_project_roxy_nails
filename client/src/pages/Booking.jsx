@@ -7,13 +7,13 @@ import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
 import '../styles/Booking.css'
 import { brand } from '../config/brand'
+import { categoryIcon, formatPrice, formatDuration } from '../config/services'
 
 // ─── Calendar helpers ────────────────────────────────────────────
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 const ALL_SLOTS = ['09:00', '10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00', '18:00']
-const CAT_ICONS = { manicure: '💅', pedicure: '🦶', 'nail-art': '🎨', extensiones: '💎', retiro: '✨' }
 
 function getDaysGrid(year, month) {
     const firstJS = new Date(year, month, 1).getDay()
@@ -224,14 +224,14 @@ export default function Booking() {
                                     <div className="booking__service-image">
                                         {svc.image
                                             ? <img src={svc.image} alt={svc.name} />
-                                            : (CAT_ICONS[svc.category] || '💅')
+                                            : categoryIcon(svc.category)
                                         }
                                     </div>
                                     <div className="booking__service-body">
                                         <div className="booking__service-name">{svc.name}</div>
                                         <div className="booking__service-meta">
-                                            <span className="booking__service-price">${svc.price}</span>
-                                            <span className="booking__service-duration">{svc.duration} min</span>
+                                            <span className="booking__service-price">{formatPrice(svc.price)}</span>
+                                            <span className="booking__service-duration">{formatDuration(svc.duration)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -359,7 +359,7 @@ export default function Booking() {
                                 ['Servicio', selSvc?.name],
                                 ['Fecha', new Date(selDate + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })],
                                 ['Hora', selSlot],
-                                ['Precio', `$${selSvc?.price}`],
+                                ['Precio', formatPrice(selSvc?.price)],
                             ].map(([k, v]) => (
                                 <div key={k} className="booking__summary-row">
                                     <span className="booking__summary-key">{k}</span>

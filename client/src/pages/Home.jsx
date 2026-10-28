@@ -10,12 +10,14 @@ import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Home.css'
 import { brand } from '../config/brand'
 
+// Respaldo si la API no responde (muestra del catálogo real)
 const FALLBACK_SERVICES = [
-    { _id: '1', name: 'Manicure Gel', category: 'manicure', price: 25, duration: 60, featured: true, description: 'Acabado brillante que dura semanas.' },
-    { _id: '2', name: 'Pedicure Spa', category: 'pedicure', price: 30, duration: 75, featured: true, description: 'Ritual completo con piedras calientes.' },
-    { _id: '3', name: 'Nail Art', category: 'nail-art', price: 15, duration: 45, featured: false, description: 'Diseños personalizados a mano.' },
-    { _id: '4', name: 'Extensiones', category: 'extensiones', price: 45, duration: 90, featured: false, description: 'Extensiones de gel o acrílico.' },
-    { _id: '5', name: 'Retiro Gel', category: 'retiro', price: 10, duration: 30, featured: false, description: 'Retiro seguro sin dañar la uña.' },
+    { _id: 'f1', name: 'Botox capilar', category: 'capilar', price: null, duration: null, featured: true },
+    { _id: 'f2', name: 'Esmalte semipermanente – manos', category: 'unas', price: 25, duration: null, featured: true },
+    { _id: 'f3', name: 'Soft gel – diseño liso', category: 'unas', price: 18, duration: null, featured: true },
+    { _id: 'f4', name: 'Laminado de cejas', category: 'cejas', price: 25, duration: null, featured: true },
+    { _id: 'f5', name: 'Pestañas por punto – clásicas', category: 'pestanas', price: 20, duration: null, featured: true },
+    { _id: 'f6', name: 'Pestañas pelo a pelo – clásicas', category: 'pestanas', price: null, duration: null, featured: false },
 ]
 
 const SectionLabel = ({ children }) => (

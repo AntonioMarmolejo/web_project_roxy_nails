@@ -5,13 +5,9 @@ import LikeButton from '../components/LikeButton'
 import { fetchGalleryImages, likeGalleryImage } from '../api/gallery'
 import '../styles/Gallery.css'
 import { brand } from '../config/brand'
+import { SERVICE_CATEGORIES } from '../config/services'
 
-const CATS = [
-    { key: 'todas', label: 'Todas' },
-    { key: 'manicure', label: 'Manicure' },
-    { key: 'pedicure', label: 'Pedicure' },
-    { key: 'nail-art', label: 'Nail Art' },
-]
+const CATS = [{ key: 'todas', label: 'Todas' }, ...SERVICE_CATEGORIES]
 
 export default function Gallery() {
     const [images, setImages] = useState([])

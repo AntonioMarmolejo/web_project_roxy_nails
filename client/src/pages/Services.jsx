@@ -5,26 +5,19 @@ import PageHeader from '../components/PageHeader'
 import { fetchServices } from '../api/services'
 import '../styles/Services.css'
 import { brand } from '../config/brand'
+import { SERVICE_CATEGORIES } from '../config/services'
 
+// Respaldo si la API no responde (muestra del catálogo real)
 const FALLBACK = [
-    { _id: '1', name: 'Manicure Gel', category: 'manicure', price: 25, duration: 60, featured: true, description: 'Acabado brillante que dura semanas.' },
-    { _id: '2', name: 'Manicure Clásica', category: 'manicure', price: 12, duration: 40, featured: false, description: 'Limpieza, forma y esmalte regular.' },
-    { _id: '3', name: 'Pedicure Spa', category: 'pedicure', price: 30, duration: 75, featured: true, description: 'Ritual completo con piedras calientes.' },
-    { _id: '4', name: 'Pedicure Básico', category: 'pedicure', price: 18, duration: 50, featured: false, description: 'Limpieza y esmalte de pies.' },
-    { _id: '5', name: 'Nail Art', category: 'nail-art', price: 15, duration: 45, featured: false, description: 'Diseños personalizados a mano.' },
-    { _id: '6', name: 'Nail Art Premium', category: 'nail-art', price: 25, duration: 60, featured: false, description: 'Piedras, degradados y diseños complejos.' },
-    { _id: '7', name: 'Extensiones', category: 'extensiones', price: 45, duration: 90, featured: false, description: 'Extensiones de gel o acrílico.' },
-    { _id: '8', name: 'Retiro Gel', category: 'retiro', price: 10, duration: 30, featured: false, description: 'Retiro seguro sin dañar la uña.' },
+    { _id: 'f1', name: 'Botox capilar', category: 'capilar', price: null, duration: null, featured: true },
+    { _id: 'f2', name: 'Esmalte semipermanente – manos', category: 'unas', price: 25, duration: null, featured: true },
+    { _id: 'f3', name: 'Soft gel – diseño liso', category: 'unas', price: 18, duration: null, featured: true },
+    { _id: 'f4', name: 'Laminado de cejas', category: 'cejas', price: 25, duration: null, featured: true },
+    { _id: 'f5', name: 'Pestañas por punto – clásicas', category: 'pestanas', price: 20, duration: null, featured: true },
+    { _id: 'f6', name: 'Pestañas pelo a pelo – clásicas', category: 'pestanas', price: null, duration: null, featured: false },
 ]
 
-const CATS = [
-    { key: 'todas', label: 'Todas' },
-    { key: 'manicure', label: 'Manicure' },
-    { key: 'pedicure', label: 'Pedicure' },
-    { key: 'nail-art', label: 'Nail Art' },
-    { key: 'extensiones', label: 'Extensiones' },
-    { key: 'retiro', label: 'Retiro' },
-]
+const CATS = [{ key: 'todas', label: 'Todas' }, ...SERVICE_CATEGORIES]
 
 export default function Services() {
     const [services, setServices] = useState(FALLBACK)

@@ -5,6 +5,7 @@ import { fetchMyBookings, cancelMyBooking } from '../api/bookings'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyBookings.css'
 import { brand } from '../config/brand'
+import { formatPrice } from '../config/services'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -91,7 +92,7 @@ export default function MyBookings() {
                                         <div className="mybookings__meta-row">
                                             <span>📅 {dateStr}</span>
                                             <span>🕐 {b.timeSlot}</span>
-                                            {b.service?.price && <span className="mybookings__meta-price">💰 ${b.service.price}</span>}
+                                            {b.service && <span className="mybookings__meta-price">💰 {formatPrice(b.service.price)}</span>}
                                         </div>
                                         {b.notes && (
                                             <p className="mybookings__notes">

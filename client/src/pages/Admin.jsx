@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
-import { fetchServices, createService, updateService, deleteService, removeService } from '../api/services'
+import { fetchAllServices, createService, updateService, removeService } from '../api/services'
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
 import { fetchAllProducts, createProduct, updateProduct, toggleProduct, deleteProduct } from '../api/products'
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
@@ -11,15 +11,14 @@ import { fetchAllGalleryImages, createGalleryImage, updateGalleryImage, toggleGa
 import ImageInput from '../components/ImageInput'
 import '../styles/Admin.css'
 import { brand } from '../config/brand'
+import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
-const SVC_CATS     = ['manicure', 'pedicure', 'nail-art', 'extensiones', 'retiro']
 const PROD_CATS    = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
-const GALLERY_CATS = ['manicure', 'pedicure', 'nail-art']
-const EMPTY_SVC     = { name: '', description: '', price: '', duration: '', category: 'manicure', featured: false, image: '' }
+const EMPTY_SVC     = { name: '', description: '', price: '', duration: '', category: 'unas', featured: false, active: true, image: '' }
 const EMPTY_PROD    = { name: '', description: '', price: '', stock: '', brand: '', category: 'esmaltes', images: ['', '', ''] }
 const EMPTY_WS      = { title: '', description: '', date: '', duration: '', modality: 'presencial', price: '', spots: '', image: '' }
-const EMPTY_GALLERY = { image: '', category: 'manicure' }
+const EMPTY_GALLERY = { image: '', category: 'unas' }
 
 const BOOKING_STATUS = {
     pending:   { label: 'Pendiente',  bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -103,7 +102,7 @@ export default function Admin() {
     // ── Carga inicial ────────────────────────────────────────────────────────
     useEffect(() => {
         setFetching(true)
-        fetchServices()
+        fetchAllServices()
             .then(({ data }) => setServices(data))
             .catch(() => showToast('Error al cargar servicios'))
             .finally(() => setFetching(false))
@@ -159,11 +158,13 @@ export default function Admin() {
         const { name, value, type, checked } = e.target
         setSvcForm(f => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
     }
-    const startEditSvc  = (svc) => { setEditing(svc._id); setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price, duration: svc.duration, category: svc.category, featured: svc.featured, image: svc.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
+    const startEditSvc  = (svc) => { setEditing(svc._id); setSvcForm({ name: svc.name, description: svc.description || '', price: svc.price ?? '', duration: svc.duration ?? '', category: svc.category, featured: svc.featured, active: svc.active !== false, image: svc.image || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }) }
     const cancelEditSvc = () => { setEditing(null); setSvcForm(EMPTY_SVC) }
     const submitSvc = async (e) => {
         e.preventDefault(); setSvcLoad(true)
-        const payload = { ...svcForm, price: Number(svcForm.price), duration: Number(svcForm.duration) }
+        // Vacío → null: se muestra "Consultar precio" / "Duración a consultar"
+        const toNum = (v) => v === '' || v === null ? null : Number(v)
+        const payload = { ...svcForm, price: toNum(svcForm.price), duration: toNum(svcForm.duration) }
         try {
             if (editing) {
                 const { data } = await updateService(editing, payload)
@@ -178,10 +179,14 @@ export default function Admin() {
         } catch (err) { showToast(err.response?.data?.message || 'Error al guardar') }
         finally { setSvcLoad(false) }
     }
-    const handleDeleteSvc = async (id, name) => {
-        if (!window.confirm(`¿Desactivar "${name}"?`)) return
-        try { await deleteService(id); setServices(s => s.filter(x => x._id !== id)); showToast('Servicio desactivado ✓') }
-        catch { showToast('Error al eliminar') }
+    const handleToggleSvc = async (id, name, active) => {
+        if (!window.confirm(`¿${active ? 'Ocultar' : 'Mostrar'} "${name}"?`)) return
+        try {
+            const { data } = await updateService(id, { active: !active })
+            setServices(s => s.map(x => x._id === id ? data : x))
+            if (editing === id) setSvcForm(f => ({ ...f, active: data.active }))
+            showToast(`Servicio ${data.active ? 'visible' : 'oculto'} ✓`)
+        } catch (err) { showToast(err.response?.data?.message || 'Error al cambiar estado') }
     }
     const handleRemoveSvc = async (id, name) => {
         if (!window.confirm(`¿Eliminar "${name}" definitivamente? Esta acción no se puede deshacer.`)) return
@@ -427,9 +432,9 @@ export default function Admin() {
                     <>
                         <div className="admin__stats-grid--3">
                             {[
-                                { label: 'Servicios activos', value: services.length },
-                                { label: 'Destacados', value: services.filter(s => s.featured).length },
-                                { label: 'Categorías', value: new Set(services.map(s => s.category)).size },
+                                { label: 'Servicios activos', value: services.filter(s => s.active !== false).length },
+                                { label: 'Ocultos', value: services.filter(s => s.active === false).length },
+                                { label: 'Sin precio', value: services.filter(s => s.active !== false && !hasPrice(s)).length },
                             ].map(st => (
                                 <div key={st.label} className="admin__stat-tile admin__stat-tile--padded">
                                     <div className="admin__stat-value">{st.value}</div>
@@ -453,21 +458,22 @@ export default function Admin() {
                                 ) : (
                                     <div className="admin__list">
                                         {services.map(svc => (
-                                            <div key={svc._id} className={`admin__list-item${editing === svc._id ? ' admin__list-item--editing' : ''}`}>
+                                            <div key={svc._id} className={`admin__list-item${editing === svc._id ? ' admin__list-item--editing' : svc.active === false ? ' admin__list-item--inactive' : ''}`}>
                                                 <div>
                                                     <div className="admin__item-header">
                                                         <span className="admin__item-name">{svc.name}</span>
+                                                        {svc.active === false && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-neutral-bg)', '--badge-color': 'var(--color-neutral)' }}>Oculto</span>}
                                                         {svc.featured && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-primary-light)', '--badge-color': 'var(--color-primary-dark)' }}>Destacado</span>}
                                                     </div>
                                                     <div className="admin__item-meta">
-                                                        <span className="admin__item-meta-price">${svc.price}</span>
-                                                        <span>{svc.duration} min</span>
-                                                        <span className="admin__item-meta-cap">{svc.category}</span>
+                                                        <span className="admin__item-meta-price">{formatPrice(svc.price)}</span>
+                                                        <span>{formatDuration(svc.duration)}</span>
+                                                        <span className="admin__item-meta-cap">{categoryLabel(svc.category)}</span>
                                                     </div>
                                                 </div>
                                                 <div className="admin__item-actions">
                                                     <button onClick={() => startEditSvc(svc)} className="admin__btn-edit">Editar</button>
-                                                    <button onClick={() => handleDeleteSvc(svc._id, svc.name)} className="admin__btn-secondary">Desactivar</button>
+                                                    <button onClick={() => handleToggleSvc(svc._id, svc.name, svc.active !== false)} className="admin__btn-secondary">{svc.active === false ? 'Mostrar' : 'Ocultar'}</button>
                                                     <button onClick={() => handleRemoveSvc(svc._id, svc.name)} className="admin__btn-danger">Eliminar</button>
                                                 </div>
                                             </div>
@@ -482,17 +488,21 @@ export default function Admin() {
                                     {editing ? 'Editar servicio' : 'Nuevo servicio'}
                                 </h2>
                                 <form onSubmit={submitSvc} className="admin__form">
-                                    <div><label className="admin__label">Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} className="admin__input" placeholder="Manicure Gel" required /></div>
+                                    <div><label className="admin__label">Nombre *</label><input name="name" value={svcForm.name} onChange={handleSvc} className="admin__input" placeholder="Laminado de cejas" required /></div>
                                     <div><label className="admin__label">Descripción</label><input name="description" value={svcForm.description} onChange={handleSvc} className="admin__input" placeholder="Breve descripción" /></div>
                                     <div className="admin__form-row">
-                                        <div><label className="admin__label">Precio ($) *</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} className="admin__input" placeholder="25" required /></div>
-                                        <div><label className="admin__label">Duración (min) *</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin__input" placeholder="60" required /></div>
+                                        <div><label className="admin__label">Precio ($)</label><input name="price" type="number" min="0" step="0.01" value={svcForm.price} onChange={handleSvc} className="admin__input" placeholder="Consultar precio" /><p className="admin__hint">Dejar vacío = Consultar precio</p></div>
+                                        <div><label className="admin__label">Duración (min)</label><input name="duration" type="number" min="1" value={svcForm.duration} onChange={handleSvc} className="admin__input" placeholder="A consultar" /><p className="admin__hint">Dejar vacío = A consultar</p></div>
                                     </div>
-                                    <div><label className="admin__label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin__input">{SVC_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}</select></div>
+                                    <div><label className="admin__label">Categoría</label><select name="category" value={svcForm.category} onChange={handleSvc} className="admin__input">{SERVICE_CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}{svcForm.category && !SERVICE_CATEGORIES.some(c => c.key === svcForm.category) && <option value={svcForm.category}>{svcForm.category} (catálogo anterior)</option>}</select></div>
                                     <ImageInput label="Imagen" value={svcForm.image} onChange={(url) => setSvcForm(f => ({ ...f, image: url }))} />
                                     <label className="admin__checkbox-label">
                                         <input type="checkbox" name="featured" checked={svcForm.featured} onChange={handleSvc} />
                                         Marcar como destacado
+                                    </label>
+                                    <label className="admin__checkbox-label">
+                                        <input type="checkbox" name="active" checked={svcForm.active} onChange={handleSvc} />
+                                        Visible en el sitio (si lo desmarcas, queda oculto)
                                     </label>
                                     <div className="admin__form-actions">
                                         <button type="submit" disabled={svcLoad} className="admin__submit-btn">
@@ -550,8 +560,8 @@ export default function Admin() {
                                                     </div>
                                                     <div className="admin__record-meta">
                                                         <span>📅 {dateStr} · {b.timeSlot}</span>
-                                                        <span>💅 {b.service?.name}</span>
-                                                        {b.service?.price && <span className="admin__record-meta-price">${b.service.price}</span>}
+                                                        <span>✂️ {b.service?.name}</span>
+                                                        {b.service && <span className="admin__record-meta-price">{formatPrice(b.service.price)}</span>}
                                                     </div>
                                                     <div className="admin__record-contact">
                                                         {b.client?.phone && <span>📱 {b.client.phone}</span>}
@@ -908,7 +918,7 @@ export default function Admin() {
                                                     <img src={g.image} alt="" />
                                                 </div>
                                                 <div className="admin__gallery-info">
-                                                    <span className="admin__item-meta-cap">{g.category}</span>
+                                                    <span className="admin__item-meta-cap">{categoryLabel(g.category)}</span>
                                                     <span>❤️ {g.likes || 0}</span>
                                                     {!g.active && <span className="admin__item-badge" style={{ '--badge-bg': 'var(--color-neutral-bg)', '--badge-color': 'var(--color-text-muted)' }}>Oculta</span>}
                                                 </div>
@@ -938,7 +948,7 @@ export default function Admin() {
                                             onChange={(e) => setGalleryForm(f => ({ ...f, category: e.target.value }))}
                                             className="admin__input"
                                         >
-                                            {GALLERY_CATS.map(c => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>)}
+                                            {SERVICE_CATEGORIES.map(c => <option key={c.key} value={c.key}>{c.label}</option>)}{galleryForm.category && !SERVICE_CATEGORIES.some(c => c.key === galleryForm.category) && <option value={galleryForm.category}>{galleryForm.category} (anterior)</option>}
                                         </select>
                                     </div>
                                     <ImageInput label="Foto *" value={galleryForm.image} onChange={(url) => setGalleryForm(f => ({ ...f, image: url }))} />

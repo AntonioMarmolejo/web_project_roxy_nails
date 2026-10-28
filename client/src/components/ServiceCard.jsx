@@ -2,20 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LikeButton from './LikeButton'
 import '../styles/ServiceCard.css'
-
-const ICONS = {
-    manicure: '💅',
-    pedicure: '🦶',
-    'nail-art': '🎨',
-    extensiones: '💎',
-    retiro: '✨',
-}
+import { categoryIcon, formatPrice, formatDuration, hasPrice } from '../config/services'
 
 const CLOSE_MS = 350
 
 export default function ServiceCard({ service, onClick }) {
     const navigate = useNavigate()
-    const icon = ICONS[service.category] || '💅'
+    const icon = categoryIcon(service.category)
     const [open, setOpen] = useState(false)
     const [visible, setVisible] = useState(false)
 
@@ -89,10 +82,10 @@ export default function ServiceCard({ service, onClick }) {
 
                             <div className="service-modal__footer">
                                 <span className="service-modal__price">
-                                    desde ${service.price}
+                                    {hasPrice(service) ? `desde ${formatPrice(service.price)}` : formatPrice(service.price)}
                                 </span>
                                 <span className="service-modal__duration">
-                                    {service.duration} min
+                                    {formatDuration(service.duration)}
                                 </span>
                             </div>
 

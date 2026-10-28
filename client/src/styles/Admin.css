@@ -487,3 +487,11 @@
     padding: 6px 8px;
     font-size: 11px;
 }
+.admin__list-item--inactive {
+    opacity: 0.6;
+}
+.admin__hint {
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--color-text-muted);
+}
