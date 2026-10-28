@@ -163,7 +163,7 @@ export default function Booking() {
         return (
             <div className="booking__success-wrap">
                 <div className="booking__success-card">
-                    <div className="booking__success-icon">💅</div>
+                    <div className="booking__success-icon">✂️</div>
                     <h2 className="booking__success-title">
                         ¡Cita agendada!
                     </h2>
@@ -400,7 +400,7 @@ export default function Booking() {
                                     ← Atrás
                                 </button>
                                 <button type="submit" disabled={submitting} className={`btn btn--primary booking__btn-flex2${submitting ? ' btn--disabled' : ''}`}>
-                                    {submitting ? 'Confirmando...' : 'Confirmar cita 💅'}
+                                    {submitting ? 'Confirmando...' : 'Confirmar cita'}
                                 </button>
                             </div>
                         </form>

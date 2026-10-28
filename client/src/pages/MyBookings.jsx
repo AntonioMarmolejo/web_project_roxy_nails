@@ -59,7 +59,7 @@ export default function MyBookings() {
                     </p>
                 ) : bookings.length === 0 ? (
                     <div className="mybookings__empty">
-                        <div className="mybookings__empty-icon">💅</div>
+                        <div className="mybookings__empty-icon">📅</div>
                         <h3 className="mybookings__empty-title">Aún no tienes citas</h3>
                         <p className="mybookings__empty-sub">
                             Cuando agendes, aparecerán aquí con todos los detalles.

@@ -12,7 +12,7 @@ export default function NotFound() {
             </Helmet>
 
             <div className="not-found">
-                <div className="not-found__icon">💅</div>
+                <div className="not-found__icon">✂️</div>
                 <h1 className="not-found__title">404</h1>
                 <p className="not-found__sub">
                     Uy, esta página no existe o fue movida.
