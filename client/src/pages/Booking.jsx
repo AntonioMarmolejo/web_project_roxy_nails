@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
 import PageHeader from '../components/PageHeader'
@@ -98,6 +98,14 @@ export default function Booking() {
     useEffect(() => {
         fetchServices().then(({ data }) => setServices(data)).catch(() => { })
     }, [])
+
+    // Al cambiar de paso, subir hasta el inicio del formulario (si no, se queda a mitad de página)
+    const containerRef = useRef(null)
+    const firstStep = useRef(true)
+    useEffect(() => {
+        if (firstStep.current) { firstStep.current = false; return }
+        containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, [step])
 
     useEffect(() => {
         const id = location.state?.serviceId
@@ -241,7 +249,7 @@ export default function Booking() {
                 subtitle="Elige tu servicio, fecha y hora favorita en minutos."
             />
 
-            <div className="booking__container">
+            <div ref={containerRef} className={`booking__container${step === 1 && selSvc ? ' booking__container--floating-next' : ''}`}>
                 <Stepper step={step} />
 
                 {/* ── Paso 1: Servicio ─────────────────────────── */}
@@ -269,11 +277,13 @@ export default function Booking() {
                                 </div>
                             ))}
                         </div>
-                        <div className="booking__nav-row">
-                            <button onClick={() => setStep(2)} disabled={!selSvc} className={`btn btn--primary booking__btn-next${!selSvc ? ' btn--disabled' : ''}`}>
-                                Siguiente →
+                        {/* Al elegir un servicio aparece fijo abajo, para no tener que bajar hasta el final de la lista */}
+                        {selSvc && (
+                            <button onClick={() => setStep(2)} className="btn btn--primary booking__floating-next">
+                                <span className="booking__floating-next-name">{selSvc.name}</span>
+                                <span className="booking__floating-next-label">Siguiente →</span>
                             </button>
-                        </div>
+                        )}
                     </div>
                 )}
 

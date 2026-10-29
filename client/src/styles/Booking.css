@@ -26,6 +26,7 @@
     max-width: 680px;
     margin: 0 auto;
     padding: 3rem 2rem;
+    scroll-margin-top: 80px;   /* que el menú fijo no tape el paso al subir */
 }
 
 /* Stepper */
@@ -404,4 +405,64 @@
     background: var(--color-surface-soft);
     border-radius: 10px;
     padding: 10px 14px;
+}
+
+/* Botón "Siguiente" fijo abajo en el paso 1, a la altura del botón de WhatsApp sin taparlo */
+.booking__container--floating-next {
+    padding-bottom: 110px;   /* que el botón no tape la última tarjeta */
+}
+.btn.booking__floating-next {   /* .btn: gana a la regla de botones a ancho completo en celular */
+    position: fixed;
+    z-index: 900;
+    bottom: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(420px, calc(100% - 180px));
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 22px;
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    animation: booking-floating-in 0.25s ease-out;
+}
+.booking__floating-next-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.85;
+}
+.booking__floating-next-label {
+    flex-shrink: 0;
+    font-size: 14px;
+    font-weight: 700;
+}
+@keyframes booking-floating-in {
+    from { opacity: 0; transform: translate(-50%, 16px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (max-width: 480px) {
+    /* En celular el botón de WhatsApp está a 84px del borde y mide 50px */
+    .btn.booking__floating-next {   /* .btn: gana a la regla de botones a ancho completo en celular */
+        bottom: 84px;
+        left: 16px;
+        right: 78px;
+        width: auto;
+        height: 50px;
+        padding: 0 18px;
+        transform: none;
+        animation-name: booking-floating-in-mobile;
+    }
+    .booking__container--floating-next {
+        padding-bottom: 160px;
+    }
+}
+@keyframes booking-floating-in-mobile {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
