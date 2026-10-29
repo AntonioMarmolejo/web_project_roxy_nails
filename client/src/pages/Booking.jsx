@@ -80,6 +80,7 @@ export default function Booking() {
     const [slots, setSlots] = useState({ available: [], booked: [] })
     const [loadingSlots, setLoadSlots] = useState(false)
     const [selSlot, setSelSlot] = useState(null)
+    const [slotNotice, setSlotNotice] = useState('')
 
     const [form, setForm] = useState({ name: '', phone: '', email: '', notes: '' })
     const [submitting, setSubmitting] = useState(false)
@@ -122,6 +123,7 @@ export default function Booking() {
         const dateStr = toDateStr(calYear, calMonth, day)
         setSelDate(dateStr)
         setSelSlot(null)
+        setSlotNotice('')
         loadSlots(dateStr)
     }
 
@@ -144,7 +146,16 @@ export default function Booking() {
             })
             setResult(data)
         } catch (err) {
-            setError(err.response?.data?.message || 'Error al crear la cita. Intenta de nuevo.')
+            const message = err.response?.data?.message
+            if (err.response?.status === 409) {
+                // Otra persona tomó esa hora mientras tanto: volver a elegir con la disponibilidad al día
+                setSelSlot(null)
+                setSlotNotice(message)
+                setStep(3)
+                loadSlots(selDate)
+                return
+            }
+            setError(message || 'Error al crear la cita. Intenta de nuevo.')
         } finally {
             setSubmitting(false)
         }
@@ -152,7 +163,7 @@ export default function Booking() {
 
     const resetWizard = () => {
         setResult(null); setStep(1); setSelSvc(null)
-        setSelDate(null); setSelSlot(null); setError('')
+        setSelDate(null); setSelSlot(null); setError(''); setSlotNotice('')
     }
 
     // ── Pantalla de éxito ─────────────────────────────────────────
@@ -307,6 +318,10 @@ export default function Booking() {
                             })}
                         </p>
 
+                        {slotNotice && (
+                            <div className="booking__error-box" style={{ marginBottom: 14 }}>{slotNotice}</div>
+                        )}
+
                         {loadingSlots ? (
                             <p className="booking__loading-note">
                                 Consultando disponibilidad...
@@ -318,7 +333,7 @@ export default function Booking() {
                                         const avail = slots.available.includes(slot)
                                         const selected = slot === selSlot
                                         return (
-                                            <button key={slot} onClick={() => avail && setSelSlot(slot)}
+                                            <button key={slot} onClick={() => { if (avail) { setSelSlot(slot); setSlotNotice('') } }}
                                                 className={`booking__slot-btn${selected ? ' booking__slot-btn--selected' : ''}${!avail ? ' booking__slot-btn--unavailable' : ''}`}>
                                                 {slot}
                                                 {!avail && <div className="booking__slot-unavailable-label">Ocupado</div>}

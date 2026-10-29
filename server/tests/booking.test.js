@@ -1,0 +1,122 @@
+import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import request from 'supertest'
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+import app from '../app.js'
+import Booking from '../models/Booking.js'
+import Service from '../models/Service.js'
+import User from '../models/User.js'
+
+dotenv.config()
+
+// Fechas lejanas para no chocar con citas reales de la base local
+const DAY = '2099-03-03'      // martes
+const SUNDAY = '2099-03-01'
+const ADMIN_EMAIL = 'test-booking-admin@test.local'
+
+let service
+let adminToken
+
+const book = (overrides = {}) => request(app).post('/api/v1/bookings').send({
+    client: { name: 'Prueba', phone: '0999999999' },
+    service: service._id,
+    date: DAY,
+    timeSlot: '09:00',
+    ...overrides,
+})
+
+const cleanup = async () => {
+    await Booking.deleteMany({ date: { $gte: new Date('2099-01-01'), $lt: new Date('2100-01-01') } })
+    await Service.deleteMany({ name: 'Servicio de prueba (citas)' })
+    await User.deleteOne({ email: ADMIN_EMAIL })
+}
+
+beforeAll(async () => {
+    if (mongoose.connection.readyState === 0) {
+        await mongoose.connect(process.env.MONGO_URI)
+    }
+    await cleanup()
+    service = await Service.create({ name: 'Servicio de prueba (citas)', category: 'capilar' })
+    const admin = await User.create({ name: 'Admin prueba', email: ADMIN_EMAIL, password: 'x1234567', role: 'admin' })
+    adminToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '10m' })
+})
+
+afterAll(async () => {
+    await cleanup()
+    await mongoose.disconnect()
+})
+
+describe('Citas — una sola cita por hora', () => {
+    it('un día vacío tiene todas las horas libres', async () => {
+        const res = await request(app).get('/api/v1/bookings/slots').query({ date: DAY })
+        expect(res.status).toBe(200)
+        expect(res.body.available).toHaveLength(9)
+        expect(res.body.booked).toEqual([])
+    })
+
+    it('reserva una hora libre', async () => {
+        const res = await book()
+        expect(res.status).toBe(201)
+        expect(res.body.timeSlot).toBe('09:00')
+        expect(res.body.slotKey).toBeUndefined()
+    })
+
+    it('rechaza otra cita en la misma hora con 409', async () => {
+        const res = await book()
+        expect(res.status).toBe(409)
+        expect(res.body.message).toMatch(/reservada/)
+    })
+
+    it('si varias personas reservan a la vez, solo una lo consigue', async () => {
+        const results = await Promise.all([1, 2, 3, 4].map(() => book({ timeSlot: '10:00' })))
+        const codes = results.map(r => r.status).sort()
+        expect(codes).toEqual([201, 409, 409, 409])
+        expect(await Booking.countDocuments({ timeSlot: '10:00', date: new Date(`${DAY}T00:00:00Z`) })).toBe(1)
+    })
+
+    it('las horas ocupadas aparecen como no disponibles', async () => {
+        const res = await request(app).get('/api/v1/bookings/slots').query({ date: DAY })
+        expect(res.body.booked).toEqual(['09:00', '10:00'])
+        expect(res.body.available).not.toContain('09:00')
+    })
+
+    it('al cancelar se libera la hora, y no se puede reactivar si otra persona la tomó', async () => {
+        const first = await Booking.findOne({ timeSlot: '09:00', date: new Date(`${DAY}T00:00:00Z`) })
+        const auth = { Authorization: `Bearer ${adminToken}` }
+
+        const cancel = await request(app).patch(`/api/v1/bookings/${first._id}`).set(auth).send({ status: 'cancelled' })
+        expect(cancel.status).toBe(200)
+
+        expect((await book()).status).toBe(201)   // otra persona toma las 09:00
+
+        const reactivate = await request(app).patch(`/api/v1/bookings/${first._id}`).set(auth).send({ status: 'confirmed' })
+        expect(reactivate.status).toBe(409)
+    })
+
+    it('cuando el cliente cancela su propia cita, la hora queda libre', async () => {
+        const auth = { Authorization: `Bearer ${adminToken}` }
+        const mine = await book({ timeSlot: '14:00' }).set(auth)
+        expect(mine.status).toBe(201)
+
+        const cancel = await request(app).patch(`/api/v1/bookings/${mine.body._id}/cancel`).set(auth)
+        expect(cancel.status).toBe(200)
+        expect((await book({ timeSlot: '14:00' })).status).toBe(201)
+    })
+
+    it('rechaza horas, fechas y servicios no válidos', async () => {
+        expect((await book({ timeSlot: '13:00' })).status).toBe(400)
+        expect((await book({ timeSlot: '07:30' })).status).toBe(400)
+        expect((await book({ date: SUNDAY })).status).toBe(400)
+        expect((await book({ date: '2020-01-07' })).status).toBe(400)
+        expect((await book({ date: 'mañana' })).status).toBe(400)
+        expect((await book({ service: new mongoose.Types.ObjectId() })).status).toBe(400)
+    })
+
+    it('no deja que el cliente fije el estado ni el lugar de la cita', async () => {
+        const res = await book({ timeSlot: '11:00', status: 'confirmed', slotKey: `${DAY}|12:00|1` })
+        expect(res.status).toBe(201)
+        expect(res.body.status).toBe('pending')
+        expect((await book({ timeSlot: '12:00' })).status).toBe(201)
+    })
+})

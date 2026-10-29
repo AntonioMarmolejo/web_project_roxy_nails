@@ -12,6 +12,11 @@ const bookingSchema = new mongoose.Schema({
   notes:     { type: String },
   status:    { type: String, enum: ['pending', 'confirmed', 'cancelled', 'completed'], default: 'pending' },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  // Lugar que ocupa la cita: "AAAA-MM-DD|HH:MM|n" (n = 1..capacidad). Único, para que dos citas
+  // no puedan quedarse con el mismo lugar aunque lleguen a la vez. Se quita al cancelar.
+  slotKey:   { type: String, select: false },
 }, { timestamps: true })
+
+bookingSchema.index({ slotKey: 1 }, { unique: true, sparse: true })
 
 export default mongoose.model('Booking', bookingSchema)
