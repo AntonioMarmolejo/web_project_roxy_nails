@@ -13,9 +13,11 @@ dotenv.config()
 // Fechas lejanas para no chocar con citas reales de la base local
 const DAY = '2099-03-03'      // martes
 const SUNDAY = '2099-03-01'
+const DAY2 = '2099-03-04'     // miércoles, para las pruebas de duración
 const ADMIN_EMAIL = 'test-booking-admin@test.local'
 
 let service
+let alisado   // dura 120 minutos
 let adminToken
 
 const book = (overrides = {}) => request(app).post('/api/v1/bookings').send({
@@ -28,7 +30,7 @@ const book = (overrides = {}) => request(app).post('/api/v1/bookings').send({
 
 const cleanup = async () => {
     await Booking.deleteMany({ date: { $gte: new Date('2099-01-01'), $lt: new Date('2100-01-01') } })
-    await Service.deleteMany({ name: 'Servicio de prueba (citas)' })
+    await Service.deleteMany({ name: /de prueba (citas)$/ })
     await User.deleteOne({ email: ADMIN_EMAIL })
 }
 
@@ -38,6 +40,7 @@ beforeAll(async () => {
     }
     await cleanup()
     service = await Service.create({ name: 'Servicio de prueba (citas)', category: 'capilar' })
+    alisado = await Service.create({ name: 'Alisado de prueba (citas)', category: 'capilar', duration: 120 })
     const admin = await User.create({ name: 'Admin prueba', email: ADMIN_EMAIL, password: 'x1234567', role: 'admin' })
     adminToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '10m' })
 })
@@ -118,5 +121,48 @@ describe('Citas — una sola cita por hora', () => {
         expect(res.status).toBe(201)
         expect(res.body.status).toBe('pending')
         expect((await book({ timeSlot: '12:00' })).status).toBe(201)
+    })
+})
+
+describe('Citas — según lo que dura cada servicio', () => {
+    const slotsFor = (svc) => request(app).get('/api/v1/bookings/slots').query({ date: DAY2, service: String(svc._id) })
+
+    it('un servicio de 2 horas no puede empezar a las 12:00 (almuerzo) ni a las 18:00 (cierre)', async () => {
+        const res = await slotsFor(alisado)
+        expect(res.body.available).toEqual(['09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'])
+        expect((await book({ service: alisado._id, date: DAY2, timeSlot: '12:00' })).status).toBe(400)
+        expect((await book({ service: alisado._id, date: DAY2, timeSlot: '18:00' })).status).toBe(400)
+    })
+
+    it('un alisado a las 10:00 ocupa también las 11:00', async () => {
+        expect((await book({ service: alisado._id, date: DAY2, timeSlot: '10:00' })).status).toBe(201)
+
+        expect((await book({ service: alisado._id, date: DAY2, timeSlot: '11:00' })).status).toBe(409)
+        expect((await book({ date: DAY2, timeSlot: '11:00' })).status).toBe(409)
+        expect((await book({ service: alisado._id, date: DAY2, timeSlot: '09:00' })).status).toBe(409)
+    })
+
+    it('la disponibilidad lo refleja según el servicio elegido', async () => {
+        const corto = await slotsFor(service)
+        expect(corto.body.available).toContain('09:00')
+        expect(corto.body.available).not.toContain('10:00')
+        expect(corto.body.available).not.toContain('11:00')
+
+        const largo = await slotsFor(alisado)
+        expect(largo.body.available).not.toContain('09:00')   // chocaría con las 10:00
+        expect(largo.body.available).toContain('14:00')
+    })
+
+    it('a las 12:00 sí queda lugar para un servicio de 1 hora', async () => {
+        expect((await book({ date: DAY2, timeSlot: '12:00' })).status).toBe(201)
+    })
+
+    it('si dos servicios que se cruzan se reservan a la vez, solo uno lo consigue', async () => {
+        const results = await Promise.all([
+            book({ service: alisado._id, date: DAY2, timeSlot: '15:00' }),
+            book({ service: alisado._id, date: DAY2, timeSlot: '16:00' }),
+            book({ date: DAY2, timeSlot: '16:00' }),
+        ])
+        expect(results.filter(r => r.status === 201)).toHaveLength(1)
     })
 })

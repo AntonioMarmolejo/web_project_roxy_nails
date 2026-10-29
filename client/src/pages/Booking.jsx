@@ -28,6 +28,14 @@ function toDateStr(year, month, day) {
     return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 }
 
+// "10:00" + 90 min → "10:00 – 11:30" (solo la hora de inicio si no hay duración)
+function timeRange(slot, duration) {
+    if (!slot || !duration) return slot
+    const total = Number(slot.slice(0, 2)) * 60 + Number(slot.slice(3)) + duration
+    const end = `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`
+    return `${slot} – ${end}`
+}
+
 function isPastOrSunday(year, month, day) {
     const today = new Date(); today.setHours(0, 0, 0, 0)
     const d = new Date(year, month, day)
@@ -110,7 +118,7 @@ export default function Booking() {
     const loadSlots = async (dateStr) => {
         setLoadSlots(true)
         try {
-            const { data } = await fetchSlots(dateStr)
+            const { data } = await fetchSlots(dateStr, selSvc?._id)
             setSlots(data)
         } catch {
             setSlots({ available: [], booked: [] })
@@ -124,8 +132,14 @@ export default function Booking() {
         setSelDate(dateStr)
         setSelSlot(null)
         setSlotNotice('')
-        loadSlots(dateStr)
     }
+
+    // Las horas libres dependen de la fecha y de cuánto dura el servicio elegido
+    useEffect(() => {
+        if (!selDate || !selSvc) return
+        setSelSlot(null)
+        loadSlots(selDate)
+    }, [selDate, selSvc?._id])
 
     const handleForm = (e) => {
         const { name, value } = e.target
@@ -185,7 +199,7 @@ export default function Booking() {
                         {[
                             ['Servicio', result.service?.name || selSvc?.name],
                             ['Fecha', dateFormatted],
-                            ['Hora', result.timeSlot],
+                            ['Hora', timeRange(result.timeSlot, selSvc?.duration)],
                             ['Cliente', result.client?.name],
                         ].map(([k, v]) => (
                             <div key={k} className="booking__summary-row">
@@ -317,6 +331,11 @@ export default function Booking() {
                                 weekday: 'long', day: 'numeric', month: 'long',
                             })}
                         </p>
+                        {selSvc?.duration > 60 && (
+                            <p className="booking__step-sub">
+                                {selSvc.name} dura {formatDuration(selSvc.duration)}: solo se muestran las horas en las que alcanza a terminar.
+                            </p>
+                        )}
 
                         {slotNotice && (
                             <div className="booking__error-box" style={{ marginBottom: 14 }}>{slotNotice}</div>
@@ -336,7 +355,7 @@ export default function Booking() {
                                             <button key={slot} onClick={() => { if (avail) { setSelSlot(slot); setSlotNotice('') } }}
                                                 className={`booking__slot-btn${selected ? ' booking__slot-btn--selected' : ''}${!avail ? ' booking__slot-btn--unavailable' : ''}`}>
                                                 {slot}
-                                                {!avail && <div className="booking__slot-unavailable-label">Ocupado</div>}
+                                                {!avail && <div className="booking__slot-unavailable-label">No disponible</div>}
                                             </button>
                                         )
                                     })}
@@ -373,7 +392,7 @@ export default function Booking() {
                             {[
                                 ['Servicio', selSvc?.name],
                                 ['Fecha', new Date(selDate + 'T00:00:00').toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })],
-                                ['Hora', selSlot],
+                                ['Hora', timeRange(selSlot, selSvc?.duration)],
                                 ['Precio', formatPrice(selSvc?.price)],
                             ].map(([k, v]) => (
                                 <div key={k} className="booking__summary-row">

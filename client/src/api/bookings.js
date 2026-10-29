@@ -1,6 +1,6 @@
 import api from './axios'
 
-export const fetchSlots = (date) => api.get('/bookings/slots', { params: { date } })
+export const fetchSlots = (date, service) => api.get('/bookings/slots', { params: { date, service } })
 export const createBooking = (data) => api.post('/bookings', data)
 export const fetchMyBookings = () => api.get('/bookings/my')
 export const cancelMyBooking = (id) => api.patch(`/bookings/${id}/cancel`)

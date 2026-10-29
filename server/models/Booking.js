@@ -12,11 +12,12 @@ const bookingSchema = new mongoose.Schema({
   notes:     { type: String },
   status:    { type: String, enum: ['pending', 'confirmed', 'cancelled', 'completed'], default: 'pending' },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  // Lugar que ocupa la cita: "AAAA-MM-DD|HH:MM|n" (n = 1..capacidad). Único, para que dos citas
-  // no puedan quedarse con el mismo lugar aunque lleguen a la vez. Se quita al cancelar.
-  slotKey:   { type: String, select: false },
+  // Horas que ocupa la cita según la duración del servicio: "AAAA-MM-DD|HH:MM|n" por cada hora
+  // (n = trabajadora 1..capacidad). Únicas entre citas, para que dos citas no se crucen aunque
+  // lleguen a la vez. Se quitan al cancelar. Sin valor por defecto: un [] vacío chocaría en el índice.
+  slotKeys:  { type: [String], default: undefined },
 }, { timestamps: true })
 
-bookingSchema.index({ slotKey: 1 }, { unique: true, sparse: true })
+bookingSchema.index({ slotKeys: 1 }, { unique: true, sparse: true })
 
 export default mongoose.model('Booking', bookingSchema)
