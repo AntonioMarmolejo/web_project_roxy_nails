@@ -103,7 +103,14 @@ export default function Booking() {
         const id = location.state?.serviceId
         if (!id || services.length === 0) return
         const match = services.find(s => s._id === id)
-        if (match) setSelSvc(match)
+        if (!match) return
+        setSelSvc(match)
+        // Llevar la vista al servicio elegido desde la tarjeta, para que se vea sin buscarlo
+        const timer = setTimeout(() => {
+            document.querySelector(`[data-service-id="${id}"]`)
+                ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        }, 150)
+        return () => clearTimeout(timer)
     }, [services, location.state])
 
     useEffect(() => {
@@ -245,7 +252,7 @@ export default function Booking() {
                         </h2>
                         <div className="booking__services-grid">
                             {services.map(svc => (
-                                <div key={svc._id} onClick={() => setSelSvc(svc)} className={`booking__service-option${selSvc?._id === svc._id ? ' booking__service-option--selected' : ''}`}>
+                                <div key={svc._id} data-service-id={svc._id} onClick={() => setSelSvc(svc)} className={`booking__service-option${selSvc?._id === svc._id ? ' booking__service-option--selected' : ''}`}>
                                     <div className="booking__service-image">
                                         {svc.image
                                             ? <img src={svc.image} alt={svc.name} />
