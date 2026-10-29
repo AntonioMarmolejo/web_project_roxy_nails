@@ -37,7 +37,7 @@ export default function Footer() {
                 </div>
                 <div>
                     <h4 className="footer__heading">Contacto</h4>
-                    {['📍 Puerto Ayora . Galapagos', `📞 ${brand.phone}`, '🕐 Lun–Sáb 8–19h'].map(c => (
+                    {['📍 Puerto Ayora, Galápagos', `📞 ${brand.phone}`, '🕐 Lun–Sáb 8–19h'].map(c => (
                         <p key={c} className="footer__text">{c}</p>
                     ))}
                 </div>
