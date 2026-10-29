@@ -15,6 +15,7 @@ import '../styles/ImageInput.css'
 import '../styles/Admin.css'
 import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
+import AdminSlides from '../components/AdminSlides'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
@@ -429,6 +430,7 @@ export default function Admin() {
                     <button onClick={() => setTab('pedidos')}   className={`admin__tab-btn${tab === 'pedidos' ? ' admin__tab-btn--active' : ''}`}>📦 Pedidos</button>
                     <button onClick={() => setTab('talleres')}  className={`admin__tab-btn${tab === 'talleres' ? ' admin__tab-btn--active' : ''}`}>🎓 Talleres</button>
                     <button onClick={() => setTab('galeria')}   className={`admin__tab-btn${tab === 'galeria' ? ' admin__tab-btn--active' : ''}`}>🖼️ Galería</button>
+                    <button onClick={() => setTab('portada')}   className={`admin__tab-btn${tab === 'portada' ? ' admin__tab-btn--active' : ''}`}>🎞️ Portada</button>
                     <button onClick={() => setTab('banner')}    className={`admin__tab-btn${tab === 'banner' ? ' admin__tab-btn--active' : ''}`}>📣 Banner</button>
                 </div>
 
@@ -888,6 +890,7 @@ export default function Admin() {
                 )}
 
                 {/* ════════ BANNER ════════ */}
+                {tab === 'portada' && <AdminSlides showToast={showToast} />}
                 {tab === 'banner' && <AdminBanner showToast={showToast} />}
 
                 {/* ════════ GALERÍA ════════ */}

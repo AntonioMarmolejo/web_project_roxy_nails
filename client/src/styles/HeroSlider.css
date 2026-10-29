@@ -28,8 +28,8 @@
     font-weight: 500;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: var(--tag-bg);
-    color: var(--tag-color);
+    background: var(--color-surface-chip);
+    color: var(--color-primary-light);
     padding: 5px 16px;
     border-radius: 20px;
     display: inline-block;
@@ -45,7 +45,7 @@
 }
 .hero__title em {
     font-style: italic;
-    color: var(--em-color);
+    color: var(--color-primary);
 }
 .hero__sub {
     font-size: 16px;
@@ -138,4 +138,11 @@
     height: 8px;
     border-radius: 4px;
     background: var(--color-primary);
+}
+
+/* Hueco mientras cargan las diapositivas (mismo alto que el carrusel en celular) */
+@media (max-width: 640px) {
+    .hero.hero--loading {
+        min-height: 455px;
+    }
 }

@@ -1,116 +1,111 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { fetchSlides } from '../api/slides'
 import '../styles/HeroSlider.css'
 
-const SLIDES = [
-    {
-        tag: '✨ Más solicitado',
-        tagBg: 'var(--color-surface-chip)', tagColor: 'var(--color-primary-light)',
-        title: ['Manicure ', 'gel', ' que dura semanas'],
-        titleEm: 1,
-        emColor: 'var(--color-primary)',
-        sub: 'Colores que no se despegan, acabados que brillan. Tu estilo, sin preocupaciones.',
-        bg: 'linear-gradient(135deg, var(--color-bg) 55%, var(--color-surface-soft) 100%)',
-        btnPrimary: { label: 'Ver precios', to: '/servicios', color: 'var(--color-primary)' },
-        btnGhost: { label: 'Agendar ahora', to: '/agendar', color: 'var(--color-primary)' },
-        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258154/roxy-nails/fo64nw2o6szi9a2m2moo.jpg',
-    },
-    {
-        tag: '🌸 Relajación total',
-        tagBg: 'var(--color-surface-chip)', tagColor: 'var(--color-primary-light)',
-        title: ['Pedicure ', 'spa', ' con piedras calientes'],
-        titleEm: 1,
-        emColor: 'var(--color-primary)',
-        sub: 'Un ritual completo de cuidado desde la rodilla hasta las puntas.',
-        bg: 'linear-gradient(135deg, var(--color-bg) 55%, var(--color-surface-soft) 100%)',
-        btnPrimary: { label: 'Reservar', to: '/agendar', color: 'var(--color-primary)' },
-        btnGhost: { label: 'Ver detalles', to: '/servicios', color: 'var(--color-primary)' },
-        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258204/roxy-nails/kn1ddmkumimcfxboibof.jpg',
-    },
-    {
-        tag: '🎓 Próximo taller',
-        tagBg: 'var(--color-surface-chip)', tagColor: 'var(--color-primary-light)',
-        title: ['Aprende ', 'nail art', ' desde cero'],
-        titleEm: 1,
-        emColor: 'var(--color-primary)',
-        sub: 'Talleres presenciales y virtuales. Certificación incluida. ¡Plazas limitadas!',
-        bg: 'linear-gradient(135deg, var(--color-bg) 55%, var(--color-surface-soft) 100%)',
-        btnPrimary: { label: 'Ver talleres', to: '/talleres', color: 'var(--color-primary)' },
-        btnGhost: { label: 'Más info', to: '/talleres', color: 'var(--color-primary)' },
-        image: 'https://res.cloudinary.com/lhwns2br/image/upload/v1784258243/roxy-nails/im714bfargexaa9lagjp.jpg',
-    },
-]
-
 const AUTOPLAY_MS = 6500
+const HERO_BG = 'linear-gradient(135deg, var(--color-bg) 55%, var(--color-surface-soft) 100%)'
 
-export default function HeroSlider() {
+// Separa el título en [antes, destacado, después] según la parte destacada (sin distinguir mayúsculas)
+function splitTitle(title = '', highlight = '') {
+    const i = highlight ? title.toLowerCase().indexOf(highlight.toLowerCase()) : -1
+    if (i < 0) return [title, '', '']
+    return [title.slice(0, i), title.slice(i, i + highlight.length), title.slice(i + highlight.length)]
+}
+
+// Las diapositivas se administran en el panel (pestaña Portada).
+// `slides` + `preview`: el admin muestra una vista previa sin cargar del servidor ni navegar.
+export default function HeroSlider({ slides: given, preview = false }) {
+    const [loaded, setLoaded] = useState(null)
     const [cur, setCur] = useState(0)
     const navigate = useNavigate()
-
-    const go = useCallback((n) => setCur((n + SLIDES.length) % SLIDES.length), [])
+    const slides = given || loaded
 
     useEffect(() => {
+        if (given) return
+        fetchSlides().then(({ data }) => setLoaded(data)).catch(() => setLoaded([]))
+    }, [given])
+
+    const count = slides?.length || 0
+    const go = useCallback((n) => setCur(count ? (n + count) % count : 0), [count])
+
+    useEffect(() => {
+        if (preview || count < 2) return
         const t = setInterval(() => go(cur + 1), AUTOPLAY_MS)
         return () => clearInterval(t)
-    }, [cur, go])
+    }, [cur, go, count, preview])
 
-    const s = SLIDES[cur]
+    // Mientras carga, un hueco del mismo alto para que la página no salte
+    if (!slides) return <div className="hero hero--loading" style={{ '--hero-bg': HERO_BG }} />
+    if (count === 0) return null
+
+    const s = slides[Math.min(cur, count - 1)]
+    const [before, em, after] = splitTitle(s.title, s.highlight)
+
+    const open = (to) => {
+        if (preview || !to) return
+        if (to.startsWith('/')) navigate(to)
+        else window.open(to, '_blank', 'noopener,noreferrer')
+    }
 
     return (
-        <div className="hero" style={{ '--hero-bg': s.bg, '--btn-color': s.btnPrimary.color }}>
+        <div className="hero" style={{ '--hero-bg': HERO_BG, '--btn-color': 'var(--color-primary)' }}>
             <div className="hero__inner">
                 {/* Contenido */}
                 <div className="hero__content" key={`content-${cur}`}>
-                    <span className="hero__tag" style={{ '--tag-bg': s.tagBg, '--tag-color': s.tagColor }}>{s.tag}</span>
+                    {s.tag && <span className="hero__tag">{s.tag}</span>}
 
                     <h1 className="hero__title">
-                        {s.title.map((part, i) =>
-                            i === s.titleEm
-                                ? <em key={i} style={{ '--em-color': s.emColor }}>{part}</em>
-                                : <span key={i}>{part}</span>
-                        )}
+                        {before && <span>{before}</span>}
+                        {em && <em>{em}</em>}
+                        {after && <span>{after}</span>}
                     </h1>
 
-                    <p className="hero__sub">
-                        {s.sub}
-                    </p>
+                    {s.subtitle && <p className="hero__sub">{s.subtitle}</p>}
 
-                    <div className="hero__buttons">
-                        <button className="btn btn--primary"
-                            style={{ '--btn-color': s.btnPrimary.color }}
-                            onClick={() => navigate(s.btnPrimary.to)}>
-                            {s.btnPrimary.label}
-                        </button>
-                        <button className="btn btn--ghost"
-                            style={{ '--btn-color': s.btnGhost.color }}
-                            onClick={() => navigate(s.btnGhost.to)}>
-                            {s.btnGhost.label}
-                        </button>
-                    </div>
+                    {(s.primaryLabel || s.secondaryLabel) && (
+                        <div className="hero__buttons">
+                            {s.primaryLabel && (
+                                <button className="btn btn--primary" onClick={() => open(s.primaryLink)}>
+                                    {s.primaryLabel}
+                                </button>
+                            )}
+                            {s.secondaryLabel && (
+                                <button className="btn btn--ghost" onClick={() => open(s.secondaryLink)}>
+                                    {s.secondaryLabel}
+                                </button>
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* Imagen */}
                 <div className="hero__media">
-                    <img src={s.image} alt={s.title.join('')} key={`media-${cur}`} />
+                    {s.image && <img src={s.image} alt={s.title} key={`media-${cur}`} />}
                 </div>
             </div>
 
-            {/* Flechas */}
-            {['‹', '›'].map((arrow, i) => (
-                <button
-                    key={arrow}
-                    onClick={() => go(cur + (i === 0 ? -1 : 1))}
-                    aria-label={i === 0 ? 'Anterior' : 'Siguiente'}
-                    className={`hero__arrow ${i === 0 ? 'hero__arrow--left' : 'hero__arrow--right'}`}
-                >{arrow}</button>
-            ))}
+            {count > 1 && (
+                <>
+                    {/* Flechas */}
+                    {['‹', '›'].map((arrow, i) => (
+                        <button
+                            key={arrow}
+                            onClick={() => go(cur + (i === 0 ? -1 : 1))}
+                            aria-label={i === 0 ? 'Anterior' : 'Siguiente'}
+                            className={`hero__arrow ${i === 0 ? 'hero__arrow--left' : 'hero__arrow--right'}`}
+                        >{arrow}</button>
+                    ))}
 
-            {/* Dots */}
-            <div className="hero__dots">
-                {SLIDES.map((_, i) => (
-                    <button key={i} onClick={() => go(i)} className={`hero__dot${cur === i ? ' hero__dot--active' : ''}`} />
-                ))}
-            </div>
+                    {/* Dots */}
+                    <div className="hero__dots">
+                        {slides.map((_, i) => (
+                            <button key={i} onClick={() => go(i)} aria-label={`Diapositiva ${i + 1}`}
+                                className={`hero__dot${cur === i ? ' hero__dot--active' : ''}`} />
+                        ))}
+                    </div>
+                </>
+            )}
         </div>
     )
 }

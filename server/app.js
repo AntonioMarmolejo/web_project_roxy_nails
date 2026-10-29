@@ -13,6 +13,7 @@ import enrollmentRoutes from './routes/enrollment.routes.js'
 import uploadRoutes     from './routes/upload.routes.js'
 import galleryRoutes    from './routes/gallery.routes.js'
 import bannerRoutes     from './routes/banner.routes.js'
+import slideRoutes      from './routes/slide.routes.js'
 import { brand }        from './config/brand.js'
 
 dotenv.config()
@@ -41,6 +42,7 @@ app.use('/api/v1/enrollments', enrollmentRoutes)
 app.use('/api/v1/upload',      uploadRoutes)
 app.use('/api/v1/gallery',     galleryRoutes)
 app.use('/api/v1/banner',      bannerRoutes)
+app.use('/api/v1/slides',      slideRoutes)
 
 // Health check
 app.get('/api/health', (_req, res) => res.json({ status: 'OK', app: `${brand.name} API` }))
