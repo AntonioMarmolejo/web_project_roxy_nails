@@ -3,7 +3,7 @@ export const brand = {
     name: "Captain's",
     fullName: "Captain's Barbería Studio Unisex",
     tagline: "Belleza, cuidado y estilo para todos",
-    phone: "0986647711 / 0992641293",
+    phone: "0967141740",
     address: "Puerto Ayora, Galápagos",
     whatsappUrl: "https://wa.me/593967141740",
     serviceNote: "Servicio unisex · Agenda previa",
