@@ -5,6 +5,8 @@ import { brand } from '../config/brand'
 import '../styles/TurnScreen.css'
 
 const REFRESH_MS = 8000
+// Hora del local (Galápagos), aunque el TV o la tablet tengan otra zona horaria
+const clockText = (d) => d.toLocaleTimeString('es-ES', { timeZone: 'Pacific/Galapagos', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' })
 const MAX_NEXT = 8
 
 // Aviso sonoro al llamar un turno (dos tonos, sin archivos de audio)
@@ -55,7 +57,7 @@ export default function TurnScreen() {
     useEffect(() => {
         load()
         const poll = setInterval(load, REFRESH_MS)
-        const tick = setInterval(() => setNow(new Date()), 15000)
+        const tick = setInterval(() => setNow(new Date()), 1000)
         return () => { clearInterval(poll); clearInterval(tick) }
     }, [load])
 
@@ -77,7 +79,7 @@ export default function TurnScreen() {
 
             <header className="turns__header">
                 <div className="turns__brand">{brand.logo.main} <em>{brand.logo.accent}</em></div>
-                <div className="turns__clock">{now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}</div>
+                <div className="turns__clock">{clockText(now)}</div>
             </header>
 
             <main className="turns__body">

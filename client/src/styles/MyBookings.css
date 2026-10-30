@@ -141,3 +141,22 @@
     cursor: pointer;
     font-family: var(--font-body);
 }
+
+/* Celular: datos arriba y botones abajo, a lo ancho (antes se salían de la tarjeta) */
+@media (max-width: 640px) {
+    .mybookings__card {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem 1.1rem;
+    }
+    .mybookings__card-main {
+        min-width: 0;
+    }
+    .mybookings__actions {
+        width: 100%;
+    }
+    .mybookings__actions button {
+        flex: 1 1 0;
+        padding: 9px 12px;
+    }
+}
