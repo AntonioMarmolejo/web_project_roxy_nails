@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { fetchAllSlides, createSlide, updateSlide, toggleSlide, deleteSlide, reorderSlides } from '../api/slides'
 import HeroSlider from './HeroSlider'
 import ImageInput from './ImageInput'
+import { SkeletonList } from './Skeleton'
 
 const EMPTY = {
     tag: '', title: '', highlight: '', subtitle: '', image: '',
@@ -112,7 +113,7 @@ export default function AdminSlides({ showToast }) {
                         Se muestran en este orden y cambian solas cada pocos segundos. Las desactivadas no aparecen en la página.
                     </p>
                     {loading ? (
-                        <p className="admin__list-loading">Cargando...</p>
+                        <SkeletonList count={3} label="Cargando diapositivas" />
                     ) : slides.length === 0 ? (
                         <div className="admin__list-empty">
                             No hay diapositivas: la portada no se muestra. Crea la primera con el formulario.

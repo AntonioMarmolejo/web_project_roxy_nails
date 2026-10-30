@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { fetchBannerAdmin, saveBanner } from '../api/banner'
 import PromoBanner from './PromoBanner'
 import '../styles/Home.css'
+import { SkeletonList } from './Skeleton'
 
 const EMPTY = { active: false, emoji: '', highlight: '', message: '', linkText: '', linkTo: '', startsAt: '', endsAt: '' }
 
@@ -58,7 +59,7 @@ export default function AdminBanner({ showToast }) {
         finally { setSaving(false) }
     }
 
-    if (loading) return <p className="admin__list-loading">Cargando...</p>
+    if (loading) return <SkeletonList count={2} label="Cargando banner" />
 
     // Estado actual según lo guardado
     let status = { label: 'Oculto', color: 'var(--color-neutral)', bg: 'var(--color-neutral-bg)' }

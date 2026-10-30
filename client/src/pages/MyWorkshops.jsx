@@ -5,6 +5,7 @@ import { fetchMyEnrollments } from '../api/enrollments'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyWorkshops.css'
 import { brand } from '../config/brand'
+import { SkeletonList } from '../components/Skeleton'
 
 const STATUS = {
     pending:   { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -38,9 +39,7 @@ export default function MyWorkshops() {
 
             <div className="myworkshops__container">
                 {loading ? (
-                    <p className="myworkshops__loading">
-                        Cargando talleres...
-                    </p>
+                    <SkeletonList count={3} label="Cargando talleres" />
                 ) : enrollments.length === 0 ? (
                     <div className="myworkshops__empty">
                         <div className="myworkshops__empty-icon">🎓</div>

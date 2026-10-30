@@ -8,6 +8,7 @@ import { brand } from '../config/brand'
 import { formatPrice } from '../config/services'
 import { bookingCode } from '../utils/turnos'
 import { downloadBookingTicket } from '../utils/bookingTicket'
+import { SkeletonList } from '../components/Skeleton'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -65,9 +66,7 @@ export default function MyBookings() {
 
             <div className="mybookings__container">
                 {loading ? (
-                    <p className="mybookings__loading">
-                        Cargando citas...
-                    </p>
+                    <SkeletonList count={3} label="Cargando citas" />
                 ) : bookings.length === 0 ? (
                     <div className="mybookings__empty">
                         <div className="mybookings__empty-icon">📅</div>

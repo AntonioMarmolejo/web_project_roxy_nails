@@ -7,6 +7,7 @@ import Lightbox from '../components/Lightbox'
 import PageHeader from '../components/PageHeader'
 import '../styles/Shop.css'
 import { brand } from '../config/brand'
+import { SkeletonGrid } from '../components/Skeleton'
 
 const CATS = ['todo', 'esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
 const CLOSE_MS = 350
@@ -60,9 +61,7 @@ export default function Shop() {
             {/* Grid */}
             <div className="shop__grid-section">
                 {loading ? (
-                    <p className="shop__loading">
-                        Cargando productos...
-                    </p>
+                    <SkeletonGrid count={8} label="Cargando productos" />
                 ) : filtered.length === 0 ? (
                     <div className="shop__empty">
                         <div className="shop__empty-icon">🛍️</div>

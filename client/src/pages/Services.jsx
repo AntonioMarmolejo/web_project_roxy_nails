@@ -6,6 +6,7 @@ import { fetchServices } from '../api/services'
 import '../styles/Services.css'
 import { brand } from '../config/brand'
 import { SERVICE_CATEGORIES } from '../config/services'
+import { SkeletonGrid } from '../components/Skeleton'
 
 // Respaldo si la API no responde (muestra del catálogo real)
 const FALLBACK = [
@@ -58,7 +59,7 @@ export default function Services() {
             {/* Grid */}
             <div className="u-section services__grid-section">
                 {loading ? (
-                    <p className="services__empty">Cargando servicios...</p>
+                    <SkeletonGrid count={8} label="Cargando servicios" />
                 ) : filtered.length === 0 ? (
                     <p className="services__empty">
                         No hay servicios en esta categoría aún.

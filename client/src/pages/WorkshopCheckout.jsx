@@ -6,6 +6,7 @@ import { fetchWorkshop }   from '../api/workshops'
 import { createEnrollment } from '../api/enrollments'
 import '../styles/Checkout.css'
 import { brand } from '../config/brand'
+import { SkeletonList } from '../components/Skeleton'
 
 export default function WorkshopCheckout() {
     const { id } = useParams()
@@ -54,7 +55,7 @@ export default function WorkshopCheckout() {
     }
 
     if (loading) {
-        return <p className="checkout__empty" style={{ padding: '6rem 0' }}>Cargando...</p>
+        return <div style={{ maxWidth: 720, margin: '0 auto', padding: '4rem 1.25rem' }}><SkeletonList count={2} label="Cargando taller" /></div>
     }
 
     if (!workshop) {

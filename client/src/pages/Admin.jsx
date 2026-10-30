@@ -22,6 +22,7 @@ import { bookingCode, shopNow } from '../utils/turnos'
 import { PAYMENT_LABELS, isPrepaid, RECEIPT_PHONE } from '../config/payments'
 import { toWhatsappNumber, whatsappUrl, bookingConfirmedMessage } from '../utils/whatsapp'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
+import { SkeletonGrid, SkeletonList } from '../components/Skeleton'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
 const PROD_CATS    = ['esmaltes', 'cuidado', 'herramientas', 'nail-art', 'accesorios']
@@ -492,7 +493,7 @@ export default function Admin() {
                                     Servicios ({services.length})
                                 </h2>
                                 {fetching ? (
-                                    <p className="admin__list-loading">Cargando...</p>
+                                    <SkeletonList count={3} />
                                 ) : services.length === 0 ? (
                                     <div className="admin__list-empty">
                                         No hay servicios. Crea el primero con el formulario.
@@ -585,7 +586,7 @@ export default function Admin() {
                             placeholder="🔎 Buscar por código, nombre o teléfono" style={{ maxWidth: 360, marginBottom: '1rem' }} />
 
                         {bFetching ? (
-                            <p className="admin__list-loading">Cargando citas...</p>
+                            <SkeletonList count={3} />
                         ) : filteredBookings.length === 0 ? (
                             <div className="admin__list-empty">
                                 No hay citas en esta categoría.
@@ -664,7 +665,7 @@ export default function Admin() {
                                     Productos ({products.length})
                                 </h2>
                                 {prodFetching ? (
-                                    <p className="admin__list-loading">Cargando...</p>
+                                    <SkeletonList count={3} />
                                 ) : products.length === 0 ? (
                                     <div className="admin__list-empty">
                                         No hay productos. Crea el primero con el formulario.
@@ -754,7 +755,7 @@ export default function Admin() {
                         </div>
 
                         {oFetching ? (
-                            <p className="admin__list-loading">Cargando pedidos...</p>
+                            <SkeletonList count={3} />
                         ) : filteredOrders.length === 0 ? (
                             <div className="admin__list-empty">
                                 No hay pedidos en esta categoría.
@@ -828,7 +829,7 @@ export default function Admin() {
                                     Talleres ({workshops.length})
                                 </h2>
                                 {wsFetching ? (
-                                    <p className="admin__list-loading">Cargando...</p>
+                                    <SkeletonList count={3} />
                                 ) : workshops.length === 0 ? (
                                     <div className="admin__list-empty">
                                         No hay talleres. Crea el primero con el formulario.
@@ -901,7 +902,7 @@ export default function Admin() {
                         </div>
 
                         {enFetching ? (
-                            <p className="admin__list-loading">Cargando inscripciones...</p>
+                            <SkeletonList count={3} />
                         ) : filteredEnrollments.length === 0 ? (
                             <div className="admin__list-empty">
                                 No hay inscripciones en esta categoría.
@@ -971,7 +972,7 @@ export default function Admin() {
                                     Fotos y videos ({galleryImages.length})
                                 </h2>
                                 {galleryFetching ? (
-                                    <p className="admin__list-loading">Cargando...</p>
+                                    <SkeletonGrid className="admin__gallery-grid" item="tile" count={8} label="Cargando galería" />
                                 ) : galleryImages.length === 0 ? (
                                     <div className="admin__list-empty">
                                         Aún no hay fotos ni videos. Sube el primero con el formulario.

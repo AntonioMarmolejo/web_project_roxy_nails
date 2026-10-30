@@ -7,6 +7,7 @@ import '../styles/Gallery.css'
 import { brand } from '../config/brand'
 import GalleryMedia from '../components/GalleryMedia'
 import { SERVICE_CATEGORIES } from '../config/services'
+import { SkeletonGrid } from '../components/Skeleton'
 
 const CATS = [{ key: 'todas', label: 'Todas' }, ...SERVICE_CATEGORIES]
 
@@ -57,7 +58,7 @@ export default function Gallery() {
 
             <div className="gallery__grid-section">
                 {loading ? (
-                    <p className="gallery__empty">Cargando diseños...</p>
+                    <SkeletonGrid className="gallery__grid" item="tile" count={12} label="Cargando galería" />
                 ) : filtered.length === 0 ? (
                     <p className="gallery__empty">
                         {images.length === 0

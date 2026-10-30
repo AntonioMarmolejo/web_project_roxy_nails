@@ -178,3 +178,15 @@
         margin-bottom: 1.5rem;
     }
 }
+
+/* Silueta mientras cargan las diapositivas */
+.hero__content--skeleton {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: none;
+}
+.hero__content--skeleton .hero__buttons {
+    margin-top: 10px;
+}

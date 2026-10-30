@@ -11,6 +11,7 @@ import { categoryIcon, formatPrice, formatDuration, hasPrice } from '../config/s
 import PaymentMethods, { PREPAID_OPTIONS } from '../components/PaymentMethods'
 import { PAYMENT_LABELS, isPrepaid, receiptWhatsappUrl } from '../config/payments'
 import { downloadBookingTicket } from '../utils/bookingTicket'
+import { Skeleton, SkeletonGrid } from '../components/Skeleton'
 import { bookingCode, bookingQrDataUrl } from '../utils/turnos'
 
 // ─── Calendar helpers ────────────────────────────────────────────
@@ -81,7 +82,7 @@ export default function Booking() {
     const location = useLocation()
 
     const [step, setStep] = useState(1)
-    const [services, setServices] = useState([])
+    const [services, setServices] = useState(null)   // null = cargando
     const [selSvc, setSelSvc] = useState(null)
 
     const now = new Date()
@@ -109,7 +110,7 @@ export default function Booking() {
     }, [result])
 
     useEffect(() => {
-        fetchServices().then(({ data }) => setServices(data)).catch(() => { })
+        fetchServices().then(({ data }) => setServices(data)).catch(() => setServices([]))
     }, [])
 
     // Al cambiar de paso, subir hasta el inicio del formulario (si no, se queda a mitad de página)
@@ -122,7 +123,7 @@ export default function Booking() {
 
     useEffect(() => {
         const id = location.state?.serviceId
-        if (!id || services.length === 0) return
+        if (!id || !services?.length) return
         const match = services.find(s => s._id === id)
         if (!match) return
         setSelSvc(match)
@@ -305,8 +306,9 @@ export default function Booking() {
                         <h2 className="booking__step-title">
                             ¿Qué servicio deseas?
                         </h2>
+                        {!services && <SkeletonGrid className="booking__services-grid" count={6} label="Cargando servicios" />}
                         <div className="booking__services-grid">
-                            {services.map(svc => (
+                            {(services || []).map(svc => (
                                 <div key={svc._id} data-service-id={svc._id} onClick={() => setSelSvc(svc)} className={`booking__service-option${selSvc?._id === svc._id ? ' booking__service-option--selected' : ''}`}>
                                     <div className="booking__service-image">
                                         {svc.image
@@ -406,9 +408,9 @@ export default function Booking() {
                         )}
 
                         {loadingSlots ? (
-                            <p className="booking__loading-note">
-                                Consultando disponibilidad...
-                            </p>
+                            <div className="booking__slots-grid" role="status" aria-label="Consultando disponibilidad">
+                                {Array.from({ length: 9 }, (_, i) => <Skeleton key={i} height={48} radius={12} />)}
+                            </div>
                         ) : (
                             <>
                                 <div className="booking__slots-grid">

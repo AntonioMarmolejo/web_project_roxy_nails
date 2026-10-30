@@ -6,6 +6,7 @@ import LikeButton from '../components/LikeButton'
 import PageHeader from '../components/PageHeader'
 import '../styles/Workshops.css'
 import { brand } from '../config/brand'
+import { SkeletonGrid } from '../components/Skeleton'
 
 const CLOSE_MS = 350
 
@@ -35,9 +36,7 @@ export default function Workshops() {
 
             <div className="workshops__grid-section">
                 {loading ? (
-                    <p className="workshops__loading">
-                        Cargando talleres...
-                    </p>
+                    <SkeletonGrid count={4} label="Cargando talleres" />
                 ) : workshops.length === 0 ? (
                     <div className="workshops__empty">
                         <div className="workshops__empty-icon">🎓</div>

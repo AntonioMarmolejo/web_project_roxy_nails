@@ -1,0 +1,100 @@
+/* Esqueletos de carga: bloques con un brillo que recorre la silueta */
+.skeleton {
+    display: block;
+    background: linear-gradient(
+        90deg,
+        var(--color-surface-soft) 0%,
+        var(--color-surface-chip) 45%,
+        var(--color-surface-soft) 90%
+    );
+    background-size: 220% 100%;
+    border-radius: 8px;
+    animation: skeleton-shine 1.4s ease-in-out infinite;
+}
+@keyframes skeleton-shine {
+    from { background-position: 120% 0; }
+    to   { background-position: -120% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .skeleton {
+        animation: none;
+    }
+}
+
+/* Tarjeta de catálogo: misma forma que service-card / product-card / workshop-card */
+.skeleton-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-card);
+    border-radius: 22px;
+    overflow: hidden;
+    padding-bottom: 18px;
+}
+.skeleton-card__image {
+    align-self: stretch;
+    margin: 14px 14px 0;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+}
+.skeleton-card__title {
+    width: 70%;
+    height: 16px;
+    margin-top: 16px;
+}
+.skeleton-card__line {
+    width: 45%;
+    height: 12px;
+    margin-top: 10px;
+}
+
+/* Foto de galería */
+.skeleton-tile {
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+}
+.home__gallery-grid .skeleton-tile {
+    aspect-ratio: auto;
+    height: 100%;
+    border-radius: 12px;
+}
+
+/* Registros en lista */
+.skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.skeleton-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 1rem 1.25rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+}
+.skeleton-row__main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.skeleton-row__title {
+    width: 45%;
+    height: 16px;
+}
+.skeleton-row__line {
+    width: 75%;
+    height: 12px;
+}
+.skeleton-row__line--short {
+    width: 35%;
+}
+.skeleton-row__action {
+    width: 84px;
+    height: 32px;
+    border-radius: 8px;
+    flex-shrink: 0;
+}

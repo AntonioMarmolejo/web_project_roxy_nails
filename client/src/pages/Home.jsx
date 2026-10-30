@@ -12,6 +12,7 @@ import PromoBanner from '../components/PromoBanner'
 import '../styles/Home.css'
 import { brand } from '../config/brand'
 import GalleryMedia from '../components/GalleryMedia'
+import { Skeleton, SkeletonGrid } from '../components/Skeleton'
 
 // Respaldo si la API no responde (muestra del catálogo real)
 const FALLBACK_SERVICES = [
@@ -30,30 +31,31 @@ const SectionLabel = ({ children }) => (
 )
 
 export default function Home() {
-    const [services, setServices] = useState(FALLBACK_SERVICES)
-    const [galleryImages, setGalleryImages] = useState([])
+    const [services, setServices] = useState(null)        // null = cargando (se muestran siluetas)
+    const [galleryImages, setGalleryImages] = useState(null)
     const [lightboxIndex, setLightboxIndex] = useState(null)
     const [banner, setBanner] = useState(null)
-    const galleryImgs = galleryImages
+    const galleryImgs = galleryImages || []
 
     useEffect(() => {
         fetchBanner()
             .then(({ data }) => setBanner(data?.visible ? data : null))
             .catch(() => { })
         fetchServices()
-            .then(({ data }) => { if (data?.length) setServices(data) })
-            .catch(() => { })
+            .then(({ data }) => setServices(data?.length ? data : FALLBACK_SERVICES))
+            .catch(() => setServices(FALLBACK_SERVICES))
         fetchGalleryImages()
             .then(({ data }) => setGalleryImages(data))
-            .catch(() => { })
+            .catch(() => setGalleryImages([]))
     }, [])
 
     const handleLike = (id, liked) => {
         likeGalleryImage(id, liked ? 1 : -1).catch(() => {})
     }
 
-    const featured = services.filter(s => s.featured).slice(0, 9)
-    const display = featured.length ? featured : services.slice(0, 9)
+    const featured = (services || []).filter(s => s.featured).slice(0, 9)
+    const display = featured.length ? featured : (services || []).slice(0, 9)
+    const galleryRowSpan = (i) => (i === 0 || i === 6 ? 'span 2' : 'span 1')
 
     return (
         <>
@@ -75,9 +77,13 @@ export default function Home() {
                 <p className="home__section-sub">
                     Cada servicio incluye limpieza, hidratación y el acabado que elijas.
                 </p>
-                <div className="home__services-grid">
-                    {display.map(svc => <ServiceCard key={svc._id} service={svc} />)}
-                </div>
+                {services ? (
+                    <div className="home__services-grid">
+                        {display.map(svc => <ServiceCard key={svc._id} service={svc} />)}
+                    </div>
+                ) : (
+                    <SkeletonGrid className="home__services-grid" count={6} label="Cargando servicios" />
+                )}
                 <div className="home__section-cta">
                     <Link to="/servicios">
                         <button className="btn btn--ghost" style={{ width: 'auto' }}>Ver todos los servicios</button>
@@ -90,11 +96,14 @@ export default function Home() {
                 <SectionLabel>Nuestro trabajo</SectionLabel>
                 <h2 className="home__gallery-title">Galería</h2>
                 <div className="home__gallery-grid">
-                    {galleryImages.map((item, i) => (
+                    {!galleryImages && Array.from({ length: 10 }, (_, i) => (
+                        <Skeleton key={i} className="skeleton-tile" style={{ gridRow: galleryRowSpan(i) }} />
+                    ))}
+                    {galleryImgs.map((item, i) => (
                         <div
                             key={item._id}
                             className="home__gallery-item"
-                            style={{ '--gallery-row-span': i === 0 || i === 6 ? 'span 2' : 'span 1' }}
+                            style={{ '--gallery-row-span': galleryRowSpan(i) }}
                             onClick={() => setLightboxIndex(i)}
                         >
                             <GalleryMedia item={item} alt={`Trabajo de ${brand.name}`} />

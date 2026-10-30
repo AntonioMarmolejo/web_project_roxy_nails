@@ -5,6 +5,7 @@ import { fetchMyOrders } from '../api/orders'
 import PageHeader from '../components/PageHeader'
 import '../styles/MyOrders.css'
 import { brand } from '../config/brand'
+import { SkeletonList } from '../components/Skeleton'
 
 const STATUS = {
     pending:   { label: 'Pendiente',   bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -40,9 +41,7 @@ export default function MyOrders() {
 
             <div className="myorders__container">
                 {loading ? (
-                    <p className="myorders__loading">
-                        Cargando pedidos...
-                    </p>
+                    <SkeletonList count={3} label="Cargando pedidos" />
                 ) : orders.length === 0 ? (
                     <div className="myorders__empty">
                         <div className="myorders__empty-icon">📦</div>

@@ -4,6 +4,7 @@ import { bookingCode, parseScannedCode, arrivalStatus } from '../utils/turnos'
 import { PAYMENT_LABELS, isPrepaid } from '../config/payments'
 import QrScanner from './QrScanner'
 import '../styles/AdminQueue.css'
+import { SkeletonList } from './Skeleton'
 
 const REFRESH_MS = 20000
 
@@ -161,7 +162,7 @@ export default function AdminQueue({ showToast, initialCode }) {
                 Sala de espera — hoy{queue.date ? `, ${longDay(queue.date)}` : ''}
             </h2>
             {loading ? (
-                <p className="admin__list-loading">Cargando...</p>
+                <SkeletonList count={3} label="Cargando sala de espera" />
             ) : list.length === 0 ? (
                 <div className="admin__list-empty">No hay citas para hoy.</div>
             ) : (

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { fetchSlides } from '../api/slides'
+import { Skeleton } from './Skeleton'
 import '../styles/HeroSlider.css'
 
 const AUTOPLAY_MS = 6500
@@ -35,8 +36,25 @@ export default function HeroSlider({ slides: given, preview = false }) {
         return () => clearInterval(t)
     }, [cur, go, count, preview])
 
-    // Mientras carga, un hueco del mismo alto para que la página no salte
-    if (!slides) return <div className="hero hero--loading" style={{ '--hero-bg': HERO_BG }} />
+    // Mientras carga, la silueta de una diapositiva (mismo alto, para que la página no salte)
+    if (!slides) return (
+        <div className="hero hero--loading" style={{ '--hero-bg': HERO_BG }} role="status" aria-label="Cargando">
+            <div className="hero__inner">
+                <div className="hero__content hero__content--skeleton">
+                    <Skeleton width={150} height={28} radius={20} />
+                    <Skeleton width="90%" height={44} />
+                    <Skeleton width="65%" height={44} />
+                    <Skeleton width="80%" height={16} />
+                    <Skeleton width="55%" height={16} />
+                    <div className="hero__buttons">
+                        <Skeleton width={140} height={46} radius={999} />
+                        <Skeleton width={160} height={46} radius={999} />
+                    </div>
+                </div>
+                <div className="hero__media"><Skeleton width="100%" height="100%" radius={0} /></div>
+            </div>
+        </div>
+    )
     if (count === 0) return null
 
     const s = slides[Math.min(cur, count - 1)]
