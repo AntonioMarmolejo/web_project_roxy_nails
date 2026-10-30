@@ -1,4 +1,5 @@
 import { brand } from '../config/brand'
+import { bookingCode } from './turnos'
 
 // Número escrito por el cliente → formato internacional para wa.me (Ecuador por defecto).
 // "0961540543", "096 154 0543", "+593 96 154 0543" → "593961540543". Devuelve null si no parece válido.
@@ -29,7 +30,7 @@ export function bookingConfirmedMessage(b) {
         `📅 Fecha: ${date}`,
         `🕐 Hora: ${b.timeSlot}${end}`,
         `📍 ${brand.address}`,
-        `🔖 Código: ${b._id.slice(-6).toUpperCase()}`,
+        `🔖 Código: ${bookingCode(b)}`,
         '',
         'Si necesitas cambiarla o cancelarla, respóndenos por aquí. ¡Te esperamos!',
     ].join('\n')

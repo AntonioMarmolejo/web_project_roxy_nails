@@ -11,6 +11,7 @@ import { categoryIcon, formatPrice, formatDuration, hasPrice } from '../config/s
 import PaymentMethods, { PREPAID_OPTIONS } from '../components/PaymentMethods'
 import { PAYMENT_LABELS, isPrepaid, receiptWhatsappUrl } from '../config/payments'
 import { drawTicket, saveTicket } from '../utils/bookingTicket'
+import { bookingCode, bookingQrDataUrl } from '../utils/turnos'
 
 // ─── Calendar helpers ────────────────────────────────────────────
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
@@ -97,9 +98,15 @@ export default function Booking() {
     const [prepay, setPrepay] = useState(false)               // ¿paga por adelantado?
     const [payMethod, setPayMethod] = useState('qr_deuna')
     const [savingTicket, setSavingTicket] = useState(false)
+    const [qrImage, setQrImage] = useState(null)              // QR del comprobante (lo escanea el local)
     const [submitting, setSubmitting] = useState(false)
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
+
+    useEffect(() => {
+        if (!result) { setQrImage(null); return }
+        bookingQrDataUrl(bookingCode(result)).then(setQrImage).catch(() => setQrImage(null))
+    }, [result])
 
     useEffect(() => {
         fetchServices().then(({ data }) => setServices(data)).catch(() => { })
@@ -210,7 +217,7 @@ export default function Booking() {
         const prepaid = isPrepaid(result.paymentMethod)
         const serviceName = result.service?.name || selSvc?.name
         const time = timeRange(result.timeSlot, selSvc?.duration)
-        const code = result._id.slice(-6).toUpperCase()
+        const code = bookingCode(result)
         const rows = [
             ['Servicio', serviceName],
             ['Fecha', dateFormatted],
@@ -225,6 +232,7 @@ export default function Booking() {
                 const blob = await drawTicket({
                     rows: rows.map(([k, v]) => [k, k === 'Fecha' ? v.charAt(0).toUpperCase() + v.slice(1) : v]),
                     code,
+                    qr: qrImage,
                     note: prepaid ? 'Recuerda enviar tu comprobante de pago por WhatsApp' : '',
                 })
                 await saveTicket(blob, `cita-captains-${result.date.slice(0, 10)}-${result.timeSlot.replace(':', 'h')}.png`)
@@ -243,6 +251,12 @@ export default function Booking() {
                     <p className="booking__success-sub">
                         Te esperamos con muchas ganas.
                     </p>
+                    {qrImage && (
+                        <div className="booking__qr">
+                            <img src={qrImage} alt={`Código QR de la cita ${code}`} />
+                            <p>Muestra este QR al llegar · <strong>{code}</strong></p>
+                        </div>
+                    )}
                     <div className="booking__summary-box">
                         {[...rows, ['Código', code]].map(([k, v]) => (
                             <div key={k} className="booking__summary-row">

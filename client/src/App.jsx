@@ -27,6 +27,7 @@ import AccountDrawer  from './components/AccountDrawer'
 import WhatsAppButton from './components/WhatsAppButton'
 import InstallAppBanner from './components/InstallAppBanner'
 import RequireAccount from './components/RequireAccount'
+import TurnScreen from './pages/TurnScreen'
 import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -68,6 +69,7 @@ function App() {
                 <Route path="/login"       element={<Login />} />
                 <Route path="/olvide-contrasena" element={<ForgotPassword />} />
                 <Route path="/restablecer-contrasena/:token" element={<ResetPassword />} />
+                <Route path="/turnos"      element={<TurnScreen />} />   {/* pantalla de turnos del local */}
                 <Route path="/privacidad"  element={<Privacidad />} />
                 <Route path="/terminos"    element={<Terminos />} />
                 <Route path="/perfil" element={

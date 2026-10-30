@@ -2,7 +2,7 @@
 // Se dibuja en un canvas con los colores y fuentes de la marca: no depende de librerías externas.
 import { brand } from '../config/brand'
 
-const W = 1080, H = 1500
+const W = 1080, H = 1820
 const C = {
     bg: '#0B0A08', card: '#16140F', row: '#1F1C16', border: '#3A3326',
     gold: '#C9A24B', goldLight: '#E8CB82', text: '#F5EFE3', muted: '#B8AE9C',
@@ -28,8 +28,15 @@ function fit(ctx, text, maxWidth) {
     return t + '…'
 }
 
-// rows: [[etiqueta, valor], ...] · extra: { code, note }
-export async function drawTicket({ rows, code, note }) {
+const loadImage = (src) => new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+})
+
+// rows: [[etiqueta, valor], ...] · code: código de reserva · qr: imagen (data URL) del QR · note
+export async function drawTicket({ rows, code, qr, note }) {
     // Esperar a que las fuentes de la marca estén listas para el canvas
     await Promise.all([
         document.fonts.load(`700 60px ${HEADING}`),
@@ -94,9 +101,17 @@ export async function drawTicket({ rows, code, note }) {
         ctx.fillText(fit(ctx, String(value ?? ''), w - 80 - labelWidth - 30), x + w - 40, y)
     })
 
-    // Código y nota
-    let y = top + rows.length * rowH + 40 + 80
+    // QR (para que el local lo escanee al llegar), código y nota
+    let y = top + rows.length * rowH + 40 + 50
     ctx.textAlign = 'center'
+    if (qr) {
+        const size = 300, pad = 18
+        roundRect(ctx, W / 2 - size / 2 - pad, y, size + pad * 2, size + pad * 2, 24)
+        ctx.fillStyle = '#FFFFFF'
+        ctx.fill()
+        ctx.drawImage(await loadImage(qr), W / 2 - size / 2, y + pad, size, size)
+        y += size + pad * 2 + 60
+    }
     if (code) {
         ctx.fillStyle = C.muted
         ctx.font = `400 26px ${BODY}`

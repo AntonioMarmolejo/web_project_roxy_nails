@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchAllServices, createService, updateService, removeService } from '../api/services'
 import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
@@ -16,6 +17,8 @@ import '../styles/Admin.css'
 import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
 import AdminSlides from '../components/AdminSlides'
+import AdminQueue from '../components/AdminQueue'
+import { bookingCode } from '../utils/turnos'
 import { PAYMENT_LABELS, isPrepaid, RECEIPT_PHONE } from '../config/payments'
 import { toWhatsappNumber, whatsappUrl, bookingConfirmedMessage } from '../utils/whatsapp'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
@@ -55,7 +58,10 @@ const ACTION_PURPLE = { '--btn-bg': 'var(--color-purple-bg)', '--btn-border': 'v
 // ─────────────────────────────────────────────────────────────────────────────
 export default function Admin() {
     const { user, logout } = useAuthStore()
-    const [tab, setTab] = useState('servicios') // servicios | citas | productos | pedidos | talleres
+    const [searchParams] = useSearchParams()
+    const scannedCode = searchParams.get('turno')
+    const [tab, setTab] = useState(scannedCode ? 'turnos' : 'servicios') // servicios | citas | turnos | productos | …
+    const [bSearch, setBSearch] = useState('')   // buscar citas por código, nombre o teléfono
 
     // ── Servicios ────────────────────────────────────────────────────────────
     const [services, setServices] = useState([])
@@ -371,7 +377,14 @@ export default function Admin() {
     }
 
     // ── Filtros ──────────────────────────────────────────────────────────────
-    const filteredBookings = bFilter === 'all' ? bookings : bookings.filter(b => b.status === bFilter)
+    const bQuery = bSearch.trim().toLowerCase()
+    const bDigits = bQuery.replace(/\D/g, '')
+    const filteredBookings = bookings
+        .filter(b => bFilter === 'all' || b.status === bFilter)
+        .filter(b => !bQuery
+            || bookingCode(b).toLowerCase().includes(bQuery)
+            || b.client?.name?.toLowerCase().includes(bQuery)
+            || (bDigits.length >= 3 && b.client?.phone?.replace(/\D/g, '').includes(bDigits)))
     const filteredOrders   = oFilter === 'all' ? orders   : orders.filter(o => o.status === oFilter)
     const filteredEnrollments = enFilter === 'all' ? enrollments : enrollments.filter(e => e.status === enFilter)
 
@@ -435,6 +448,7 @@ export default function Admin() {
                 <div className="admin__tabs">
                     <button onClick={() => setTab('servicios')} className={`admin__tab-btn${tab === 'servicios' ? ' admin__tab-btn--active' : ''}`}>✂️ Servicios</button>
                     <button onClick={() => setTab('citas')}     className={`admin__tab-btn${tab === 'citas' ? ' admin__tab-btn--active' : ''}`}>📅 Citas</button>
+                    <button onClick={() => setTab('turnos')}    className={`admin__tab-btn${tab === 'turnos' ? ' admin__tab-btn--active' : ''}`}>🎫 Turnos</button>
                     <button onClick={() => setTab('productos')} className={`admin__tab-btn${tab === 'productos' ? ' admin__tab-btn--active' : ''}`}>🛍️ Productos</button>
                     <button onClick={() => setTab('pedidos')}   className={`admin__tab-btn${tab === 'pedidos' ? ' admin__tab-btn--active' : ''}`}>📦 Pedidos</button>
                     <button onClick={() => setTab('talleres')}  className={`admin__tab-btn${tab === 'talleres' ? ' admin__tab-btn--active' : ''}`}>🎓 Talleres</button>
@@ -555,6 +569,9 @@ export default function Admin() {
                             ))}
                         </div>
 
+                        <input value={bSearch} onChange={(e) => setBSearch(e.target.value)} className="admin__input"
+                            placeholder="🔎 Buscar por código, nombre o teléfono" style={{ maxWidth: 360, marginBottom: '1rem' }} />
+
                         {bFetching ? (
                             <p className="admin__list-loading">Cargando citas...</p>
                         ) : filteredBookings.length === 0 ? (
@@ -572,6 +589,7 @@ export default function Admin() {
                                                 <div className="admin__record-main">
                                                     <div className="admin__record-title-row">
                                                         <span className="admin__record-name">{b.client?.name}</span>
+                                                        <span className="admin__record-code" title="Código de reserva">🔖 {bookingCode(b)}</span>
                                                         <span className="admin__record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
                                                     <div className="admin__record-meta">
@@ -908,6 +926,7 @@ export default function Admin() {
                 )}
 
                 {/* ════════ BANNER ════════ */}
+                {tab === 'turnos' && <AdminQueue showToast={showToast} initialCode={scannedCode} />}
                 {tab === 'portada' && <AdminSlides showToast={showToast} />}
                 {tab === 'banner' && <AdminBanner showToast={showToast} />}
 

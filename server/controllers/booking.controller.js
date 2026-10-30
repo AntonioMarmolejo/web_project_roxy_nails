@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import crypto from 'crypto'
 import Booking from '../models/Booking.js'
 import Service from '../models/Service.js'
 import { BOOKING_SLOTS, BOOKING_CAPACITY, BOOKING_TIMEZONE, coveredSlots } from '../config/booking.js'
@@ -143,7 +144,7 @@ export const createBooking = async (req, res, next) => {
     }
 
     const booking = await takeSeat(day, hours, null, (slotKeys) => Booking.create({
-      client, service, timeSlot, notes, paymentMethod, slotKeys,
+      client, service, timeSlot, notes, paymentMethod, slotKeys, code: newBookingCode(),
       date: new Date(`${day}T00:00:00Z`),
       ...(req.user && { createdBy: req.user._id }),
     }))
@@ -204,5 +205,87 @@ export const cancelBooking = async (req, res, next) => {
     booking.slotKeys = undefined   // libera sus horas
     await booking.save()
     res.json(booking)
+  } catch (err) { next(err) }
+}
+
+// ─── Turnos: código de reserva, llegada y sala de espera ────────
+
+// Código de reserva (comprobante, QR y pantalla de turnos): 6 caracteres aleatorios sin los que
+// se confunden (0/O, 1/I/L). Las citas anteriores no tienen código propio: usan los últimos 6 del id.
+const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'
+function newBookingCode() {
+  const bytes = crypto.randomBytes(6)
+  return Array.from(bytes, b => CODE_ALPHABET[b % CODE_ALPHABET.length]).join('')
+}
+export const bookingCode = (b) => b.code || String(b._id).slice(-6).toUpperCase()
+const CODE_RE = /^[0-9A-Z]{6}$/
+
+// GET /bookings/code/:code — admin: la cita de ese código (si hubiera dos, la de fecha más cercana a hoy)
+export const getBookingByCode = async (req, res, next) => {
+  try {
+    const code = String(req.params.code || '').trim().toUpperCase()
+    if (!CODE_RE.test(code)) return res.status(400).json({ message: 'El código debe tener 6 letras o números.' })
+    const matches = await Booking.find({ $or: [
+      { code },
+      // citas anteriores al código propio
+      { code: { $exists: false }, $expr: { $eq: [{ $toUpper: { $substrCP: [{ $toString: '$_id' }, 18, 6] } }, code] } },
+    ] }).populate('service', 'name duration price')
+    if (!matches.length) return res.status(404).json({ message: `No existe ninguna cita con el código ${code}.` })
+    const today = new Date(`${todayAtShop()}T00:00:00Z`).getTime()
+    matches.sort((a, b) => Math.abs(a.date - today) - Math.abs(b.date - today))
+    res.json(matches[0])
+  } catch (err) { next(err) }
+}
+
+// Citas de hoy para la sala de espera, en orden de turno (hora de la cita)
+const todaysBookings = (statuses) => Booking.find({ date: dayFilter(todayAtShop()), status: { $in: statuses } })
+  .populate('service', 'name duration price')
+  .sort({ timeSlot: 1, createdAt: 1 })
+
+// GET /bookings/queue — admin: citas de hoy (pendientes, confirmadas y atendidas)
+export const getTodayQueue = async (_req, res, next) => {
+  try {
+    res.json({ date: todayAtShop(), bookings: await todaysBookings(['pending', 'confirmed', 'completed']) })
+  } catch (err) { next(err) }
+}
+
+// GET /bookings/queue/public — pantalla del local: solo códigos y horas, sin datos personales
+export const getPublicQueue = async (_req, res, next) => {
+  try {
+    const list = await todaysBookings(['confirmed'])
+    const item = (b) => ({ code: bookingCode(b), timeSlot: b.timeSlot, arrived: Boolean(b.arrivedAt) })
+    res.json({
+      date: todayAtShop(),
+      serving: list.filter(b => b.calledAt).sort((a, b) => b.calledAt - a.calledAt)
+        .map(b => ({ ...item(b), calledAt: b.calledAt })),
+      next: list.filter(b => !b.calledAt).map(item),
+    })
+  } catch (err) { next(err) }
+}
+
+const ACTIVE = ['pending', 'confirmed']
+
+// PATCH /bookings/:id/arrive — admin: el cliente llegó (se escaneó su QR). Volver a pulsar lo deshace.
+export const markArrived = async (req, res, next) => {
+  try {
+    const booking = await Booking.findById(req.params.id)
+    if (!booking) return res.status(404).json({ message: 'Cita no encontrada' })
+    if (!ACTIVE.includes(booking.status)) return res.status(400).json({ message: 'Esta cita está cancelada o ya fue atendida.' })
+    booking.arrivedAt = booking.arrivedAt ? null : new Date()
+    await booking.save()
+    res.json(await booking.populate('service', 'name duration price'))
+  } catch (err) { next(err) }
+}
+
+// PATCH /bookings/:id/call — admin: llamar al cliente (aparece como "Atendiendo" en la pantalla)
+export const callBooking = async (req, res, next) => {
+  try {
+    const booking = await Booking.findById(req.params.id)
+    if (!booking) return res.status(404).json({ message: 'Cita no encontrada' })
+    if (booking.status !== 'confirmed') return res.status(400).json({ message: 'Solo se puede llamar a una cita confirmada.' })
+    booking.calledAt = new Date()
+    booking.arrivedAt ||= booking.calledAt
+    await booking.save()
+    res.json(await booking.populate('service', 'name duration price'))
   } catch (err) { next(err) }
 }

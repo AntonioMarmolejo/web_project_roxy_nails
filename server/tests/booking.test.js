@@ -81,6 +81,8 @@ describe('Citas — una sola cita por hora', () => {
         expect(res.status).toBe(201)
         expect(res.body.timeSlot).toBe('09:00')
         expect(res.body.slotKey).toBeUndefined()
+        // Código de reserva propio, legible (sin 0/O ni 1/I/L)
+        expect(res.body.code).toMatch(/^[A-HJKMNP-Z2-9]{6}$/)
     })
 
     it('rechaza otra cita en la misma hora con 409', async () => {

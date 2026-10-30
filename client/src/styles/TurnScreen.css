@@ -1,0 +1,164 @@
+/* Pantalla de turnos del local (TV o tablet). Cubre toda la página, sin menú ni pie. */
+.turns {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(ellipse at top, var(--color-surface-soft), var(--color-bg) 70%);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    overflow: hidden;
+}
+.turns__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2vh 4vw;
+    border-bottom: 1px solid var(--color-border);
+}
+.turns__brand {
+    font-family: var(--font-heading);
+    font-size: clamp(22px, 3.2vw, 44px);
+    color: var(--color-primary);
+}
+.turns__brand em {
+    color: var(--color-primary-light);
+}
+.turns__clock {
+    font-size: clamp(22px, 3vw, 40px);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+.turns__body {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 3vw;
+    padding: 4vh 4vw;
+    min-height: 0;
+}
+.turns__label {
+    margin-bottom: 2vh;
+    font-size: clamp(16px, 1.8vw, 26px);
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-primary-light);
+}
+.turns__serving {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4vh 3vw;
+    background: var(--color-surface);
+    border: 2px solid var(--color-primary);
+    border-radius: 28px;
+    text-align: center;
+}
+.turns__serving-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+.turns__serving-code {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: clamp(64px, 11vw, 190px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--color-primary);
+}
+.turns__serving-item + .turns__serving-item .turns__serving-code {
+    font-size: clamp(40px, 6vw, 100px);   /* si atienden a varios a la vez */
+}
+.turns__serving-time {
+    display: block;
+    margin-top: 1vh;
+    font-size: clamp(16px, 1.8vw, 28px);
+    color: var(--color-text-secondary);
+}
+.turns__idle {
+    font-size: clamp(20px, 2.4vw, 36px);
+    color: var(--color-text-muted);
+}
+.turns__idle--small {
+    font-size: clamp(16px, 1.6vw, 24px);
+}
+.turns__next-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4vh;
+}
+.turns__next-item {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    padding: 1.6vh 1.6vw;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+}
+.turns__next-time {
+    font-size: clamp(16px, 1.8vw, 28px);
+    color: var(--color-text-secondary);
+}
+.turns__next-code {
+    flex: 1;
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 3vw, 48px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--color-text);
+}
+.turns__next-here {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.4vh 1vw;
+    font-size: clamp(12px, 1.1vw, 18px);
+    border-radius: 999px;
+    color: var(--color-success);
+    background: var(--color-success-bg);
+}
+.turns__footer {
+    padding: 2vh 4vw;
+    font-size: clamp(13px, 1.4vw, 22px);
+    text-align: center;
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+}
+.turns__sound-btn {
+    position: absolute;
+    left: 50%;
+    bottom: 9vh;
+    transform: translateX(-50%);
+    padding: 14px 28px;
+    font: 600 16px var(--font-body);
+    color: var(--color-on-primary);
+    background: var(--color-primary);
+    border: 0;
+    border-radius: 999px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+/* Destello al llamar un turno nuevo */
+.turns--flash .turns__serving {
+    animation: turns-flash 0.8s ease-in-out 4;
+}
+@keyframes turns-flash {
+    0%, 100% { background: var(--color-surface); }
+    50%      { background: var(--color-surface-tint); box-shadow: 0 0 60px rgba(var(--color-primary-rgb), 0.45); }
+}
+
+/* Tablet en vertical o celular */
+@media (max-width: 800px) {
+    .turns__body {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+}

@@ -528,3 +528,11 @@ a.admin__action-btn {
     text-decoration: none;
     font-weight: 600;
 }
+
+/* Código de reserva en cada cita */
+.admin__record-code {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--color-primary);
+}

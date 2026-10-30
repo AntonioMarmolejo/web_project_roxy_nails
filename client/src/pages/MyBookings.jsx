@@ -6,6 +6,7 @@ import PageHeader from '../components/PageHeader'
 import '../styles/MyBookings.css'
 import { brand } from '../config/brand'
 import { formatPrice } from '../config/services'
+import { bookingCode } from '../utils/turnos'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -93,6 +94,7 @@ export default function MyBookings() {
                                             <span>📅 {dateStr}</span>
                                             <span>🕐 {b.timeSlot}</span>
                                             {b.service && <span className="mybookings__meta-price">💰 {formatPrice(b.service.price)}</span>}
+                                            <span title="Código de reserva: muéstralo al llegar">🔖 {bookingCode(b)}</span>
                                         </div>
                                         {b.notes && (
                                             <p className="mybookings__notes">
