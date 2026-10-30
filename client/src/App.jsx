@@ -28,6 +28,17 @@ import WhatsAppButton from './components/WhatsAppButton'
 import InstallAppBanner from './components/InstallAppBanner'
 import RequireAccount from './components/RequireAccount'
 import TurnScreen from './pages/TurnScreen'
+import { Analytics } from '@vercel/analytics/react'
+
+// Vercel Web Analytics: no cuenta el panel ni la pantalla de turnos del local (inflarían las visitas)
+// y quita los parámetros de la dirección (p. ej. el código de reserva del QR: /admin?turno=…)
+const IGNORED_PATHS = /^\/(admin|turnos)(\/|$)/
+const analyticsBeforeSend = (event) => {
+    const url = new URL(event.url)
+    if (IGNORED_PATHS.test(url.pathname)) return null
+    url.search = ''
+    return { ...event, url: url.toString() }
+}
 import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -45,6 +56,7 @@ function App() {
             <AccountDrawer />
             <WhatsAppButton />
             <InstallAppBanner />
+            <Analytics beforeSend={analyticsBeforeSend} />
             <Routes>
                 <Route path="/"            element={<Home />} />
                 <Route path="/galeria"     element={<Gallery />} />
