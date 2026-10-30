@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { fetchServices } from '../api/services'
 import '../styles/Footer.css'
 import { brand } from '../config/brand'
+import { canPromptInstall, promptInstall, isStandalone, showInstallHelp } from '../utils/installApp'
 
 export default function Footer() {
     const navigate = useNavigate()
@@ -40,6 +41,12 @@ export default function Footer() {
                     {[`📍 ${brand.address}`, `📞 ${brand.phone}`, '🕐 Lun–Sáb 8–19h'].map(c => (
                         <p key={c} className="footer__text">{c}</p>
                     ))}
+                    {!isStandalone() && (
+                        <button type="button" className="footer__install-btn"
+                            onClick={() => (canPromptInstall() ? promptInstall() : showInstallHelp())}>
+                            📲 Instalar la app
+                        </button>
+                    )}
                 </div>
                 <div>
                     <h4 className="footer__heading">Redes sociales</h4>

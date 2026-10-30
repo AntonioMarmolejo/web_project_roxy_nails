@@ -25,6 +25,7 @@ import Navbar         from './components/Navbar'
 import CartDrawer     from './components/CartDrawer'
 import AccountDrawer  from './components/AccountDrawer'
 import WhatsAppButton from './components/WhatsAppButton'
+import InstallAppBanner from './components/InstallAppBanner'
 import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -41,6 +42,7 @@ function App() {
             <CartDrawer />
             <AccountDrawer />
             <WhatsAppButton />
+            <InstallAppBanner />
             <Routes>
                 <Route path="/"            element={<Home />} />
                 <Route path="/galeria"     element={<Gallery />} />
