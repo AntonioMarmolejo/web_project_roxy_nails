@@ -1,6 +1,8 @@
 // Comprobante de cita en imagen (PNG) para que el cliente lo guarde y lo muestre al llegar.
 // Se dibuja en un canvas con los colores y fuentes de la marca: no depende de librerías externas.
 import { brand } from '../config/brand'
+import { PAYMENT_LABELS, isPrepaid } from '../config/payments'
+import { bookingCode, bookingQrDataUrl } from './turnos'
 
 const W = 1080, H = 1820
 const C = {
@@ -157,4 +159,31 @@ export async function saveTicket(blob, filename) {
     a.click()
     a.remove()
     setTimeout(() => URL.revokeObjectURL(url), 1000)
+}
+
+// Comprobante completo de una cita: filas, código y QR (el QR se genera aquí mismo, así nunca falta).
+// duration: minutos del servicio si la cita no los trae (p. ej. justo después de agendar).
+export async function downloadBookingTicket(b, { duration } = {}) {
+    const minutes = duration ?? b.service?.duration
+    const day = new Date(b.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
+    let time = b.timeSlot
+    if (minutes) {
+        const t = Number(b.timeSlot.slice(0, 2)) * 60 + Number(b.timeSlot.slice(3)) + minutes
+        time += ` – ${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`
+    }
+    const prepaid = isPrepaid(b.paymentMethod)
+    const code = bookingCode(b)
+    const blob = await drawTicket({
+        rows: [
+            ['Servicio', b.service?.name],
+            ['Fecha', day.charAt(0).toUpperCase() + day.slice(1)],
+            ['Hora', time],
+            ['Cliente', b.client?.name],
+            prepaid ? ['Pago adelantado', PAYMENT_LABELS[b.paymentMethod]] : ['Pago', 'En el local'],
+        ],
+        code,
+        qr: await bookingQrDataUrl(code),
+        note: prepaid ? 'Recuerda enviar tu comprobante de pago por WhatsApp' : '',
+    })
+    await saveTicket(blob, `cita-captains-${String(b.date).slice(0, 10)}-${b.timeSlot.replace(':', 'h')}.png`)
 }

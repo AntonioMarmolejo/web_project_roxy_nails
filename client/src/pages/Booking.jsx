@@ -10,7 +10,7 @@ import { brand } from '../config/brand'
 import { categoryIcon, formatPrice, formatDuration, hasPrice } from '../config/services'
 import PaymentMethods, { PREPAID_OPTIONS } from '../components/PaymentMethods'
 import { PAYMENT_LABELS, isPrepaid, receiptWhatsappUrl } from '../config/payments'
-import { drawTicket, saveTicket } from '../utils/bookingTicket'
+import { downloadBookingTicket } from '../utils/bookingTicket'
 import { bookingCode, bookingQrDataUrl } from '../utils/turnos'
 
 // ─── Calendar helpers ────────────────────────────────────────────
@@ -229,13 +229,9 @@ export default function Booking() {
         const downloadTicket = async () => {
             setSavingTicket(true)
             try {
-                const blob = await drawTicket({
-                    rows: rows.map(([k, v]) => [k, k === 'Fecha' ? v.charAt(0).toUpperCase() + v.slice(1) : v]),
-                    code,
-                    qr: qrImage,
-                    note: prepaid ? 'Recuerda enviar tu comprobante de pago por WhatsApp' : '',
-                })
-                await saveTicket(blob, `cita-captains-${result.date.slice(0, 10)}-${result.timeSlot.replace(':', 'h')}.png`)
+                await downloadBookingTicket(result, { duration: selSvc?.duration })
+            } catch {
+                window.alert('No se pudo generar el comprobante. Intenta de nuevo.')
             } finally {
                 setSavingTicket(false)
             }

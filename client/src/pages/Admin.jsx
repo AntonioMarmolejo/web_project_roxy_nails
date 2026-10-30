@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
 import { useAuthStore } from '../store/useAuthStore'
 import { fetchAllServices, createService, updateService, removeService } from '../api/services'
-import { fetchAllBookings, updateBookingStatus } from '../api/bookings'
+import { fetchAllBookings, updateBookingStatus, markBookingArrived, callBookingTurn } from '../api/bookings'
 import { fetchAllProducts, createProduct, updateProduct, toggleProduct, deleteProduct } from '../api/products'
 import { fetchAllOrders, updateOrderStatus } from '../api/orders'
 import { fetchAllWorkshops, createWorkshop, updateWorkshop, toggleWorkshop, deleteWorkshop } from '../api/workshops'
@@ -18,7 +18,7 @@ import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
 import AdminSlides from '../components/AdminSlides'
 import AdminQueue from '../components/AdminQueue'
-import { bookingCode } from '../utils/turnos'
+import { bookingCode, shopNow } from '../utils/turnos'
 import { PAYMENT_LABELS, isPrepaid, RECEIPT_PHONE } from '../config/payments'
 import { toWhatsappNumber, whatsappUrl, bookingConfirmedMessage } from '../utils/whatsapp'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
@@ -52,6 +52,7 @@ const ENROLLMENT_STATUS = {
 // ─── Colores de acciones (botones de estado) ─────────────────────────────────
 const ACTION_GREEN  = { '--btn-bg': 'var(--color-success-bg)', '--btn-border': 'var(--color-success-border)', '--btn-color': 'var(--color-success)' }
 const ACTION_BLUE   = { '--btn-bg': 'var(--color-info-bg)', '--btn-border': 'var(--color-info-border)', '--btn-color': 'var(--color-info)' }
+const ACTION_GOLD   = { '--btn-bg': 'var(--color-primary)', '--btn-border': 'var(--color-primary)', '--btn-color': 'var(--color-on-primary)' }
 const ACTION_WHATSAPP = { '--btn-bg': '#25D366', '--btn-border': '#25D366', '--btn-color': '#0B0B0B' }
 const ACTION_PURPLE = { '--btn-bg': 'var(--color-purple-bg)', '--btn-border': 'var(--color-purple-border)', '--btn-color': 'var(--color-purple)' }
 
@@ -213,6 +214,17 @@ export default function Admin() {
     }
 
     // ── Acciones Citas ───────────────────────────────────────────────────────
+    // Sala de espera desde Citas: "Llegó" y "Atender ahora" (sale en la pantalla de turnos)
+    const turnAction = async (id, action) => {
+        setUpdatingId(id)
+        try {
+            const { data } = await (action === 'call' ? callBookingTurn(id) : markBookingArrived(id))
+            setBookings(b => b.map(x => x._id === id ? data : x))
+            showToast(action === 'call' ? 'Atendiendo ahora: aparece en la pantalla de turnos 📢' : (data.arrivedAt ? 'Llegada registrada ✓' : 'Llegada desmarcada'))
+        } catch (err) { showToast(err.response?.data?.message || 'Error al actualizar cita') }
+        finally { setUpdatingId(null) }
+    }
+
     const changeBookingStatus = async (id, status) => {
         setUpdatingId(id)
         try {
@@ -590,6 +602,8 @@ export default function Admin() {
                                                     <div className="admin__record-title-row">
                                                         <span className="admin__record-name">{b.client?.name}</span>
                                                         <span className="admin__record-code" title="Código de reserva">🔖 {bookingCode(b)}</span>
+                                                        {b.status === 'confirmed' && b.calledAt && <span className="admin__record-badge" style={{ '--status-bg': 'var(--color-surface-tint)', '--status-color': 'var(--color-primary)' }}>🔔 Atendiendo</span>}
+                                                        {b.status === 'confirmed' && !b.calledAt && b.arrivedAt && <span className="admin__record-badge" style={{ '--status-bg': 'var(--color-success-bg)', '--status-color': 'var(--color-success)' }}>✅ En el local</span>}
                                                         <span className="admin__record-badge" style={{ '--status-bg': st.bg, '--status-color': st.color }}>{st.label}</span>
                                                     </div>
                                                     <div className="admin__record-meta">
@@ -611,6 +625,10 @@ export default function Admin() {
                                                     {b.status === 'confirmed' && (toWhatsappNumber(b.client?.phone)
                                                         ? <a href={whatsappUrl(toWhatsappNumber(b.client.phone), bookingConfirmedMessage(b))} target="_blank" rel="noopener noreferrer" className="admin__action-btn" style={ACTION_WHATSAPP}>📲 Avisar por WhatsApp</a>
                                                         : <span className="admin__action-btn" title={`El teléfono "${b.client?.phone || ''}" no parece un número de WhatsApp`}>📵 Teléfono no válido</span>)}
+                                                    {b.status === 'confirmed' && String(b.date).slice(0, 10) === shopNow().day && !b.calledAt && <>
+                                                        <button onClick={() => turnAction(b._id, 'call')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_GOLD}>📢 Atender ahora</button>
+                                                        <button onClick={() => turnAction(b._id, 'arrive')} disabled={updatingId === b._id} className="admin__action-btn">{b.arrivedAt ? 'Deshacer llegada' : '✅ Llegó'}</button>
+                                                    </>}
                                                     {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_BLUE}>Completar</button>}
                                                     {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} className="admin__action-btn">Cancelar</button>}
                                                 </div>

@@ -7,6 +7,7 @@ import '../styles/MyBookings.css'
 import { brand } from '../config/brand'
 import { formatPrice } from '../config/services'
 import { bookingCode } from '../utils/turnos'
+import { downloadBookingTicket } from '../utils/bookingTicket'
 
 const STATUS = {
     pending: { label: 'Pendiente', bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
@@ -19,6 +20,15 @@ export default function MyBookings() {
     const [bookings, setBookings] = useState([])
     const [loading, setLoading] = useState(true)
     const [cancelling, setCancelling] = useState(null)
+    const [downloading, setDownloading] = useState(null)
+
+    // Volver a descargar el comprobante (con su QR) de una cita
+    const downloadTicket = async (b) => {
+        setDownloading(b._id)
+        try { await downloadBookingTicket(b) }
+        catch { window.alert('No se pudo generar el comprobante. Intenta de nuevo.') }
+        finally { setDownloading(null) }
+    }
 
     useEffect(() => {
         fetchMyBookings()
@@ -103,9 +113,14 @@ export default function MyBookings() {
                                         )}
                                     </div>
                                     {canCancel && (
-                                        <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} className="mybookings__cancel-btn">
-                                            {cancelling === b._id ? '...' : 'Cancelar'}
-                                        </button>
+                                        <div className="mybookings__actions">
+                                            <button onClick={() => downloadTicket(b)} disabled={downloading === b._id} className="mybookings__ticket-btn">
+                                                {downloading === b._id ? '...' : '⬇ Comprobante'}
+                                            </button>
+                                            <button onClick={() => handleCancel(b._id)} disabled={cancelling === b._id} className="mybookings__cancel-btn">
+                                                {cancelling === b._id ? '...' : 'Cancelar'}
+                                            </button>
+                                        </div>
                                     )}
                                 </div>
                             )

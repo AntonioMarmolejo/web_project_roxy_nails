@@ -536,3 +536,29 @@ a.admin__action-btn {
     letter-spacing: 0.06em;
     color: var(--color-primary);
 }
+
+/* Celular: las tarjetas de citas/pedidos no deben salirse de la pantalla */
+@media (max-width: 640px) {
+    .admin__record-card {
+        padding: 0.9rem 1rem;
+        overflow: hidden;
+    }
+    .admin__record-main {
+        min-width: 0;
+        flex-basis: 100%;
+    }
+    .admin__record-meta,
+    .admin__record-contact {
+        gap: 4px 12px;
+        overflow-wrap: anywhere;
+    }
+    .admin__record-actions {
+        width: 100%;
+        flex-shrink: 1;
+    }
+    .admin__action-btn {
+        flex: 1 1 auto;
+        text-align: center;
+        padding: 9px 10px;
+    }
+}

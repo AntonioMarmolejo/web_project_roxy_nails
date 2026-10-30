@@ -122,3 +122,22 @@
     text-align: center;
     margin-top: 2.5rem;
 }
+
+/* Acciones de cada cita: comprobante y cancelar */
+.mybookings__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.mybookings__ticket-btn {
+    background: transparent;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-body);
+}
