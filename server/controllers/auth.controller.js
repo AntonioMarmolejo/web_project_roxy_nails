@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import { OAuth2Client } from 'google-auth-library'
 import User from '../models/User.js'
 import { sendPasswordReset, mailEnabled } from '../utils/mailer.js'
 
@@ -33,13 +34,68 @@ export const login = async (req, res, next) => {
     const { email, password } = req.body
     if (!isStr(email) || !isStr(password)) return res.status(400).json({ message: 'Correo y contraseña requeridos' })
 
-    const user = await User.findOne({ email }).select('+password')
+    const user = await User.findOne({ email }).select('+password +googleId')
+    if (user && !user.password && user.googleId)
+      return res.status(401).json({ message: 'Esta cuenta se creó con Google. Entra con el botón «Continuar con Google».' })
     if (!user || !(await user.comparePassword(password)))
       return res.status(401).json({ message: 'Credenciales incorrectas' })
 
     const token = signToken(user._id)
     res.json({ token, user: { id: user._id, name: user.name, email, role: user.role } })
   } catch (err) { next(err) }
+}
+
+// ─── Inicio de sesión con Google ─────────────────────────────────
+const googleClient = new OAuth2Client()
+
+// GET /auth/google/config — la página pide el ID de cliente (es público); null = botón oculto
+export const googleConfig = (_req, res) => {
+  res.json({ clientId: process.env.GOOGLE_CLIENT_ID || null })
+}
+
+// POST /auth/google — { credential } que entrega el botón de Google.
+// Se verifica con Google; entra a la cuenta con ese Google, o a la que tenga el mismo correo
+// (y se vincula), o crea una cuenta nueva.
+export const googleLogin = async (req, res, next) => {
+  try {
+    const clientId = process.env.GOOGLE_CLIENT_ID
+    if (!clientId) return res.status(503).json({ message: 'El inicio de sesión con Google no está disponible por ahora.' })
+    const { credential } = req.body
+    if (!isStr(credential)) return res.status(400).json({ message: 'Falta la credencial de Google.' })
+
+    let payload
+    try {
+      payload = (await googleClient.verifyIdToken({ idToken: credential, audience: clientId })).getPayload()
+    } catch {
+      return res.status(401).json({ message: 'No se pudo verificar tu cuenta de Google. Intenta de nuevo.' })
+    }
+    if (!payload?.email || !payload.email_verified)
+      return res.status(401).json({ message: 'Tu cuenta de Google no tiene un correo verificado.' })
+
+    const email = payload.email.toLowerCase()
+    let user = await User.findOne({ googleId: payload.sub })
+      || await User.findOne({ email }).select('+googleId')
+    let isNew = false
+
+    if (user && !user.googleId) {
+      // Ya tenía cuenta con ese correo: se vincula con Google (Google confirmó que el correo es suyo)
+      user.googleId = payload.sub
+      await user.save({ validateBeforeSave: false })
+    }
+    if (!user) {
+      user = await User.create({ name: payload.name || email.split('@')[0], email, googleId: payload.sub })
+      isNew = true
+    }
+
+    const token = signToken(user._id)
+    res.status(isNew ? 201 : 200).json({
+      token, isNew,
+      user: { id: user._id, name: user.name, email: user.email, phone: user.phone, role: user.role },
+    })
+  } catch (err) {
+    if (err.code === 11000) return res.status(409).json({ message: 'Ya existe una cuenta con ese correo.' })
+    next(err)
+  }
 }
 
 export const getMe = async (req, res) => {
@@ -72,6 +128,8 @@ export const changePassword = async (req, res, next) => {
       return res.status(400).json({ message: 'La nueva contraseña debe tener al menos 6 caracteres.' })
 
     const user = await User.findById(req.user._id).select('+password')
+    if (!user.password)
+      return res.status(400).json({ message: 'Tu cuenta usa Google y no tiene contraseña. Para crear una, usa «¿Olvidaste tu contraseña?».' })
     if (!(await user.comparePassword(currentPassword)))
       return res.status(401).json({ message: 'Contraseña actual incorrecta.' })
 

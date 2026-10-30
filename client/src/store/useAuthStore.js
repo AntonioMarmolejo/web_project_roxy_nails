@@ -31,6 +31,20 @@ export const useAuthStore = create((set) => ({
         }
     },
 
+    // Inicio de sesión o registro con la credencial del botón de Google
+    loginWithGoogle: async (credential) => {
+        set({ loading: true })
+        try {
+            const { data } = await api.post('/auth/google', { credential })
+            localStorage.setItem('rn_token', data.token)
+            set({ user: data.user, token: data.token, loading: false, authReady: true })
+            return data
+        } catch (err) {
+            set({ loading: false })
+            throw err
+        }
+    },
+
     logout: () => {
         localStorage.removeItem('rn_token')
         set({ user: null, token: null, authReady: true })

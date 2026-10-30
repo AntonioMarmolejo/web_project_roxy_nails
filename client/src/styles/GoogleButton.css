@@ -1,0 +1,30 @@
+/* Botón "Continuar con Google" del formulario de login/registro */
+.google-btn {
+    margin-bottom: 1.25rem;
+}
+.google-btn__slot {
+    display: flex;
+    justify-content: center;
+    min-height: 44px;
+}
+.google-btn__placeholder {
+    height: 44px;
+    margin-top: -44px;
+    border-radius: 999px;
+    background: var(--color-surface-soft);
+}
+.google-btn__divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 1.25rem;
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+.google-btn__divider::before,
+.google-btn__divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-border);
+}

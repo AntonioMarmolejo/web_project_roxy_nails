@@ -3,6 +3,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import PasswordInput from '../components/PasswordInput'
+import GoogleButton from '../components/GoogleButton'
 import '../styles/Login.css'
 import { brand } from '../config/brand'
 
@@ -15,7 +16,7 @@ export default function Login() {
     const [mode, setMode] = useState(initialMode === 'register' ? 'register' : 'login')
     const [form, setForm] = useState(EMPTY_FORM)
     const [error, setError] = useState('')
-    const { login, register, loading } = useAuthStore()
+    const { login, register, loginWithGoogle, loading } = useAuthStore()
     const navigate = useNavigate()
 
     const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value })
@@ -32,6 +33,16 @@ export default function Login() {
             navigate(from || '/', { replace: true, state: fromState })
         } catch (err) {
             setError(err.response?.data?.message || 'Ocurrió un error, intenta de nuevo.')
+        }
+    }
+
+    const google = async (credential) => {
+        setError('')
+        try {
+            await loginWithGoogle(credential)
+            navigate(from || '/', { replace: true, state: fromState })
+        } catch (err) {
+            setError(err.response?.data?.message || 'No se pudo entrar con Google. Intenta de nuevo.')
         }
     }
 
@@ -74,6 +85,8 @@ export default function Login() {
                         </button>
                     ))}
                 </div>
+
+                <GoogleButton onCredential={google} onError={setError} />
 
                 <form onSubmit={submit} className="login__form">
                     {mode === 'register' && (

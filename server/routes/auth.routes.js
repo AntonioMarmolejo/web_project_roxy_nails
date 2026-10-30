@@ -4,6 +4,7 @@ import {
   register, login, getMe,
   updateProfile, changePassword,
   forgotPassword, resetPassword,
+  googleConfig, googleLogin,
 } from '../controllers/auth.controller.js'
 import { protect } from '../middleware/auth.middleware.js'
 
@@ -20,6 +21,8 @@ const authLimiter = rateLimit({
 
 router.post('/register',        authLimiter, register)
 router.post('/login',           authLimiter, login)
+router.get('/google/config',    googleConfig)
+router.post('/google',          authLimiter, googleLogin)
 router.post('/forgot-password', authLimiter, forgotPassword)
 router.post('/reset-password/:token', authLimiter, resetPassword)
 router.get('/me',               protect, getMe)
