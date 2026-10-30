@@ -149,7 +149,7 @@ export default function AdminSlides({ showToast }) {
                     <h2 className="admin__form-title">{editing ? 'Editar diapositiva' : 'Nueva diapositiva'}</h2>
                     <form onSubmit={submit} className="admin__form">
                         <ImageInput label="Imagen *" value={form.image} onChange={(url) => setForm(f => ({ ...f, image: url }))} />
-                        <p className="admin__hint">Mejor una foto vertical o cuadrada. En celular la imagen no se muestra, solo el texto.</p>
+                        <p className="admin__hint">Mejor una foto cuadrada con lo importante en el centro: en computadora se ve cuadrada y en celular se recorta en horizontal, arriba del texto.</p>
                         <div><label className="admin__label">Etiqueta</label><input name="tag" value={form.tag} onChange={handle} className="admin__input" placeholder="✨ Más solicitado" maxLength={40} /></div>
                         <div><label className="admin__label">Título *</label><input name="title" value={form.title} onChange={handle} className="admin__input" placeholder="Corte clásico con estilo" maxLength={80} required /></div>
                         <div>

@@ -271,9 +271,7 @@ a {
         min-height: 320px;
         padding: 2.5rem 0 3.25rem;
     }
-    .hero__media {
-        display: none !important;
-    }
+    /* La imagen pasa a ser el fondo de la diapositiva (ver HeroSlider.css) */
     .hero__arrow {
         display: none;
     }
