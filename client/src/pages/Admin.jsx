@@ -16,6 +16,7 @@ import '../styles/Admin.css'
 import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
 import AdminSlides from '../components/AdminSlides'
+import { PAYMENT_LABELS, isPrepaid, RECEIPT_PHONE } from '../config/payments'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
@@ -575,6 +576,9 @@ export default function Admin() {
                                                         {b.client?.email && <span>✉️ {b.client.email}</span>}
                                                     </div>
                                                     {b.notes && <p className="admin__record-notes">"{b.notes}"</p>}
+                                                    {isPrepaid(b.paymentMethod)
+                                                        ? <p className="admin__record-notes" style={{ fontStyle: 'normal', color: 'var(--color-warning)' }}>💳 Pago por adelantado · {PAYMENT_LABELS[b.paymentMethod]} — revisa el comprobante en el WhatsApp {RECEIPT_PHONE}</p>
+                                                        : <p className="admin__record-notes" style={{ fontStyle: 'normal' }}>💵 Pago: {PAYMENT_LABELS[b.paymentMethod] || PAYMENT_LABELS.local}</p>}
                                                 </div>
                                                 <div className="admin__record-actions">
                                                     {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_GREEN}>Confirmar</button>}
@@ -734,6 +738,9 @@ export default function Admin() {
                                                     </div>
                                                     {o.client?.address && <p className="admin__record-address">📍 {o.client.address}</p>}
                                                     {o.notes && <p className="admin__record-notes">"{o.notes}"</p>}
+                                                    {isPrepaid(o.paymentMethod)
+                                                        ? <p className="admin__record-notes" style={{ fontStyle: 'normal', color: 'var(--color-warning)' }}>💳 Pago por adelantado · {PAYMENT_LABELS[o.paymentMethod]} — revisa el comprobante en el WhatsApp {RECEIPT_PHONE}</p>
+                                                        : <p className="admin__record-notes" style={{ fontStyle: 'normal' }}>💵 Pago: {PAYMENT_LABELS[o.paymentMethod] || PAYMENT_LABELS.local}</p>}
                                                 </div>
                                                 <div className="admin__record-actions">
                                                     {o.status === 'pending'  && <button onClick={() => changeOrderStatus(o._id, 'paid')}      disabled={updatingOId === o._id} className="admin__action-btn" style={ACTION_GREEN}>Marcar pagado</button>}

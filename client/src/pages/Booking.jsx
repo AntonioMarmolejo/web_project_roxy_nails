@@ -7,7 +7,10 @@ import { fetchServices } from '../api/services'
 import { fetchSlots, createBooking } from '../api/bookings'
 import '../styles/Booking.css'
 import { brand } from '../config/brand'
-import { categoryIcon, formatPrice, formatDuration } from '../config/services'
+import { categoryIcon, formatPrice, formatDuration, hasPrice } from '../config/services'
+import PaymentMethods, { PREPAID_OPTIONS } from '../components/PaymentMethods'
+import { PAYMENT_LABELS, isPrepaid, receiptWhatsappUrl } from '../config/payments'
+import { drawTicket, saveTicket } from '../utils/bookingTicket'
 
 // ─── Calendar helpers ────────────────────────────────────────────
 const DAYS = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
@@ -91,6 +94,9 @@ export default function Booking() {
     const [slotNotice, setSlotNotice] = useState('')
 
     const [form, setForm] = useState({ name: '', phone: '', email: '', notes: '' })
+    const [prepay, setPrepay] = useState(false)               // ¿paga por adelantado?
+    const [payMethod, setPayMethod] = useState('qr_deuna')
+    const [savingTicket, setSavingTicket] = useState(false)
     const [submitting, setSubmitting] = useState(false)
     const [result, setResult] = useState(null)
     const [error, setError] = useState('')
@@ -172,6 +178,7 @@ export default function Booking() {
                 date: selDate,
                 timeSlot: selSlot,
                 notes: form.notes.trim() || undefined,
+                paymentMethod: prepay && hasPrice(selSvc) ? payMethod : 'local',
             })
             setResult(data)
         } catch (err) {
@@ -192,7 +199,7 @@ export default function Booking() {
 
     const resetWizard = () => {
         setResult(null); setStep(1); setSelSvc(null)
-        setSelDate(null); setSelSlot(null); setError(''); setSlotNotice('')
+        setSelDate(null); setSelSlot(null); setError(''); setSlotNotice(''); setPrepay(false)
     }
 
     // ── Pantalla de éxito ─────────────────────────────────────────
@@ -200,6 +207,32 @@ export default function Booking() {
         const dateFormatted = new Date(result.date).toLocaleDateString('es-ES', {
             weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
         })
+        const prepaid = isPrepaid(result.paymentMethod)
+        const serviceName = result.service?.name || selSvc?.name
+        const time = timeRange(result.timeSlot, selSvc?.duration)
+        const code = result._id.slice(-6).toUpperCase()
+        const rows = [
+            ['Servicio', serviceName],
+            ['Fecha', dateFormatted],
+            ['Hora', time],
+            ['Cliente', result.client?.name],
+            prepaid ? ['Pago adelantado', PAYMENT_LABELS[result.paymentMethod]] : ['Pago', 'En el local'],
+        ]
+
+        const downloadTicket = async () => {
+            setSavingTicket(true)
+            try {
+                const blob = await drawTicket({
+                    rows: rows.map(([k, v]) => [k, k === 'Fecha' ? v.charAt(0).toUpperCase() + v.slice(1) : v]),
+                    code,
+                    note: prepaid ? 'Recuerda enviar tu comprobante de pago por WhatsApp' : '',
+                })
+                await saveTicket(blob, `cita-captains-${result.date.slice(0, 10)}-${result.timeSlot.replace(':', 'h')}.png`)
+            } finally {
+                setSavingTicket(false)
+            }
+        }
+        const receiptText = `Hola, envío el comprobante de pago de mi cita en ${brand.fullName}: ${serviceName}, ${dateFormatted} a las ${result.timeSlot}, a nombre de ${result.client?.name} (código ${code}).`
         return (
             <div className="booking__success-wrap">
                 <div className="booking__success-card">
@@ -211,12 +244,7 @@ export default function Booking() {
                         Te esperamos con muchas ganas.
                     </p>
                     <div className="booking__summary-box">
-                        {[
-                            ['Servicio', result.service?.name || selSvc?.name],
-                            ['Fecha', dateFormatted],
-                            ['Hora', timeRange(result.timeSlot, selSvc?.duration)],
-                            ['Cliente', result.client?.name],
-                        ].map(([k, v]) => (
+                        {[...rows, ['Código', code]].map(([k, v]) => (
                             <div key={k} className="booking__summary-row">
                                 <span className="booking__summary-key">{k}</span>
                                 <span className="booking__summary-value">{v}</span>
@@ -228,9 +256,19 @@ export default function Booking() {
                             Recibirás confirmación en <strong>{result.client.email}</strong>
                         </p>
                     )}
-                    <button onClick={resetWizard} className="btn btn--primary" style={{ width: 'auto', padding: '13px 32px' }}>
-                        Agendar otra cita
-                    </button>
+                    <div className="booking__success-actions">
+                        <button onClick={downloadTicket} disabled={savingTicket} className="btn btn--primary">
+                            {savingTicket ? 'Preparando...' : '⬇ Descargar comprobante'}
+                        </button>
+                        {prepaid && (
+                            <a href={receiptWhatsappUrl(receiptText)} target="_blank" rel="noopener noreferrer" className="btn btn--ghost">
+                                📲 Enviar comprobante de pago
+                            </a>
+                        )}
+                        <button onClick={resetWizard} className="btn btn--ghost">
+                            Agendar otra cita
+                        </button>
+                    </div>
                 </div>
             </div>
         )
@@ -438,6 +476,33 @@ export default function Booking() {
                                 </label>
                                 <textarea name="notes" value={form.notes} onChange={handleForm} rows={3}
                                     placeholder="Opcional" className="booking__input" style={{ resize: 'vertical' }} />
+                            </div>
+
+                            {/* Pago por adelantado (opcional) */}
+                            <div className="checkout__payment-box" style={{ marginTop: 0 }}>
+                                {hasPrice(selSvc) ? (
+                                    <>
+                                        <button type="button" onClick={() => setPrepay(p => !p)}
+                                            className={`checkout__payment-option${prepay ? ' checkout__payment-option--active' : ''}`}>
+                                            <span className="checkout__payment-option-icon">💳</span>
+                                            <span className="checkout__payment-option-label">
+                                                ¿Deseas pagar por adelantado? <strong>{formatPrice(selSvc.price)}</strong>
+                                            </span>
+                                            <span className="checkout__payment-option-badge">{prepay ? 'Sí' : 'No'}</span>
+                                        </button>
+                                        {prepay ? (
+                                            <div style={{ marginTop: 10 }}>
+                                                <PaymentMethods options={PREPAID_OPTIONS} value={payMethod} onChange={setPayMethod} amount={selSvc.price} />
+                                            </div>
+                                        ) : (
+                                            <p className="booking__pay-note">Si no, pagas en el local el día de tu cita.</p>
+                                        )}
+                                    </>
+                                ) : (
+                                    <p className="booking__pay-note" style={{ marginTop: 0 }}>
+                                        💵 Este servicio no tiene precio fijo: el pago se hace en el local.
+                                    </p>
+                                )}
                             </div>
 
                             {error && (

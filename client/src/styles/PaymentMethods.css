@@ -1,0 +1,72 @@
+/* Detalles del pago por adelantado (tienda y citas) */
+.payment__qr-img {
+    width: 100%;
+    max-width: 220px;
+    padding: 10px;
+    background: var(--color-white);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(var(--color-primary-rgb), 0.15);
+}
+.payment__app-link {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.payment__accounts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    text-align: left;
+}
+.payment__account {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+}
+.payment__account-bank {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+.payment__account-type {
+    font-size: 12px;
+    color: var(--color-text-muted);
+}
+.payment__account-number {
+    margin-top: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--color-primary);
+}
+.payment__copy-btn {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 8px;
+    cursor: pointer;
+}
+.payment__copy-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+.payment__receipt-note {
+    margin-top: 12px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}

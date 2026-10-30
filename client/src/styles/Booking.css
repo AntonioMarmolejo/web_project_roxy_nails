@@ -126,6 +126,7 @@
 .booking__summary-row {
     display: flex;
     justify-content: space-between;
+    gap: 16px;
     margin-bottom: 10px;
     font-size: 14px;
 }
@@ -134,10 +135,12 @@
 }
 .booking__summary-key {
     color: var(--color-text-muted);
+    flex-shrink: 0;
 }
 .booking__summary-value {
     color: var(--color-text);
     font-weight: 500;
+    text-align: right;
 }
 .booking__success-email-note {
     font-size: 13px;
@@ -465,4 +468,25 @@
 @keyframes booking-floating-in-mobile {
     from { opacity: 0; transform: translateY(16px); }
     to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Pantalla de éxito: descargar comprobante, enviar pago, otra cita */
+.booking__success-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+.booking__success-actions .btn {
+    width: 100%;
+    max-width: 300px;
+    padding: 13px 24px;
+    text-align: center;
+}
+
+/* Paso 4: nota del pago */
+.booking__pay-note {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--color-text-muted);
 }

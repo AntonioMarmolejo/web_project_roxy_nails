@@ -27,6 +27,7 @@ export const getMyBookings = async (req, res, next) => {
 // ─── Disponibilidad ──────────────────────────────────────────────
 
 const STATUSES = ['pending', 'confirmed', 'cancelled', 'completed']
+const PAYMENT_METHODS = ['local', 'qr_deuna', 'qr_bdp', 'transfer']
 const SLOT_TAKEN = 'Esa hora acaba de ser reservada por otra persona. Por favor elige otra.'
 
 // Fecha "AAAA-MM-DD" válida, o null. Las citas se guardan a las 00:00 UTC de ese día.
@@ -102,15 +103,20 @@ export const getAvailableSlots = async (req, res, next) => {
 
 export const createBooking = async (req, res, next) => {
   try {
-    const { client, service, timeSlot, notes } = req.body
+    const { client, service, timeSlot, notes, paymentMethod = 'local' } = req.body
     const day = parseDay(req.body.date)
 
     if (!day) return res.status(400).json({ message: 'Fecha no válida' })
     if (day < todayAtShop()) return res.status(400).json({ message: 'No se puede reservar en una fecha pasada' })
     if (new Date(`${day}T00:00:00Z`).getUTCDay() === 0) return res.status(400).json({ message: 'No atendemos los domingos' })
     if (!BOOKING_SLOTS.includes(timeSlot)) return res.status(400).json({ message: 'Horario no válido' })
-    const svc = mongoose.isValidObjectId(service) && await Service.findOne({ _id: service, active: true }).select('duration')
+    if (!PAYMENT_METHODS.includes(paymentMethod)) return res.status(400).json({ message: 'Método de pago no válido' })
+    const svc = mongoose.isValidObjectId(service) && await Service.findOne({ _id: service, active: true }).select('duration price')
     if (!svc) return res.status(400).json({ message: 'El servicio elegido no está disponible' })
+    // Sin precio fijo no se sabe cuánto pagar: se paga en el local
+    if (paymentMethod !== 'local' && svc.price == null) {
+      return res.status(400).json({ message: 'Este servicio no tiene precio fijo: el pago se hace en el local' })
+    }
 
     const hours = coveredSlots(timeSlot, svc.duration)
     if (!hours) {
@@ -118,7 +124,7 @@ export const createBooking = async (req, res, next) => {
     }
 
     const booking = await takeSeat(day, hours, null, (slotKeys) => Booking.create({
-      client, service, timeSlot, notes, slotKeys,
+      client, service, timeSlot, notes, paymentMethod, slotKeys,
       date: new Date(`${day}T00:00:00Z`),
       ...(req.user && { createdBy: req.user._id }),
     }))

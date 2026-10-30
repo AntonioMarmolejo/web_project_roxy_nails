@@ -40,7 +40,7 @@ beforeAll(async () => {
     }
     await cleanup()
     service = await Service.create({ name: 'Servicio de prueba (citas)', category: 'capilar' })
-    alisado = await Service.create({ name: 'Alisado de prueba (citas)', category: 'capilar', duration: 120 })
+    alisado = await Service.create({ name: 'Alisado de prueba (citas)', category: 'capilar', duration: 120, price: 55 })
     const admin = await User.create({ name: 'Admin prueba', email: ADMIN_EMAIL, password: 'x1234567', role: 'admin' })
     adminToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '10m' })
 })
@@ -164,5 +164,31 @@ describe('Citas — según lo que dura cada servicio', () => {
             book({ date: DAY2, timeSlot: '16:00' }),
         ])
         expect(results.filter(r => r.status === 201)).toHaveLength(1)
+    })
+})
+
+describe('Citas — pago por adelantado', () => {
+    const DAY3 = '2099-03-05'   // jueves
+
+    it('por defecto se paga en el local', async () => {
+        const res = await book({ date: DAY3, timeSlot: '09:00' })
+        expect(res.status).toBe(201)
+        expect(res.body.paymentMethod).toBe('local')
+    })
+
+    it('un servicio con precio se puede pagar por adelantado', async () => {
+        const res = await book({ service: alisado._id, date: DAY3, timeSlot: '10:00', paymentMethod: 'transfer' })
+        expect(res.status).toBe(201)
+        expect(res.body.paymentMethod).toBe('transfer')
+    })
+
+    it('un servicio sin precio fijo no se puede pagar por adelantado', async () => {
+        const res = await book({ date: DAY3, timeSlot: '14:00', paymentMethod: 'qr_deuna' })
+        expect(res.status).toBe(400)
+        expect(res.body.message).toMatch(/precio fijo/)
+    })
+
+    it('rechaza métodos de pago desconocidos', async () => {
+        expect((await book({ service: alisado._id, date: DAY3, timeSlot: '15:00', paymentMethod: 'bitcoin' })).status).toBe(400)
     })
 })

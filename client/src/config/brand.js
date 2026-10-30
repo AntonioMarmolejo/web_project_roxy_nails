@@ -4,6 +4,7 @@ export const brand = {
     fullName: "Captain's Barbería Studio Unisex",
     tagline: "Belleza, cuidado y estilo para todos",
     phone: "0986647711 / 0992641293",
+    address: "Puerto Ayora, Galápagos",
     whatsappUrl: "https://wa.me/593967141740",
     serviceNote: "Servicio unisex · Agenda previa",
     // Logo de texto: parte principal + parte destacada (en cursiva/acento)
