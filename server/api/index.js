@@ -9,7 +9,8 @@ let connection = null
 const connect = () => {
   if (mongoose.connection.readyState === 1) return Promise.resolve()
   if (!connection) {
-    connection = mongoose.connect(process.env.MONGO_URI).catch((err) => {
+    // Si la base no responde, fallar en 10 s (no en 30 s) para que el cliente pueda reintentar antes
+    connection = mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 10000 }).catch((err) => {
       connection = null // permite reintentar en la siguiente petición
       throw err
     })

@@ -60,7 +60,13 @@ app.use((err, _req, res, _next) => {
     return res.status(400).json({ message: msg })
   }
   if (err.name === 'CastError') return res.status(400).json({ message: 'Datos no válidos. Revisa el formulario.' })
-  res.status(err.status || 500).json({ message: err.message || 'Error interno del servidor' })
+  // Fallo momentáneo de conexión con la base de datos (p. ej. al "despertar" la función en Vercel)
+  if (/^Mongo(ose)?(Network|NetworkTimeout|ServerSelection|PoolCleared|Topology)/.test(err.name)) {
+    return res.status(503).json({ message: 'No pudimos conectar con el servidor. Intenta de nuevo en unos segundos.' })
+  }
+  // Errores con estado propio (4xx) muestran su mensaje; los inesperados nunca muestran detalles técnicos
+  if (err.status && err.status < 500) return res.status(err.status).json({ message: err.message })
+  res.status(500).json({ message: 'Ocurrió un error inesperado. Intenta de nuevo.' })
 })
 
 export default app
