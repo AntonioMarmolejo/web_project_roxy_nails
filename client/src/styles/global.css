@@ -338,3 +338,8 @@ a {
         font-size: 9px;
     }
 }
+
+/* Sin zoom con dos dedos ni con doble toque (Chrome / Android). En iPhone se bloquea en main.jsx */
+html {
+    touch-action: pan-x pan-y;
+}

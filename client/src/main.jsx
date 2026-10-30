@@ -15,3 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 )
 
 registerServiceWorker()
+
+// Sin zoom con dos dedos en iPhone: Safari ignora user-scalable=no del viewport
+document.addEventListener('gesturestart', (e) => e.preventDefault(), { passive: false })
