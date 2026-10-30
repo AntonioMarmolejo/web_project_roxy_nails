@@ -15,12 +15,14 @@ const DAY = '2099-03-03'      // martes
 const SUNDAY = '2099-03-01'
 const DAY2 = '2099-03-04'     // miércoles, para las pruebas de duración
 const ADMIN_EMAIL = 'test-booking-admin@test.local'
+const CLIENT_EMAIL = 'test-booking-client@test.local'
 
 let service
 let alisado   // dura 120 minutos
 let adminToken
+let clientAuth   // las citas exigen cuenta: se reservan como un cliente
 
-const book = (overrides = {}) => request(app).post('/api/v1/bookings').send({
+const book = (overrides = {}) => request(app).post('/api/v1/bookings').set(clientAuth).send({
     client: { name: 'Prueba', phone: '0999999999' },
     service: service._id,
     date: DAY,
@@ -30,8 +32,8 @@ const book = (overrides = {}) => request(app).post('/api/v1/bookings').send({
 
 const cleanup = async () => {
     await Booking.deleteMany({ date: { $gte: new Date('2099-01-01'), $lt: new Date('2100-01-01') } })
-    await Service.deleteMany({ name: /de prueba (citas)$/ })
-    await User.deleteOne({ email: ADMIN_EMAIL })
+    await Service.deleteMany({ name: /de prueba \(citas\)$/ })
+    await User.deleteMany({ email: { $in: [ADMIN_EMAIL, CLIENT_EMAIL] } })
 }
 
 beforeAll(async () => {
@@ -43,6 +45,8 @@ beforeAll(async () => {
     alisado = await Service.create({ name: 'Alisado de prueba (citas)', category: 'capilar', duration: 120, price: 55 })
     const admin = await User.create({ name: 'Admin prueba', email: ADMIN_EMAIL, password: 'x1234567', role: 'admin' })
     adminToken = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: '10m' })
+    const client = await User.create({ name: 'Cliente prueba', email: CLIENT_EMAIL, password: 'x1234567' })
+    clientAuth = { Authorization: `Bearer ${jwt.sign({ id: client._id }, process.env.JWT_SECRET, { expiresIn: '10m' })}` }
 })
 
 afterAll(async () => {
@@ -51,6 +55,13 @@ afterAll(async () => {
 })
 
 describe('Citas — una sola cita por hora', () => {
+    it('sin iniciar sesión no se puede agendar', async () => {
+        const res = await request(app).post('/api/v1/bookings').send({
+            client: { name: 'Prueba', phone: '0999999999' }, service: service._id, date: DAY, timeSlot: '09:00',
+        })
+        expect(res.status).toBe(401)
+    })
+
     it('un día vacío tiene todas las horas libres', async () => {
         const res = await request(app).get('/api/v1/bookings/slots').query({ date: DAY })
         expect(res.status).toBe(200)

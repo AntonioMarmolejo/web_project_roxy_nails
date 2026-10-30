@@ -1,0 +1,53 @@
+/* Aviso "Necesitas una cuenta" (citas, tienda y talleres) */
+.require-account,
+.require-account__loading {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.25rem;
+    color: var(--color-text-muted);
+}
+.require-account__card {
+    width: 100%;
+    max-width: 440px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+.require-account__icon {
+    font-size: 40px;
+    margin-bottom: 0.75rem;
+}
+.require-account__title {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    color: var(--color-primary);
+    margin-bottom: 0.75rem;
+}
+.require-account__text {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.75rem;
+}
+.require-account__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.require-account__actions .btn {
+    width: 100%;
+    padding: 13px 24px;
+}
+.require-account__back {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}

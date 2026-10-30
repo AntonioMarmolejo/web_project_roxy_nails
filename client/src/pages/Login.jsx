@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuthStore } from '../store/useAuthStore'
 import PasswordInput from '../components/PasswordInput'
@@ -9,7 +9,10 @@ import { brand } from '../config/brand'
 const EMPTY_FORM = { name: '', email: '', phone: '', password: '' }
 
 export default function Login() {
-    const [mode, setMode] = useState('login')
+    const location = useLocation()
+    // Si viene del aviso "necesitas una cuenta": a dónde volver después y con qué pestaña abrir
+    const { from, fromState, mode: initialMode, reason } = location.state || {}
+    const [mode, setMode] = useState(initialMode === 'register' ? 'register' : 'login')
     const [form, setForm] = useState(EMPTY_FORM)
     const [error, setError] = useState('')
     const { login, register, loading } = useAuthStore()
@@ -26,7 +29,7 @@ export default function Login() {
             } else {
                 await register(form.name, form.email, form.phone, form.password)
             }
-            navigate('/')
+            navigate(from || '/', { replace: true, state: fromState })
         } catch (err) {
             setError(err.response?.data?.message || 'Ocurrió un error, intenta de nuevo.')
         }
@@ -55,6 +58,12 @@ export default function Login() {
                         {mode === 'login' ? 'Ingresa a tu cuenta' : 'Crea tu cuenta'}
                     </p>
                 </div>
+
+                {reason && (
+                    <p className="login__reason">
+                        🔒 Para {reason} necesitas una cuenta. Al terminar volverás a donde estabas.
+                    </p>
+                )}
 
                 {/* Toggle tabs */}
                 <div className="login__tabs">

@@ -26,6 +26,7 @@ import CartDrawer     from './components/CartDrawer'
 import AccountDrawer  from './components/AccountDrawer'
 import WhatsAppButton from './components/WhatsAppButton'
 import InstallAppBanner from './components/InstallAppBanner'
+import RequireAccount from './components/RequireAccount'
 import Footer         from './components/Footer'
 import ProtectedRoute from './components/ProtectedRoute'
 
@@ -47,11 +48,23 @@ function App() {
                 <Route path="/"            element={<Home />} />
                 <Route path="/galeria"     element={<Gallery />} />
                 <Route path="/servicios"   element={<Services />} />
-                <Route path="/agendar"     element={<Booking />} />
+                <Route path="/agendar"     element={
+                    <RequireAccount action="agendar una cita" backTo="/servicios" backLabel="Seguir viendo servicios">
+                        <Booking />
+                    </RequireAccount>
+                } />
                 <Route path="/tienda"      element={<Shop />} />
-                <Route path="/checkout"    element={<Checkout />} />
+                <Route path="/checkout"    element={
+                    <RequireAccount action="realizar una compra" backTo="/tienda" backLabel="Seguir viendo la tienda">
+                        <Checkout />
+                    </RequireAccount>
+                } />
                 <Route path="/talleres"    element={<Workshops />} />
-                <Route path="/talleres/:id/inscripcion" element={<WorkshopCheckout />} />
+                <Route path="/talleres/:id/inscripcion" element={
+                    <RequireAccount action="inscribirte a un taller" backTo="/talleres" backLabel="Seguir viendo talleres">
+                        <WorkshopCheckout />
+                    </RequireAccount>
+                } />
                 <Route path="/login"       element={<Login />} />
                 <Route path="/olvide-contrasena" element={<ForgotPassword />} />
                 <Route path="/restablecer-contrasena/:token" element={<ResetPassword />} />

@@ -128,3 +128,16 @@
     cursor: pointer;
     font-weight: 500;
 }
+
+/* Motivo por el que se pide iniciar sesión (viene del aviso de citas, tienda o talleres) */
+.login__reason {
+    margin: 0 0 1rem;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--color-primary-light);
+    background: var(--color-surface-tint);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    text-align: center;
+}
