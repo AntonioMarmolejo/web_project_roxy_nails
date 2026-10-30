@@ -28,3 +28,7 @@
     height: 1px;
     background: var(--color-border);
 }
+/* El sitio usa color-scheme: dark; sin esto el navegador pinta un fondo blanco detrás del botón de Google */
+.google-btn__slot iframe {
+    color-scheme: light;
+}
