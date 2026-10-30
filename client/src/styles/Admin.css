@@ -521,3 +521,10 @@
     opacity: 0.35;
     cursor: default;
 }
+
+/* Botones de acción que son enlaces (p. ej. "Avisar por WhatsApp") */
+a.admin__action-btn {
+    display: inline-block;
+    text-decoration: none;
+    font-weight: 600;
+}

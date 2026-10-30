@@ -251,11 +251,10 @@ export default function Booking() {
                             </div>
                         ))}
                     </div>
-                    {result.client?.email && (
-                        <p className="booking__success-email-note">
-                            Recibirás confirmación en <strong>{result.client.email}</strong>
-                        </p>
-                    )}
+                    <p className="booking__success-email-note">
+                        Tu cita queda <strong>pendiente</strong>: te la confirmaremos por WhatsApp al <strong>{result.client?.phone}</strong>
+                        {(result.client?.email || user?.email) && <> y por correo a <strong>{result.client?.email || user.email}</strong></>}.
+                    </p>
                     <div className="booking__success-actions">
                         <button onClick={downloadTicket} disabled={savingTicket} className="btn btn--primary">
                             {savingTicket ? 'Preparando...' : '⬇ Descargar comprobante'}

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from 'vitest'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 import request from 'supertest'
 import mongoose from 'mongoose'
 import jwt from 'jsonwebtoken'
@@ -9,6 +9,13 @@ import Service from '../models/Service.js'
 import User from '../models/User.js'
 
 dotenv.config()
+
+// Correos simulados: las pruebas nunca envían correos de verdad
+const mail = vi.hoisted(() => ({
+    sendBookingReceived: vi.fn(async () => {}),
+    sendBookingConfirmed: vi.fn(async () => {}),
+}))
+vi.mock('../utils/mailer.js', async (importOriginal) => ({ ...(await importOriginal()), ...mail, mailEnabled: () => true }))
 
 // Fechas lejanas para no chocar con citas reales de la base local
 const DAY = '2099-03-03'      // martes
@@ -201,5 +208,43 @@ describe('Citas — pago por adelantado', () => {
 
     it('rechaza métodos de pago desconocidos', async () => {
         expect((await book({ service: alisado._id, date: DAY3, timeSlot: '15:00', paymentMethod: 'bitcoin' })).status).toBe(400)
+    })
+})
+
+describe('Citas — avisos al cliente', () => {
+    const DAY4 = '2099-03-06'   // viernes
+
+    it('al agendar se envía "recibimos tu solicitud" al correo de su cuenta', async () => {
+        mail.sendBookingReceived.mockClear()
+        const res = await book({ date: DAY4, timeSlot: '09:00' })
+        expect(res.status).toBe(201)
+        expect(res.body.emailSent).toBe(true)
+        expect(mail.sendBookingReceived).toHaveBeenCalledWith(expect.objectContaining({ to: CLIENT_EMAIL, timeSlot: '09:00' }))
+    })
+
+    it('al confirmarla desde el panel se envía "tu cita está confirmada", una sola vez', async () => {
+        const created = await book({ date: DAY4, timeSlot: '10:00', client: { name: 'Prueba', phone: '0999999999', email: 'otro@test.local' } })
+        const admin = { Authorization: `Bearer ${adminToken}` }
+        mail.sendBookingConfirmed.mockClear()
+
+        const res = await request(app).patch(`/api/v1/bookings/${created.body._id}`).set(admin).send({ status: 'confirmed' })
+        expect(res.status).toBe(200)
+        expect(res.body.status).toBe('confirmed')
+        expect(res.body.emailSent).toBe(true)
+        // Prioridad al correo que puso en el formulario
+        expect(mail.sendBookingConfirmed).toHaveBeenCalledWith(expect.objectContaining({ to: 'otro@test.local', name: 'Prueba' }))
+
+        // Completarla después no vuelve a enviar la confirmación
+        await request(app).patch(`/api/v1/bookings/${created.body._id}`).set(admin).send({ status: 'completed' })
+        expect(mail.sendBookingConfirmed).toHaveBeenCalledTimes(1)
+    })
+
+    it('si el correo falla, la cita se confirma igual', async () => {
+        const created = await book({ date: DAY4, timeSlot: '11:00' })
+        mail.sendBookingConfirmed.mockRejectedValueOnce(new Error('SMTP caído'))
+        const res = await request(app).patch(`/api/v1/bookings/${created.body._id}`).set({ Authorization: `Bearer ${adminToken}` }).send({ status: 'confirmed' })
+        expect(res.status).toBe(200)
+        expect(res.body.status).toBe('confirmed')
+        expect(res.body.emailSent).toBe(false)
     })
 })

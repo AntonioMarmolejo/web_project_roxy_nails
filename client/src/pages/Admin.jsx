@@ -17,6 +17,7 @@ import { brand } from '../config/brand'
 import AdminBanner from '../components/AdminBanner'
 import AdminSlides from '../components/AdminSlides'
 import { PAYMENT_LABELS, isPrepaid, RECEIPT_PHONE } from '../config/payments'
+import { toWhatsappNumber, whatsappUrl, bookingConfirmedMessage } from '../utils/whatsapp'
 import { SERVICE_CATEGORIES, categoryLabel, formatPrice, formatDuration, hasPrice } from '../config/services'
 
 // ─── Constantes ──────────────────────────────────────────────────────────────
@@ -48,6 +49,7 @@ const ENROLLMENT_STATUS = {
 // ─── Colores de acciones (botones de estado) ─────────────────────────────────
 const ACTION_GREEN  = { '--btn-bg': 'var(--color-success-bg)', '--btn-border': 'var(--color-success-border)', '--btn-color': 'var(--color-success)' }
 const ACTION_BLUE   = { '--btn-bg': 'var(--color-info-bg)', '--btn-border': 'var(--color-info-border)', '--btn-color': 'var(--color-info)' }
+const ACTION_WHATSAPP = { '--btn-bg': '#25D366', '--btn-border': '#25D366', '--btn-color': '#0B0B0B' }
 const ACTION_PURPLE = { '--btn-bg': 'var(--color-purple-bg)', '--btn-border': 'var(--color-purple-border)', '--btn-color': 'var(--color-purple)' }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -210,7 +212,13 @@ export default function Admin() {
         try {
             const { data } = await updateBookingStatus(id, status)
             setBookings(b => b.map(x => x._id === id ? data : x))
-            showToast(`Cita ${BOOKING_STATUS[status]?.label.toLowerCase()} ✓`)
+            if (status === 'confirmed') {
+                showToast(data.emailSent
+                    ? 'Cita confirmada ✓ Correo enviado. Ahora avísale por WhatsApp 📲'
+                    : 'Cita confirmada ✓ (sin correo). Avísale por WhatsApp 📲')
+            } else {
+                showToast(`Cita ${BOOKING_STATUS[status]?.label.toLowerCase()} ✓`)
+            }
         } catch { showToast('Error al actualizar cita') }
         finally { setUpdatingId(null) }
     }
@@ -582,6 +590,9 @@ export default function Admin() {
                                                 </div>
                                                 <div className="admin__record-actions">
                                                     {b.status === 'pending'   && <button onClick={() => changeBookingStatus(b._id, 'confirmed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_GREEN}>Confirmar</button>}
+                                                    {b.status === 'confirmed' && (toWhatsappNumber(b.client?.phone)
+                                                        ? <a href={whatsappUrl(toWhatsappNumber(b.client.phone), bookingConfirmedMessage(b))} target="_blank" rel="noopener noreferrer" className="admin__action-btn" style={ACTION_WHATSAPP}>📲 Avisar por WhatsApp</a>
+                                                        : <span className="admin__action-btn" title={`El teléfono "${b.client?.phone || ''}" no parece un número de WhatsApp`}>📵 Teléfono no válido</span>)}
                                                     {b.status === 'confirmed' && <button onClick={() => changeBookingStatus(b._id, 'completed')} disabled={updatingId === b._id} className="admin__action-btn" style={ACTION_BLUE}>Completar</button>}
                                                     {['pending', 'confirmed'].includes(b.status) && <button onClick={() => changeBookingStatus(b._id, 'cancelled')} disabled={updatingId === b._id} className="admin__action-btn">Cancelar</button>}
                                                 </div>

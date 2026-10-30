@@ -3,6 +3,7 @@
 export const brand = {
   name: "Captain's",
   fullName: "Captain's Barbería Studio Unisex",
+  address: 'Puerto Ayora, Galápagos',
   // Paleta de los correos (los clientes de correo no soportan variables CSS)
   email: {
     primary: '#8C6A2B',      // dorado oscuro: legible sobre blanco (5.0:1)

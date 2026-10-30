@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 import Booking from '../models/Booking.js'
 import Service from '../models/Service.js'
 import { BOOKING_SLOTS, BOOKING_CAPACITY, BOOKING_TIMEZONE, coveredSlots } from '../config/booking.js'
-import { sendBookingConfirmation, mailEnabled } from '../utils/mailer.js'
+import { sendBookingReceived, sendBookingConfirmed, mailEnabled } from '../utils/mailer.js'
 
 export const getBookings = async (req, res, next) => {
   try {
@@ -27,6 +27,25 @@ export const getMyBookings = async (req, res, next) => {
 // ─── Disponibilidad ──────────────────────────────────────────────
 
 const STATUSES = ['pending', 'confirmed', 'cancelled', 'completed']
+const MAIL_TIMEOUT_MS = 8000
+
+// Envía un correo de la cita y espera el resultado (en Vercel, un envío "en segundo plano" puede
+// quedarse sin salir al terminar la función). Destinatario: el correo del formulario o, si no lo
+// puso, el de su cuenta. Devuelve true si se envió; un fallo solo se registra.
+async function emailBooking(send, booking) {
+  const to = booking.client?.email || booking.createdBy?.email
+  if (!to || !mailEnabled()) return false
+  try {
+    await Promise.race([
+      send({ to, name: booking.client.name, serviceName: booking.service?.name, date: booking.date, timeSlot: booking.timeSlot }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('tiempo de espera agotado')), MAIL_TIMEOUT_MS)),
+    ])
+    return true
+  } catch (err) {
+    console.warn('Email no enviado:', err.message)
+    return false
+  }
+}
 const PAYMENT_METHODS = ['local', 'qr_deuna', 'qr_bdp', 'transfer']
 const SLOT_TAKEN = 'Esa hora acaba de ser reservada por otra persona. Por favor elige otra.'
 
@@ -130,20 +149,11 @@ export const createBooking = async (req, res, next) => {
     }))
     if (!booking) return res.status(409).json({ message: SLOT_TAKEN })
 
-    await booking.populate('service', 'name price')
-
-    if (booking.client.email && mailEnabled()) {
-      sendBookingConfirmation({
-        to:          booking.client.email,
-        name:        booking.client.name,
-        serviceName: booking.service.name,
-        date:        booking.date,
-        timeSlot:    booking.timeSlot,
-      }).catch(err => console.warn('Email no enviado:', err.message))
-    }
+    await booking.populate([{ path: 'service', select: 'name price' }, { path: 'createdBy', select: 'email' }])
+    const emailSent = await emailBooking(sendBookingReceived, booking)
 
     const { slotKeys, ...json } = booking.toObject()
-    res.status(201).json(json)
+    res.status(201).json({ ...json, createdBy: booking.createdBy?._id, emailSent })
   } catch (err) { next(err) }
 }
 
@@ -169,7 +179,17 @@ export const updateBookingStatus = async (req, res, next) => {
       await Booking.updateOne({ _id: booking._id }, { $set: { status } })
     }
 
-    res.json(await Booking.findById(booking._id).populate('service', 'name duration price'))
+    const updated = await Booking.findById(booking._id).populate('service', 'name duration price')
+
+    // Al confirmarla, avisar al cliente por correo (el aviso por WhatsApp lo envía el local desde el panel)
+    let emailSent = false
+    if (status === 'confirmed' && booking.status !== 'confirmed') {
+      await updated.populate('createdBy', 'email')
+      emailSent = await emailBooking(sendBookingConfirmed, updated)
+      updated.depopulate('createdBy')
+    }
+
+    res.json({ ...updated.toObject(), emailSent })
   } catch (err) { next(err) }
 }
 

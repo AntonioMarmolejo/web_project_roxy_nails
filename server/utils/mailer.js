@@ -22,22 +22,49 @@ const wrapper = (title, bodyHtml) => `
   </div>
 `
 
-export const sendBookingConfirmation = async ({ to, name, serviceName, date, timeSlot }) => {
+// Texto escrito por el cliente dentro del HTML del correo
+const esc = (v) => String(v ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch])
+
+const bookingDetails = ({ serviceName, date, timeSlot }) => {
   const dateStr = new Date(date).toLocaleDateString('es-ES', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC',
   })
+  return `
+        <div style="background:${c.surface};border-radius:12px;padding:1.25rem;margin:1.25rem 0;">
+          <p style="margin:0 0 8px"><strong>Servicio:</strong> ${esc(serviceName)}</p>
+          <p style="margin:0 0 8px"><strong>Fecha:</strong> ${dateStr}</p>
+          <p style="margin:0 0 8px"><strong>Hora:</strong> ${esc(timeSlot)}</p>
+          <p style="margin:0"><strong>Dirección:</strong> ${esc(brand.address)}</p>
+        </div>`
+}
+
+// Al agendar: la cita queda pendiente hasta que el local la confirma
+export const sendBookingReceived = async ({ to, name, ...booking }) => {
+  await transporter.sendMail({
+    from: from(),
+    to,
+    subject: `📅 Recibimos tu solicitud de cita — ${brand.fullName}`,
+    html: wrapper('¡Recibimos tu solicitud! ✂️', `
+        <p>Hola <strong>${esc(name)}</strong>,</p>
+        <p>Registramos tu solicitud de cita en ${brand.fullName}. En breve te la confirmaremos por WhatsApp y por correo.</p>
+        ${bookingDetails(booking)}
+        <p style="color:${c.muted};font-size:13px;">
+          Si necesitas cancelar o cambiar tu cita, contáctanos por WhatsApp con anticipación.
+        </p>
+    `),
+  })
+}
+
+// Cuando el local confirma la cita desde el panel
+export const sendBookingConfirmed = async ({ to, name, ...booking }) => {
   await transporter.sendMail({
     from: from(),
     to,
     subject: `✅ Tu cita está confirmada — ${brand.fullName}`,
     html: wrapper('¡Tu cita está confirmada! ✂️', `
-        <p>Hola <strong>${name}</strong>,</p>
-        <p>Tu reserva en ${brand.fullName} ha sido registrada exitosamente.</p>
-        <div style="background:${c.surface};border-radius:12px;padding:1.25rem;margin:1.25rem 0;">
-          <p style="margin:0 0 8px"><strong>Servicio:</strong> ${serviceName}</p>
-          <p style="margin:0 0 8px"><strong>Fecha:</strong> ${dateStr}</p>
-          <p style="margin:0"><strong>Hora:</strong> ${timeSlot}</p>
-        </div>
+        <p>Hola <strong>${esc(name)}</strong>,</p>
+        <p>Tu cita en ${brand.fullName} ha sido <strong>confirmada</strong>. ¡Te esperamos!</p>
+        ${bookingDetails(booking)}
         <p style="color:${c.muted};font-size:13px;">
           Si necesitas cancelar o cambiar tu cita, contáctanos por WhatsApp con anticipación.
         </p>
