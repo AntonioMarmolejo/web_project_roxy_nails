@@ -138,19 +138,9 @@ export async function drawTicket({ rows, code, qr, note }) {
     return new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
 }
 
-// Guarda la imagen: en el celular abre el menú de compartir (para "Guardar imagen"),
-// en la computadora la descarga directamente.
+// Descarga la imagen directamente, en la computadora y en el celular (Android la guarda en
+// Descargas; el iPhone la muestra con la opción de guardarla en Fotos o Archivos).
 export async function saveTicket(blob, filename) {
-    const file = new File([blob], filename, { type: 'image/png' })
-    const touch = window.matchMedia?.('(pointer: coarse)').matches
-    if (touch && navigator.canShare?.({ files: [file] })) {
-        try {
-            await navigator.share({ files: [file], title: 'Comprobante de cita' })
-            return
-        } catch (err) {
-            if (err.name === 'AbortError') return   // el cliente cerró el menú
-        }
-    }
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -158,7 +148,8 @@ export async function saveTicket(blob, filename) {
     document.body.appendChild(a)
     a.click()
     a.remove()
-    setTimeout(() => URL.revokeObjectURL(url), 1000)
+    // Algunos celulares tardan en empezar la descarga: liberar la imagen con margen
+    setTimeout(() => URL.revokeObjectURL(url), 60000)
 }
 
 // Comprobante completo de una cita: filas, código y QR (el QR se genera aquí mismo, así nunca falta).
