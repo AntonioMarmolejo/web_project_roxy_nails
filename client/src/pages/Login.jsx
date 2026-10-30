@@ -86,8 +86,6 @@ export default function Login() {
                     ))}
                 </div>
 
-                <GoogleButton onCredential={google} onError={setError} />
-
                 <form onSubmit={submit} className="login__form">
                     {mode === 'register' && (
                         <>
@@ -126,9 +124,13 @@ export default function Login() {
                         <p className="login__error">{error}</p>
                     )}
 
-                    <button type="submit" disabled={loading} className="login__submit-btn">
-                        {loading ? 'Cargando...' : mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
-                    </button>
+                    {/* Enviar + entrar con Google (solo el círculo con la "G") */}
+                    <div className="login__submit-row">
+                        <button type="submit" disabled={loading} className="login__submit-btn">
+                            {loading ? 'Cargando...' : mode === 'login' ? 'Ingresar' : 'Crear cuenta'}
+                        </button>
+                        <GoogleButton onCredential={google} onError={setError} />
+                    </div>
                 </form>
 
                 <p className="login__toggle-text">

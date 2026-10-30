@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import api from '../api/axios'
 import '../styles/GoogleButton.css'
 
-// Botón oficial "Continuar con Google" (Google Identity Services).
+// Botón oficial de Google (Google Identity Services), solo el círculo con la "G".
 // En el celular muestra las cuentas de Google del teléfono. El ID de cliente lo da la API;
 // si no está configurado, el botón no aparece.
 let configPromise = null
@@ -25,7 +25,7 @@ const loadGoogleScript = () => {
     return scriptPromise
 }
 
-// El mismo botón sirve para entrar y para crear la cuenta ("Continuar con Google")
+// El mismo botón sirve para entrar y para crear la cuenta
 export default function GoogleButton({ onCredential, onError }) {
     const ref = useRef(null)
     const [state, setState] = useState('loading')   // loading | ready | off
@@ -49,14 +49,11 @@ export default function GoogleButton({ onCredential, onError }) {
                 cancel_on_tap_outside: true,
             })
             window.google.accounts.id.renderButton(ref.current, {
-                type: 'standard',
-                theme: 'filled_black',
+                type: 'icon',
+                theme: 'outline',
                 size: 'large',
-                shape: 'pill',
-                text: 'continue_with',
-                logo_alignment: 'center',
+                shape: 'circle',
                 locale: 'es',
-                width: Math.min(400, ref.current.offsetWidth || 320),
             })
             setState('ready')
         })()
@@ -65,10 +62,8 @@ export default function GoogleButton({ onCredential, onError }) {
 
     if (state === 'off') return null
     return (
-        <div className="google-btn">
+        <div className={`google-btn${state === 'loading' ? ' google-btn--loading' : ''}`} title="Continuar con Google">
             <div ref={ref} className="google-btn__slot" />
-            {state === 'loading' && <div className="google-btn__placeholder" aria-hidden="true" />}
-            <div className="google-btn__divider"><span>o con tu correo</span></div>
         </div>
     )
 }

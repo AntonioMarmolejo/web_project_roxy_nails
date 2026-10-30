@@ -141,3 +141,15 @@
     border-radius: 10px;
     text-align: center;
 }
+
+/* Fila del botón de enviar + botón redondo de Google */
+.login__submit-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+.login__submit-row .login__submit-btn {
+    flex: 1;
+    margin-top: 0;
+}

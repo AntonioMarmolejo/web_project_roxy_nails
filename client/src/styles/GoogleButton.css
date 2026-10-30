@@ -1,34 +1,26 @@
-/* Botón "Continuar con Google" del formulario de login/registro */
+/* Botón de Google: solo el círculo con la "G", al lado de "Ingresar" / "Crear cuenta".
+   Se recorta en círculo para que nunca se vea el recuadro blanco que el navegador
+   pone detrás del iframe de Google (en el celular sale aunque se pida tema claro). */
 .google-btn {
-    margin-bottom: 1.25rem;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 1px var(--color-border);
+}
+.google-btn--loading {
+    background: var(--color-surface-soft);
 }
 .google-btn__slot {
     display: flex;
-    justify-content: center;
-    min-height: 44px;
-}
-.google-btn__placeholder {
-    height: 44px;
-    margin-top: -44px;
-    border-radius: 999px;
-    background: var(--color-surface-soft);
-}
-.google-btn__divider {
-    display: flex;
     align-items: center;
-    gap: 12px;
-    margin-top: 1.25rem;
-    font-size: 12px;
-    color: var(--color-text-muted);
+    justify-content: center;
 }
-.google-btn__divider::before,
-.google-btn__divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--color-border);
-}
-/* El sitio usa color-scheme: dark; sin esto el navegador pinta un fondo blanco detrás del botón de Google */
 .google-btn__slot iframe {
     color-scheme: light;
 }
