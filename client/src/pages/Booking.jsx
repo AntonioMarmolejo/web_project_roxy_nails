@@ -416,12 +416,13 @@ export default function Booking() {
                                 <div className="booking__slots-grid">
                                     {ALL_SLOTS.map(slot => {
                                         const avail = slots.available.includes(slot)
+                                        const passed = slots.passed?.includes(slot)
                                         const selected = slot === selSlot
                                         return (
-                                            <button key={slot} onClick={() => { if (avail) { setSelSlot(slot); setSlotNotice('') } }}
+                                            <button key={slot} onClick={() => { if (avail) { setSelSlot(slot); setSlotNotice('') } }} disabled={!avail}
                                                 className={`booking__slot-btn${selected ? ' booking__slot-btn--selected' : ''}${!avail ? ' booking__slot-btn--unavailable' : ''}`}>
                                                 {slot}
-                                                {!avail && <div className="booking__slot-unavailable-label">No disponible</div>}
+                                                {!avail && <div className="booking__slot-unavailable-label">{passed ? 'Ya pasó' : 'No disponible'}</div>}
                                             </button>
                                         )
                                     })}
