@@ -64,6 +64,13 @@ const dayFilter = (day) => {
 }
 
 const todayAtShop = () => new Date().toLocaleDateString('en-CA', { timeZone: BOOKING_TIMEZONE })
+const timeAtShop = () => new Date().toLocaleTimeString('en-GB', { timeZone: BOOKING_TIMEZONE, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+
+// Una hora ya pasó si el día es anterior a hoy, o si es hoy y esa hora ya empezó
+const slotPassed = (day, slot) => {
+  const today = todayAtShop()
+  return day < today || (day === today && slot <= timeAtShop())
+}
 
 // Cuántas citas no canceladas ocupan cada hora de ese día (sin contar la indicada).
 // Las citas anteriores a este cambio no tienen slotKeys: se calculan con la duración de su servicio.
@@ -108,15 +115,17 @@ export const getAvailableSlots = async (req, res, next) => {
       ? await Service.findById(req.query.service).select('duration')
       : null
     const count = await occupancy(day)
+    const passed = BOOKING_SLOTS.filter(s => slotPassed(day, s))
     const canStart = (s) => {
       const hours = coveredSlots(s, svc?.duration)
-      return Boolean(hours) && fits(count, hours)
+      return !passed.includes(s) && Boolean(hours) && fits(count, hours)
     }
 
     res.json({
       date: day,
       available: BOOKING_SLOTS.filter(canStart),
       booked:    BOOKING_SLOTS.filter(s => !canStart(s)),
+      passed,
     })
   } catch (err) { next(err) }
 }
@@ -130,6 +139,7 @@ export const createBooking = async (req, res, next) => {
     if (day < todayAtShop()) return res.status(400).json({ message: 'No se puede reservar en una fecha pasada' })
     if (new Date(`${day}T00:00:00Z`).getUTCDay() === 0) return res.status(400).json({ message: 'No atendemos los domingos' })
     if (!BOOKING_SLOTS.includes(timeSlot)) return res.status(400).json({ message: 'Horario no válido' })
+    if (slotPassed(day, timeSlot)) return res.status(400).json({ message: 'Esa hora ya pasó. Por favor elige una hora más tarde.' })
     if (!PAYMENT_METHODS.includes(paymentMethod)) return res.status(400).json({ message: 'Método de pago no válido' })
     const svc = mongoose.isValidObjectId(service) && await Service.findOne({ _id: service, active: true }).select('duration price')
     if (!svc) return res.status(400).json({ message: 'El servicio elegido no está disponible' })

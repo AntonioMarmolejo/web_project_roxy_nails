@@ -144,6 +144,39 @@ describe('Citas — una sola cita por hora', () => {
     })
 })
 
+describe('Citas — horas que ya pasaron hoy', () => {
+    const TODAY = '2099-03-05'   // jueves; el reloj se fija a las 14:40 del local (UTC-6)
+
+    beforeAll(() => {
+        vi.useFakeTimers({ toFake: ['Date'] })
+        vi.setSystemTime(new Date(`${TODAY}T20:40:00Z`))
+    })
+    afterAll(() => vi.useRealTimers())
+
+    it('no ofrece las horas que ya pasaron', async () => {
+        const res = await request(app).get('/api/v1/bookings/slots').query({ date: TODAY })
+        expect(res.body.passed).toEqual(['09:00', '10:00', '11:00', '12:00', '14:00'])
+        expect(res.body.available).toEqual(['15:00', '16:00', '17:00', '18:00'])
+    })
+
+    it('rechaza reservar una hora que ya pasó', async () => {
+        // Con el reloj adelantado, la sesión de las otras pruebas ya venció: se firma una nueva
+        const client = await User.findOne({ email: CLIENT_EMAIL })
+        const auth = { Authorization: `Bearer ${jwt.sign({ id: client._id }, process.env.JWT_SECRET, { expiresIn: '10m' })}` }
+
+        const res = await book({ date: TODAY, timeSlot: '10:00' }).set(auth)
+        expect(res.status).toBe(400)
+        expect(res.body.message).toMatch(/ya pasó/)
+        expect((await book({ date: TODAY, timeSlot: '15:00' }).set(auth)).status).toBe(201)
+    })
+
+    it('mañana todas las horas siguen libres', async () => {
+        const res = await request(app).get('/api/v1/bookings/slots').query({ date: '2099-03-06' })
+        expect(res.body.passed).toEqual([])
+        expect(res.body.available).toHaveLength(9)
+    })
+})
+
 describe('Citas — según lo que dura cada servicio', () => {
     const slotsFor = (svc) => request(app).get('/api/v1/bookings/slots').query({ date: DAY2, service: String(svc._id) })
 
