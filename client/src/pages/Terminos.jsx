@@ -45,11 +45,6 @@ export default function Terminos() {
                     Las imágenes y diseños publicados en la galería son propiedad de {brand.fullName} y no pueden
                     reproducirse sin autorización.
                 </p>
-
-                <p className="legal-page__note">
-                    Este documento es un modelo general y debe ser revisado por un profesional legal antes de su uso
-                    definitivo en producción.
-                </p>
             </div>
         </>
     )
