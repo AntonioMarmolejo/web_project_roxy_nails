@@ -147,10 +147,6 @@
     color: var(--color-text);
     margin-bottom: 1rem;
 }
-.admin__list-loading {
-    color: var(--color-text-secondary);
-    font-size: 13px;
-}
 .admin__list-empty {
     background: var(--color-surface);
     border: 1px dashed var(--color-border);

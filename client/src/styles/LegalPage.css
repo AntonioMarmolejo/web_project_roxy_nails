@@ -22,12 +22,3 @@
     font-size: 14.5px;
     color: var(--color-text-alt);
 }
-.legal-page__note {
-    margin-top: 2.5rem;
-    padding: 1rem 1.25rem;
-    background: var(--color-surface-soft);
-    border-radius: 12px;
-    font-size: 13px;
-    color: var(--color-text-muted);
-    font-style: italic;
-}
