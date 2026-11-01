@@ -46,11 +46,6 @@ export default function Privacidad() {
                 <p>
                     Podemos actualizar esta política ocasionalmente. Publicaremos cualquier cambio en esta misma página.
                 </p>
-
-                <p className="legal-page__note">
-                    Este documento es un modelo general y debe ser revisado por un profesional legal antes de su uso
-                    definitivo en producción.
-                </p>
             </div>
         </>
     )
