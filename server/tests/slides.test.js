@@ -69,6 +69,18 @@ describe('Diapositivas del inicio', () => {
         expect((await post({ primaryLink: '' })).body.message).toMatch(/a dónde lleva/)
         expect((await post({ primaryLink: 'javascript:alert(1)' })).status).toBe(400)
         expect((await post({ secondaryLink: '/tienda' })).body.message).toMatch(/texto del segundo botón/)
+        expect((await post({ primaryLink: `https://wa.me/593967141740?text=${'a'.repeat(600)}` })).body.message).toMatch(/demasiado largo/)
+    })
+
+    it('acepta botones a un servicio concreto y a WhatsApp con un mensaje largo', async () => {
+        // Con tildes y espacios codificados, el enlace pasa del antiguo límite de 300 caracteres
+        const wa = `https://wa.me/593967141740?text=${encodeURIComponent('Hola, vi en www.roxynail.com la promoción "Manicure Spa Completo para Caballeros: Baño de Parafina, Exfoliación y Masaje" y me interesa. ¿Me pueden dar más información? ¡Gracias!')}`
+        expect(wa.length).toBeGreaterThan(300)
+        const res = await request(app).post('/api/v1/slides').set(auth)
+            .send(valid({ primaryLink: '/agendar?servicio=665f1c2ab3e4d5f6a7b8c9d0', secondaryLabel: 'Reservar ahora', secondaryLink: wa }))
+        expect(res.status).toBe(201)
+        expect(res.body.secondaryLink).toBe(wa)
+        await request(app).delete(`/api/v1/slides/${res.body._id}`).set(auth)
     })
 
     it('la portada solo muestra las activas, y desactivar/activar funciona', async () => {
