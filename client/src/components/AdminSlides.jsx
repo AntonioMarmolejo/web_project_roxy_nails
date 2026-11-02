@@ -3,27 +3,29 @@ import { fetchAllSlides, createSlide, updateSlide, toggleSlide, deleteSlide, reo
 import HeroSlider from './HeroSlider'
 import ImageInput from './ImageInput'
 import { SkeletonList } from './Skeleton'
+import SlideLinkPicker, { slideWhatsappLink, isSlideWhatsappLink } from './SlideLinkPicker'
+import { fetchServices } from '../api/services'
 
 const EMPTY = {
     tag: '', title: '', highlight: '', subtitle: '', image: '',
     primaryLabel: '', primaryLink: '', secondaryLabel: '', secondaryLink: '', active: true,
 }
 
-// Páginas del sitio sugeridas para los botones (también se puede escribir otra ruta o una URL https://)
-const PAGES = ['/agendar', '/servicios', '/galeria', '/tienda', '/talleres']
-
 export default function AdminSlides({ showToast }) {
     const [slides, setSlides] = useState([])
     const [loading, setLoading] = useState(true)
     const [form, setForm] = useState(EMPTY)
     const [editing, setEditing] = useState(null)
+    const [formKey, setFormKey] = useState(0)   // reinicia los selectores de destino al cambiar de diapositiva
     const [saving, setSaving] = useState(false)
+    const [services, setServices] = useState(null)   // para enlazar un botón a un servicio concreto
 
     useEffect(() => {
         fetchAllSlides()
             .then(({ data }) => setSlides(data))
             .catch(() => showToast('Error al cargar las diapositivas'))
             .finally(() => setLoading(false))
+        fetchServices().then(({ data }) => setServices(data)).catch(() => setServices([]))
     }, [])
 
     const handle = (e) => {
@@ -33,22 +35,28 @@ export default function AdminSlides({ showToast }) {
 
     const startEdit = (s) => {
         setEditing(s._id)
+        setFormKey(k => k + 1)
         setForm(Object.fromEntries(Object.keys(EMPTY).map(k => [k, s[k] ?? EMPTY[k]])))
         window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-    const cancelEdit = () => { setEditing(null); setForm(EMPTY) }
+    const cancelEdit = () => { setEditing(null); setForm(EMPTY); setFormKey(k => k + 1) }
 
     const submit = async (e) => {
         e.preventDefault()
         if (!form.image) return showToast('Sube o pega una imagen')
+        // El mensaje de WhatsApp usa el título final, aunque se haya cambiado después de elegir el destino
+        const payload = { ...form }
+        for (const k of ['primaryLink', 'secondaryLink']) {
+            if (isSlideWhatsappLink(payload[k])) payload[k] = slideWhatsappLink(payload.title)
+        }
         setSaving(true)
         try {
             if (editing) {
-                const { data } = await updateSlide(editing, form)
+                const { data } = await updateSlide(editing, payload)
                 setSlides(list => list.map(s => s._id === editing ? data : s))
                 showToast('Diapositiva actualizada ✓')
             } else {
-                const { data } = await createSlide(form)
+                const { data } = await createSlide(payload)
                 setSlides(list => [...list, data])
                 showToast('Diapositiva creada ✓')
             }
@@ -161,14 +169,13 @@ export default function AdminSlides({ showToast }) {
                         <div><label className="admin__label">Texto</label><textarea name="subtitle" value={form.subtitle} onChange={handle} className="admin__input" rows={2} placeholder="Una frase corta que invite a reservar" maxLength={200} style={{ resize: 'vertical' }} /></div>
                         <div className="admin__form-row">
                             <div><label className="admin__label">Botón principal</label><input name="primaryLabel" value={form.primaryLabel} onChange={handle} className="admin__input" placeholder="Agendar ahora" maxLength={30} /></div>
-                            <div><label className="admin__label">Lleva a</label><input name="primaryLink" value={form.primaryLink} onChange={handle} className="admin__input" placeholder="/agendar" list="slide-pages" maxLength={300} /></div>
+                            <div><label className="admin__label">Lleva a</label><SlideLinkPicker key={`p-${formKey}`} name="primaryLink" value={form.primaryLink} onChange={handle} services={services} title={form.title} /></div>
                         </div>
                         <div className="admin__form-row">
                             <div><label className="admin__label">Segundo botón</label><input name="secondaryLabel" value={form.secondaryLabel} onChange={handle} className="admin__input" placeholder="Ver precios" maxLength={30} /></div>
-                            <div><label className="admin__label">Lleva a</label><input name="secondaryLink" value={form.secondaryLink} onChange={handle} className="admin__input" placeholder="/servicios" list="slide-pages" maxLength={300} /></div>
+                            <div><label className="admin__label">Lleva a</label><SlideLinkPicker key={`s-${formKey}`} name="secondaryLink" value={form.secondaryLink} onChange={handle} services={services} title={form.title} /></div>
                         </div>
-                        <datalist id="slide-pages">{PAGES.map(p => <option key={p} value={p} />)}</datalist>
-                        <p className="admin__hint">Botones opcionales. Destino: una página del sitio ({PAGES.join(', ')}) o una URL que empiece por https://</p>
+                        <p className="admin__hint">Botones opcionales. Para una promoción, elige el servicio en "Agendar un servicio" (abre la reserva con ese servicio ya elegido) o "WhatsApp" (abre el chat del local con un mensaje que nombra esta promoción).</p>
                         <label className="admin__checkbox-label">
                             <input type="checkbox" name="active" checked={form.active} onChange={handle} />
                             Mostrar en la portada

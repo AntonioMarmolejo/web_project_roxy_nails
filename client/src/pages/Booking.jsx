@@ -121,8 +121,9 @@ export default function Booking() {
         containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, [step])
 
+    // Servicio elegido desde una tarjeta (state) o desde un enlace como /agendar?servicio=<id> (portada, publicidad)
     useEffect(() => {
-        const id = location.state?.serviceId
+        const id = location.state?.serviceId || new URLSearchParams(location.search).get('servicio')
         if (!id || !services?.length) return
         const match = services.find(s => s._id === id)
         if (!match) return
@@ -133,7 +134,7 @@ export default function Booking() {
                 ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
         }, 150)
         return () => clearTimeout(timer)
-    }, [services, location.state])
+    }, [services, location.state, location.search])
 
     useEffect(() => {
         if (user) setForm(f => ({

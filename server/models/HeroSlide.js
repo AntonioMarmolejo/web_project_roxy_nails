@@ -11,9 +11,9 @@ const heroSlideSchema = new mongoose.Schema({
   subtitle:  { type: String, default: '', trim: true, maxlength: [200, 'El texto admite como máximo 200 caracteres'] },
   image:     { type: String, required: [true, 'La imagen es obligatoria'], trim: true, match: [/^https:\/\//, 'La imagen debe ser una URL que empiece por https://'] },
   primaryLabel:   { type: String, default: '', trim: true, maxlength: [30, 'El texto del botón admite como máximo 30 caracteres'] },
-  primaryLink:    { type: String, default: '', trim: true, maxlength: [300, 'El enlace es demasiado largo'] },
+  primaryLink:    { type: String, default: '', trim: true, maxlength: [600, 'El enlace es demasiado largo'] },
   secondaryLabel: { type: String, default: '', trim: true, maxlength: [30, 'El texto del botón admite como máximo 30 caracteres'] },
-  secondaryLink:  { type: String, default: '', trim: true, maxlength: [300, 'El enlace es demasiado largo'] },
+  secondaryLink:  { type: String, default: '', trim: true, maxlength: [600, 'El enlace es demasiado largo'] },
   order:     { type: Number, default: 0 },
   active:    { type: Boolean, default: true },
 }, { timestamps: true })
