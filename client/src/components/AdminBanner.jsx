@@ -3,6 +3,8 @@ import { fetchBannerAdmin, saveBanner } from '../api/banner'
 import PromoBanner from './PromoBanner'
 import '../styles/Home.css'
 import { SkeletonList } from './Skeleton'
+import PromoLinkPicker, { promoWhatsappLink, isPromoWhatsappLink } from './PromoLinkPicker'
+import { fetchServices } from '../api/services'
 
 const EMPTY = { active: false, emoji: '', highlight: '', message: '', linkText: '', linkTo: '', startsAt: '', endsAt: '' }
 
@@ -16,6 +18,9 @@ const toDateInput = (iso) => {
 const fromDateInput = (value, endOfDay) =>
     value ? new Date(`${value}T${endOfDay ? '23:59:59' : '00:00:00'}`).toISOString() : null
 
+// Nombre de la promoción para el mensaje de WhatsApp: el texto destacado, o el mensaje si no hay
+const promoName = (f) => (f.highlight || f.message).trim()
+
 const fmt = (iso) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
 
 export default function AdminBanner({ showToast }) {
@@ -23,6 +28,8 @@ export default function AdminBanner({ showToast }) {
     const [saved, setSaved] = useState(null)
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
+    const [services, setServices] = useState(null)   // para enlazar a un servicio concreto
+    const [formKey, setFormKey] = useState(0)        // reinicia el selector de destino al recargar lo guardado
 
     const load = (data) => {
         setSaved(data)
@@ -31,6 +38,7 @@ export default function AdminBanner({ showToast }) {
             linkText: data.linkText || '', linkTo: data.linkTo || '',
             startsAt: toDateInput(data.startsAt), endsAt: toDateInput(data.endsAt),
         })
+        setFormKey(k => k + 1)
     }
 
     useEffect(() => {
@@ -38,6 +46,7 @@ export default function AdminBanner({ showToast }) {
             .then(({ data }) => load(data))
             .catch(() => showToast('Error al cargar el banner'))
             .finally(() => setLoading(false))
+        fetchServices().then(({ data }) => setServices(data)).catch(() => setServices([]))
     }, [])
 
     const handle = (e) => {
@@ -50,6 +59,8 @@ export default function AdminBanner({ showToast }) {
         try {
             const { data } = await saveBanner({
                 ...form,
+                // El mensaje de WhatsApp usa el texto final, aunque se haya cambiado después de elegir el destino
+                linkTo: isPromoWhatsappLink(form.linkTo) ? promoWhatsappLink(promoName(form)) : form.linkTo,
                 startsAt: fromDateInput(form.startsAt, false),
                 endsAt: fromDateInput(form.endsAt, true),
             })
@@ -103,9 +114,9 @@ export default function AdminBanner({ showToast }) {
                     <div><label className="admin__label">Mensaje</label><input name="message" value={form.message} onChange={handle} className="admin__input" placeholder="en laminado de cejas + pestañas por punto" maxLength={160} /></div>
                     <div className="admin__form-row">
                         <div><label className="admin__label">Texto del enlace</label><input name="linkText" value={form.linkText} onChange={handle} className="admin__input" placeholder="Agenda tu cita hoy" maxLength={40} /></div>
-                        <div><label className="admin__label">Destino del enlace</label><input name="linkTo" value={form.linkTo} onChange={handle} className="admin__input" placeholder="/agendar" maxLength={300} /></div>
+                        <div><label className="admin__label">Destino del enlace</label><PromoLinkPicker key={formKey} name="linkTo" value={form.linkTo} onChange={handle} services={services} title={promoName(form)} /></div>
                     </div>
-                    <p className="admin__hint">Destino: una página del sitio (/agendar, /servicios, /tienda, /talleres) o una URL que empiece por https://. Déjalo vacío si no quieres enlace.</p>
+                    <p className="admin__hint">Para una promoción, elige el servicio en "Agendar un servicio" (abre la reserva con ese servicio ya elegido) o "WhatsApp" (abre el chat del local con un mensaje que nombra la promoción). "Sin enlace" si no quieres enlace.</p>
                     <div className="admin__form-row">
                         <div><label className="admin__label">Desde (opcional)</label><input type="date" name="startsAt" value={form.startsAt} onChange={handle} className="admin__input" /></div>
                         <div><label className="admin__label">Hasta (opcional)</label><input type="date" name="endsAt" value={form.endsAt} onChange={handle} className="admin__input" /></div>

@@ -3,7 +3,7 @@ import { fetchAllSlides, createSlide, updateSlide, toggleSlide, deleteSlide, reo
 import HeroSlider from './HeroSlider'
 import ImageInput from './ImageInput'
 import { SkeletonList } from './Skeleton'
-import SlideLinkPicker, { slideWhatsappLink, isSlideWhatsappLink } from './SlideLinkPicker'
+import PromoLinkPicker, { promoWhatsappLink, isPromoWhatsappLink } from './PromoLinkPicker'
 import { fetchServices } from '../api/services'
 
 const EMPTY = {
@@ -47,7 +47,7 @@ export default function AdminSlides({ showToast }) {
         // El mensaje de WhatsApp usa el título final, aunque se haya cambiado después de elegir el destino
         const payload = { ...form }
         for (const k of ['primaryLink', 'secondaryLink']) {
-            if (isSlideWhatsappLink(payload[k])) payload[k] = slideWhatsappLink(payload.title)
+            if (isPromoWhatsappLink(payload[k])) payload[k] = promoWhatsappLink(payload.title)
         }
         setSaving(true)
         try {
@@ -169,11 +169,11 @@ export default function AdminSlides({ showToast }) {
                         <div><label className="admin__label">Texto</label><textarea name="subtitle" value={form.subtitle} onChange={handle} className="admin__input" rows={2} placeholder="Una frase corta que invite a reservar" maxLength={200} style={{ resize: 'vertical' }} /></div>
                         <div className="admin__form-row">
                             <div><label className="admin__label">Botón principal</label><input name="primaryLabel" value={form.primaryLabel} onChange={handle} className="admin__input" placeholder="Agendar ahora" maxLength={30} /></div>
-                            <div><label className="admin__label">Lleva a</label><SlideLinkPicker key={`p-${formKey}`} name="primaryLink" value={form.primaryLink} onChange={handle} services={services} title={form.title} /></div>
+                            <div><label className="admin__label">Lleva a</label><PromoLinkPicker key={`p-${formKey}`} name="primaryLink" value={form.primaryLink} onChange={handle} services={services} title={form.title} /></div>
                         </div>
                         <div className="admin__form-row">
                             <div><label className="admin__label">Segundo botón</label><input name="secondaryLabel" value={form.secondaryLabel} onChange={handle} className="admin__input" placeholder="Ver precios" maxLength={30} /></div>
-                            <div><label className="admin__label">Lleva a</label><SlideLinkPicker key={`s-${formKey}`} name="secondaryLink" value={form.secondaryLink} onChange={handle} services={services} title={form.title} /></div>
+                            <div><label className="admin__label">Lleva a</label><PromoLinkPicker key={`s-${formKey}`} name="secondaryLink" value={form.secondaryLink} onChange={handle} services={services} title={form.title} /></div>
                         </div>
                         <p className="admin__hint">Botones opcionales. Para una promoción, elige el servicio en "Agendar un servicio" (abre la reserva con ese servicio ya elegido) o "WhatsApp" (abre el chat del local con un mensaje que nombra esta promoción).</p>
                         <label className="admin__checkbox-label">

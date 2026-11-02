@@ -53,4 +53,9 @@ describe('Banner del inicio — visibilidad', () => {
         expect(make({ endsAt: new Date('2026-07-10') }).isVisible(now)).toBe(false)
         expect(make({ startsAt: new Date('2026-07-01'), endsAt: new Date('2026-07-31') }).isVisible(now)).toBe(true)
     })
+
+    it('admite enlaces largos de WhatsApp con mensaje, hasta 600 caracteres', () => {
+        expect(make({ linkTo: `https://wa.me/593967141740?text=${'a'.repeat(450)}` }).validateSync()).toBeUndefined()
+        expect(make({ linkTo: `https://wa.me/593967141740?text=${'a'.repeat(600)}` }).validateSync()?.errors.linkTo).toBeDefined()
+    })
 })

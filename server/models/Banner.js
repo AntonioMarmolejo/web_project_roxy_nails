@@ -8,7 +8,7 @@ const bannerSchema = new mongoose.Schema({
   highlight: { type: String, default: '', maxlength: [60, 'El texto destacado admite como máximo 60 caracteres'], trim: true },  // parte en negrita: "Julio: 20% OFF"
   message:   { type: String, default: '', maxlength: [160, 'El mensaje admite como máximo 160 caracteres'], trim: true }, // resto del texto
   linkText:  { type: String, default: '', maxlength: [40, 'El texto del enlace admite como máximo 40 caracteres'], trim: true },
-  linkTo:    { type: String, default: '', maxlength: [300, 'El enlace es demasiado largo'], trim: true }, // ruta interna (/agendar) o URL https://
+  linkTo:    { type: String, default: '', maxlength: [600, 'El enlace es demasiado largo'], trim: true }, // ruta interna (/agendar) o URL https://
   startsAt:  { type: Date, default: null },                             // opcional: se muestra desde esta fecha
   endsAt:    { type: Date, default: null },                             // opcional: se oculta después de esta fecha
 }, { timestamps: true })
